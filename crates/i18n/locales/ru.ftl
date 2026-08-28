@@ -1860,3 +1860,16 @@ perm-group-game = Сервер
 perm-group-branches = Ветки
 perm-superadmin-desc = Суперадмин: Полный неограниченный доступ
 perm-admin-all-desc = Админ панели: Все разделы администрирования
+
+## Cookies и выгрузка/деактивация
+cookie-banner-title = Мы используем cookies
+cookie-banner-desc = Мы применяем только технические cookies и локальное хранилище для работы авторизации и сохранения ваших настроек.
+cookie-banner-accept = Понятно
+cookie-banner-privacy = Подробнее
+admin-users-deactivate-btn = Деактивировать
+admin-users-activate-btn = Активировать
+admin-users-export-btn = Выгрузить данные
+admin-users-deactivate-confirm = Вы уверены, что хотите деактивировать учётную запись пользователя { $name }? Он не сможет войти в Сервисы.
+admin-users-activate-confirm = Активировать учётную запись пользователя { $name }?
+admin-users-deactivate-reason = Деактивировано администратором
+admin-users-deactivated-badge = Деактивирован

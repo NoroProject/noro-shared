@@ -1855,3 +1855,16 @@ perm-group-game = Server
 perm-group-branches = Branches
 perm-superadmin-desc = Superadmin: Full unlimited access
 perm-admin-all-desc = Panel Admin: All administration sections
+
+## Cookies и выгрузка/деактивация
+cookie-banner-title = We use cookies
+cookie-banner-desc = We only use essential cookies and local storage to manage your session and preserve your preferences.
+cookie-banner-accept = Got it
+cookie-banner-privacy = Learn more
+admin-users-deactivate-btn = Deactivate
+admin-users-activate-btn = Activate
+admin-users-export-btn = Export Data
+admin-users-deactivate-confirm = Are you sure you want to deactivate account { $name }? The user will not be able to sign in.
+admin-users-activate-confirm = Activate account { $name }?
+admin-users-deactivate-reason = Deactivated by administrator
+admin-users-deactivated-badge = Deactivated
