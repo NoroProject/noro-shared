@@ -227,6 +227,7 @@ web-legal-doc-privacy = Политика конфиденциальности
 web-legal-tab-terms = Условия использования
 web-legal-tab-privacy = Конфиденциальность
 web-legal-admin-edit = Настройки в админке
+web-legal-official-doc = Официальный юридический документ
 nav-admin-legal = Юр. документы
 web-footer-tagline = Модовый проект Minecraft
 web-footer-legal = © { $year } Noro. Не связан с Mojang и Microsoft.
