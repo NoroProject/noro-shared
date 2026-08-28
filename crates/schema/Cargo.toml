@@ -1,0 +1,15 @@
+[package]
+name = "schema"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+# Санитизация логов живёт здесь, а не в лаунчере: тот же набор правил обязан
+# применяться и на мастере вторым проходом — клиент можно подменить.
+regex = { workspace = true }
+once_cell = { workspace = true }
