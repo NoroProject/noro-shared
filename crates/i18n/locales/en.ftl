@@ -222,8 +222,10 @@ web-legal-copied = Section link copied
 web-legal-print = Print document
 web-legal-doc-terms = Terms of Service
 web-legal-doc-privacy = Privacy Policy
-web-legal-tab-terms = Terms of Service
+web-legal-tab-terms = Terms of Use
 web-legal-tab-privacy = Privacy Policy
+web-legal-admin-edit = Admin Settings
+nav-admin-legal = Legal Documents
 web-footer-tagline = Modded Minecraft project
 web-footer-legal = © { $year } Noro. Not affiliated with Mojang or Microsoft.
 
