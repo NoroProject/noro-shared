@@ -1862,9 +1862,9 @@ perm-superadmin-desc = Суперадмин: Полный неограничен
 perm-admin-all-desc = Админ панели: Все разделы администрирования
 
 ## Cookies и выгрузка/деактивация
-cookie-banner-title = Мы используем cookies
-cookie-banner-desc = Мы применяем только технические cookies и локальное хранилище для работы авторизации и сохранения ваших настроек.
-cookie-banner-accept = Понятно
+cookie-banner-title = Cookies
+cookie-banner-desc = Мы используем cookies только для авторизации и сохранения настроек.
+cookie-banner-accept = Принять
 cookie-banner-privacy = Подробнее
 admin-users-deactivate-btn = Деактивировать
 admin-users-activate-btn = Активировать
