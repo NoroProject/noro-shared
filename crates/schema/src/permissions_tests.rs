@@ -117,6 +117,86 @@ fn build_access_does_not_leak_between_builds_or_servers() {
     ));
 }
 
+/// Два уровня делегирования ролей: одна роль сборки и все её роли.
+#[test]
+fn role_grant_supports_two_wildcard_levels() {
+    let node = perm_grant_role("srv1", "banker");
+    assert_eq!(node, "noro.admin.users.roles.srv1.banker");
+
+    assert!(any_permission_matches(
+        ["noro.admin.users.roles.srv1.*"],
+        &node
+    ));
+    assert!(any_permission_matches([node.as_str()], &node));
+    assert!(!any_permission_matches(
+        ["noro.admin.users.roles.srv2.*"],
+        &node
+    ));
+}
+
+/// Условие безопасности, ради которого узел вообще так назван: делегировать
+/// роли сборки можно, а глобальные — нет, они остаются за целой веткой.
+#[test]
+fn role_grant_on_a_server_is_not_the_global_one() {
+    let delegated = ["noro.admin.users.roles.srv1.*"];
+    assert!(!any_permission_matches(delegated, PERM_USERS_ROLES));
+
+    // А выдача ветки целиком по-прежнему включает и то, и другое: так её и
+    // читают, когда отдают человеку все роли разом.
+    let whole = ["noro.admin.users.roles.*"];
+    assert!(any_permission_matches(whole, PERM_USERS_ROLES));
+    assert!(any_permission_matches(
+        whole,
+        &perm_grant_role("srv1", "banker")
+    ));
+}
+
+/// Три уровня выдачи для подсайта: все подсайты, один целиком, одно действие.
+#[test]
+fn hub_moderation_supports_three_wildcard_levels() {
+    let node = perm_hub_moderate("srv1");
+    assert_eq!(node, "noro.hub.srv1.moderate");
+
+    assert!(any_permission_matches(["noro.hub.*"], &node));
+    assert!(any_permission_matches(["noro.hub.srv1.*"], &node));
+    assert!(any_permission_matches([node.as_str()], &node));
+    assert!(any_permission_matches([PERM_SUPERADMIN], &node));
+}
+
+/// То, ради чего подсайт вообще привязан к серверу: модератор одного сообщества
+/// не хозяйничает в соседнем.
+#[test]
+fn hub_moderation_does_not_leak_to_another_server() {
+    let granted = [perm_hub_moderate("srv1")];
+    let granted = [granted[0].as_str()];
+
+    assert!(!any_permission_matches(
+        granted,
+        &perm_hub_moderate("srv2")
+    ));
+    assert!(!any_permission_matches(["noro.hub.srv1.*"], &perm_hub_pin("srv2")));
+}
+
+/// Закрепление и уборка — разные доверия, поэтому и узлы разные.
+#[test]
+fn pinning_is_not_implied_by_moderation() {
+    let moderator = [perm_hub_moderate("srv1")];
+    let moderator = [moderator[0].as_str()];
+    assert!(!any_permission_matches(moderator, &perm_hub_pin("srv1")));
+}
+
+/// Настройка подсайта живёт в админке и ветку `noro.hub.*` не открывает: раздать
+/// сообществу его собственную модерацию можно, не пуская никого в панель.
+#[test]
+fn hub_admin_nodes_are_separate_from_the_hub_branch() {
+    assert!(!any_permission_matches(["noro.hub.*"], PERM_HUB_EDIT));
+    assert!(!any_permission_matches(
+        [PERM_HUB_EDIT],
+        &perm_hub_moderate("srv1")
+    ));
+    assert!(any_permission_matches([PERM_ADMIN_ALL], PERM_HUB_VIEW));
+}
+
 /// Реестр — единственный источник узлов, и дубль в нём означал бы две разные
 /// подсказки на одно и то же право.
 #[test]
@@ -141,4 +221,139 @@ fn admin_wildcard_covers_every_admin_node() {
             );
         }
     }
+}
+
+/// Банкир одной сборки не распоряжается деньгами соседней — ради этого счета
+/// и привязаны к серверу.
+#[test]
+fn bank_rights_do_not_cross_servers() {
+    let here = perm_hub_bank("srv1", "withdraw");
+    assert!(any_permission_matches([here.as_str()], &here));
+    assert!(!any_permission_matches(
+        [here.as_str()],
+        &perm_hub_bank("srv2", "withdraw")
+    ));
+}
+
+/// Внести и снять — разные права: кассир на входе и тот, кто уносит со счёта,
+/// это разные люди.
+#[test]
+fn depositing_does_not_imply_withdrawing() {
+    let deposit = perm_hub_bank("srv1", "deposit");
+    assert!(!any_permission_matches(
+        [deposit.as_str()],
+        &perm_hub_bank("srv1", "withdraw")
+    ));
+}
+
+/// Ветка банка выдаётся целиком одной строкой — так её и отдают банкиру.
+#[test]
+fn the_whole_bank_branch_can_be_granted_at_once() {
+    let all = ["noro.hub.srv1.bank.*"];
+    assert!(any_permission_matches(all, &perm_hub_bank("srv1", "deposit")));
+    assert!(any_permission_matches(all, &perm_hub_bank("srv1", "withdraw")));
+    // Но модерацию ленты она не открывает: это другое доверие.
+    assert!(!any_permission_matches(all, &perm_hub_moderate("srv1")));
+}
+
+/// Доступ к официальному счёту выдаётся по коду счёта, и подстановка работает
+/// на каждом уровне: все счета сервера, один счёт целиком, одно действие.
+#[test]
+fn account_access_supports_three_wildcard_levels() {
+    let node = perm_hub_account("srv1", "mayor", ACCOUNT_SPEND);
+    assert_eq!(node, "noro.hub.srv1.account.mayor.spend");
+
+    assert!(any_permission_matches(["noro.hub.srv1.account.*"], &node));
+    assert!(any_permission_matches(["noro.hub.srv1.account.mayor.*"], &node));
+    assert!(any_permission_matches([node.as_str()], &node));
+}
+
+/// Смотреть кассу и брать из неё — разные доверия: аудитор не расплачивается
+/// деньгами мэрии, и один узел не подразумевает другой.
+#[test]
+fn seeing_an_account_does_not_allow_spending_from_it() {
+    let auditor = [perm_hub_account("srv1", "mayor", ACCOUNT_VIEW)];
+    let auditor = [auditor[0].as_str()];
+
+    assert!(any_permission_matches(
+        auditor,
+        &perm_hub_account("srv1", "mayor", ACCOUNT_VIEW)
+    ));
+    assert!(!any_permission_matches(
+        auditor,
+        &perm_hub_account("srv1", "mayor", ACCOUNT_SPEND)
+    ));
+    assert!(!any_permission_matches(
+        auditor,
+        &perm_hub_account("srv1", "mayor", ACCOUNT_MANAGE)
+    ));
+}
+
+/// Казначей мэрии не распоряжается счётом полиции — и тем более счётом того же
+/// имени на соседнем сервере.
+#[test]
+fn account_access_does_not_leak_to_another_account_or_server() {
+    let mayor = [perm_hub_account("srv1", "mayor", ACCOUNT_SPEND)];
+    let mayor = [mayor[0].as_str()];
+
+    assert!(!any_permission_matches(
+        mayor,
+        &perm_hub_account("srv1", "police", ACCOUNT_SPEND)
+    ));
+    assert!(!any_permission_matches(
+        mayor,
+        &perm_hub_account("srv2", "mayor", ACCOUNT_SPEND)
+    ));
+}
+
+/// Банкир двигает деньги между казной и картами, казначей — по своему счёту.
+/// Одно не подразумевает другого, иначе «выдать доступ к счёту мэрии» открыло
+/// бы кассу банка.
+#[test]
+fn account_access_is_not_the_same_as_being_a_banker() {
+    let banker = [perm_hub_bank("srv1", "deposit")];
+    let banker = [banker[0].as_str()];
+    assert!(!any_permission_matches(
+        banker,
+        &perm_hub_account("srv1", "mayor", ACCOUNT_SPEND)
+    ));
+
+    let treasurer = [perm_hub_account("srv1", "mayor", ACCOUNT_SPEND)];
+    let treasurer = [treasurer[0].as_str()];
+    assert!(!any_permission_matches(treasurer, &perm_hub_bank("srv1", "deposit")));
+}
+
+/// Управление списком счетов и распоряжение деньгами одного из них — разные
+/// доверия: казначей мэрии не должен заводить себе новые структуры.
+#[test]
+fn managing_accounts_is_not_spending_from_one() {
+    let treasurer = [perm_hub_account("srv1", "mayor", ACCOUNT_SPEND)];
+    let treasurer = [treasurer[0].as_str()];
+    assert!(!any_permission_matches(
+        treasurer,
+        &perm_hub_accounts("srv1", ACCOUNTS_CREATE)
+    ));
+
+    let manager = [perm_hub_accounts("srv1", ACCOUNTS_CREATE)];
+    let manager = [manager[0].as_str()];
+    assert!(!any_permission_matches(
+        manager,
+        &perm_hub_account("srv1", "mayor", ACCOUNT_SPEND)
+    ));
+}
+
+/// Завести счёт, переименовать и закрыть — три разных решения, и последнее
+/// самое опасное: выдав «создавать», сервер не выдаёт «удалять».
+#[test]
+fn account_management_actions_are_separate() {
+    let creator = [perm_hub_accounts("srv1", ACCOUNTS_CREATE)];
+    let creator = [creator[0].as_str()];
+    assert!(!any_permission_matches(
+        creator,
+        &perm_hub_accounts("srv1", ACCOUNTS_DELETE)
+    ));
+    assert!(any_permission_matches(
+        ["noro.hub.srv1.accounts.*"],
+        &perm_hub_accounts("srv1", ACCOUNTS_DELETE)
+    ));
 }

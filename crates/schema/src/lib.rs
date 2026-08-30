@@ -6,6 +6,8 @@
 pub mod admin_ws;
 pub mod blocklist;
 pub mod build;
+pub mod hub;
+pub mod hub_features;
 pub mod integrity;
 pub mod launcher;
 pub mod manifest_args;
@@ -23,6 +25,8 @@ pub mod ws_protocol;
 pub use admin_ws::*;
 pub use blocklist::*;
 pub use build::*;
+pub use hub::*;
+pub use hub_features::*;
 pub use integrity::*;
 pub use launcher::*;
 pub use manifest_args::*;

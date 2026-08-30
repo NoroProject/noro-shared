@@ -60,6 +60,33 @@ pub struct Role {
     /// чужого, а снятие унаследованного молча не делало бы ничего.
     #[serde(default)]
     pub inherited_permissions: Vec<Permission>,
+    /// Сервер, которому принадлежит роль. `None` — роль действует везде.
+    ///
+    /// Дом роли, а не контекст выдачи: «Банкир» заводится на своей сборке и
+    /// там же остаётся, вместе со своими правами и своей плашкой.
+    #[serde(default)]
+    pub server_id: Option<Uuid>,
+    /// Название этой сборки — чтобы подписать роль там, где списка серверов
+    /// нет. Владельцу сборки, которому доверены только её роли, каталог
+    /// серверов не открыт, а «Банкир» без подписи неотличим от общей роли.
+    #[serde(default)]
+    pub server_name: Option<String>,
+    /// Показывать рядом со старшей ролью, а не вместо неё.
+    ///
+    /// Роли без флага — одна лестница: модер закрывает собой хелпера. «Банкир»
+    /// на той лестнице не стоит, он про другое, и виден одновременно с ней.
+    #[serde(default)]
+    pub standalone: bool,
+    /// Цвет надписи на нарисованной плашке. `None` — по яркости фона.
+    #[serde(default)]
+    pub badge_text_color: Option<String>,
+}
+
+impl Role {
+    /// Действует ли роль на этой сборке. Глобальная — на любой.
+    pub fn applies_on(&self, server_id: &Uuid) -> bool {
+        self.server_id.is_none_or(|own| own == *server_id)
+    }
 }
 
 /// Привязка аккаунта к внешней платформе. Их у игрока может быть несколько:
@@ -207,18 +234,37 @@ pub struct SetUserCapesReq {
 }
 
 impl UserProfile {
-    /// Все эффективные права: прямые + из всех ролей, вместе с тем, что роли
-    /// получили от своих родителей.
+    /// Права, действующие всюду: прямые + из глобальных ролей, вместе с тем,
+    /// что те получили от родителей.
+    ///
+    /// Роли сервера сюда не попадают намеренно. Роль заводят на сборке ровно
+    /// затем, чтобы она работала только там: попади её права в общий список —
+    /// «Банкир» открывал бы админку и соседние сборки, а выдача такой роли
+    /// перестала бы быть безопасной для делегирования.
     pub fn all_permissions(&self) -> impl Iterator<Item = &str> {
-        self.permissions
-            .iter()
-            .map(String::as_str)
-            .chain(self.roles.iter().flat_map(|r| {
+        self.permissions_from(self.roles.iter().filter(|r| r.server_id.is_none()))
+    }
+
+    /// То же, но с учётом сборки: глобальные плюс роли этого сервера.
+    pub fn permissions_on(&self, server_id: &Uuid) -> impl Iterator<Item = &str> {
+        // Копия, а не ссылка: иначе итератор жил бы не дольше аргумента, и
+        // вызвать это с временным `&id` стало бы нельзя.
+        let server_id = *server_id;
+        self.permissions_from(self.roles.iter().filter(move |r| r.applies_on(&server_id)))
+    }
+
+    fn permissions_from<'a>(
+        &'a self,
+        roles: impl Iterator<Item = &'a Role> + 'a,
+    ) -> impl Iterator<Item = &'a str> + 'a {
+        self.permissions.iter().map(String::as_str).chain(
+            roles.flat_map(|r| {
                 r.permissions
                     .iter()
                     .chain(r.inherited_permissions.iter())
                     .map(String::as_str)
-            }))
+            }),
+        )
     }
 
     /// Есть ли у пользователя право (с учётом wildcard'ов).
@@ -227,14 +273,24 @@ impl UserProfile {
             .any(|p| permission_matches(p, required))
     }
 
+    /// Есть ли право на конкретной сборке — с ролями этой сборки.
+    pub fn has_permission_on(&self, server_id: &Uuid, required: &str) -> bool {
+        self.permissions_on(server_id)
+            .any(|p| permission_matches(p, required))
+    }
+
     /// Может ли войти на сервер с заданным id.
+    ///
+    /// Через права сборки, а не общие: роль сервера вправе пускать на свой
+    /// сервер, иначе выданный на нём «Банкир» не смог бы туда зайти.
     pub fn can_join_server(&self, server_id: &Uuid, server_limited: bool) -> bool {
         if !server_limited {
             return true;
         }
-        self.has_permission(&crate::permissions::perm_server_join(
-            &server_id.to_string(),
-        ))
+        self.has_permission_on(
+            server_id,
+            &crate::permissions::perm_server_join(&server_id.to_string()),
+        )
     }
 
     /// Может ли включить опциональный мод.
@@ -242,10 +298,10 @@ impl UserProfile {
         if !limited {
             return true;
         }
-        self.has_permission(&crate::permissions::perm_optional_mod(
-            &server_id.to_string(),
-            mod_name,
-        ))
+        self.has_permission_on(
+            server_id,
+            &crate::permissions::perm_optional_mod(&server_id.to_string(), mod_name),
+        )
     }
 
     /// Цвет первой по приоритету (наибольший sort_order) роли — для UI.
