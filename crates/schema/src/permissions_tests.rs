@@ -170,11 +170,11 @@ fn hub_moderation_does_not_leak_to_another_server() {
     let granted = [perm_hub_moderate("srv1")];
     let granted = [granted[0].as_str()];
 
+    assert!(!any_permission_matches(granted, &perm_hub_moderate("srv2")));
     assert!(!any_permission_matches(
-        granted,
-        &perm_hub_moderate("srv2")
+        ["noro.hub.srv1.*"],
+        &perm_hub_pin("srv2")
     ));
-    assert!(!any_permission_matches(["noro.hub.srv1.*"], &perm_hub_pin("srv2")));
 }
 
 /// Закрепление и уборка — разные доверия, поэтому и узлы разные.
@@ -250,8 +250,14 @@ fn depositing_does_not_imply_withdrawing() {
 #[test]
 fn the_whole_bank_branch_can_be_granted_at_once() {
     let all = ["noro.hub.srv1.bank.*"];
-    assert!(any_permission_matches(all, &perm_hub_bank("srv1", "deposit")));
-    assert!(any_permission_matches(all, &perm_hub_bank("srv1", "withdraw")));
+    assert!(any_permission_matches(
+        all,
+        &perm_hub_bank("srv1", "deposit")
+    ));
+    assert!(any_permission_matches(
+        all,
+        &perm_hub_bank("srv1", "withdraw")
+    ));
     // Но модерацию ленты она не открывает: это другое доверие.
     assert!(!any_permission_matches(all, &perm_hub_moderate("srv1")));
 }
@@ -264,7 +270,10 @@ fn account_access_supports_three_wildcard_levels() {
     assert_eq!(node, "noro.hub.srv1.account.mayor.spend");
 
     assert!(any_permission_matches(["noro.hub.srv1.account.*"], &node));
-    assert!(any_permission_matches(["noro.hub.srv1.account.mayor.*"], &node));
+    assert!(any_permission_matches(
+        ["noro.hub.srv1.account.mayor.*"],
+        &node
+    ));
     assert!(any_permission_matches([node.as_str()], &node));
 }
 
@@ -320,7 +329,10 @@ fn account_access_is_not_the_same_as_being_a_banker() {
 
     let treasurer = [perm_hub_account("srv1", "mayor", ACCOUNT_SPEND)];
     let treasurer = [treasurer[0].as_str()];
-    assert!(!any_permission_matches(treasurer, &perm_hub_bank("srv1", "deposit")));
+    assert!(!any_permission_matches(
+        treasurer,
+        &perm_hub_bank("srv1", "deposit")
+    ));
 }
 
 /// Управление списком счетов и распоряжение деньгами одного из них — разные
