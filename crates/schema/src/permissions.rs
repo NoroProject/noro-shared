@@ -93,6 +93,9 @@ nodes! {
     PERM_CASES_INVENTORY      = "noro.mod.cases.inventory", "perm-group-moderation", "perm-node-cases-inventory";
     PERM_CASES_WATCH          = "noro.mod.cases.watch", "perm-group-moderation", "perm-node-cases-watch";
     PERM_CASES_CLIENT         = "noro.mod.cases.client", "perm-group-moderation", "perm-node-cases-client";
+    PERM_TICKETS_VIEW         = "noro.mod.tickets.view", "perm-group-moderation", "perm-node-tickets-view";
+    PERM_TICKETS_REPLY        = "noro.mod.tickets.reply", "perm-group-moderation", "perm-node-tickets-reply";
+    PERM_TICKETS_CLOSE        = "noro.mod.tickets.close", "perm-group-moderation", "perm-node-tickets-close";
 
     // --- Свод правил ----------------------------------------------------------
     PERM_RULES_VIEW           = "noro.admin.rules.view", "perm-group-rules", "perm-node-rules-view";
@@ -105,6 +108,8 @@ nodes! {
     PERM_SERVERS_DELETE       = "noro.admin.servers.delete", "perm-group-servers", "perm-node-servers-delete";
     PERM_SERVERS_AGENTS       = "noro.admin.servers.agents", "perm-group-servers", "perm-node-servers-agents";
     PERM_SERVERS_ROLES        = "noro.admin.servers.roles", "perm-group-servers", "perm-node-servers-roles";
+    PERM_HUB_VIEW             = "noro.admin.hub.view", "perm-group-servers", "perm-node-hub-view";
+    PERM_HUB_EDIT             = "noro.admin.hub.edit", "perm-group-servers", "perm-node-hub-edit";
     PERM_BUILDS_VIEW          = "noro.admin.builds.view", "perm-group-builds", "perm-node-builds-view";
     PERM_BUILDS_EDIT          = "noro.admin.builds.edit", "perm-group-builds", "perm-node-builds-edit";
     PERM_BUILDS_PUBLISH       = "noro.admin.builds.publish", "perm-group-builds", "perm-node-builds-publish";
@@ -213,6 +218,99 @@ pub fn perm_build_access(server_id: &str, build_id: &str) -> String {
 /// Право выдавать конкретный вид наказания.
 pub fn perm_punish(kind: &str) -> String {
     format!("noro.mod.punish.{kind}")
+}
+
+/// Право модерировать подсайт одного сервера: скрывать чужие записи и разбирать
+/// жалобы.
+///
+/// Пространство `noro.hub.<server>.<действие>` — та же форма, что у
+/// `noro.server.<server>.join` и `noro.build.<server>.<build>`, и работает оно
+/// тремя уровнями: `noro.hub.*` — все подсайты, `noro.hub.<server>.*` — один
+/// целиком, полный узел — одно действие.
+///
+/// Проверять это право нужно через `permissions_on(server)`, а не через
+/// `all_permissions()`: роли сборки в последний намеренно не входят, и модератор
+/// подсайта на нём просто не нашёлся бы.
+///
+/// Под будущие разделы здесь же заняты: `noro.hub.<server>.bank.{view,deposit,
+/// withdraw,transfer}`, `.court.{file,judge}`, `.petition.{create,close}`,
+/// `.town.manage` — решено одним заходом, чтобы форма узлов не разъехалась.
+pub fn perm_hub_moderate(server_id: &str) -> String {
+    format!("noro.hub.{server_id}.moderate")
+}
+
+/// Право на действие в банке подсайта.
+///
+/// Действия: `view` — видеть чужие счета и историю сервера, `issue` — выпускать
+/// карты, `transfer` — переводить между картами, `deposit` и `withdraw` —
+/// вносить и снимать от лица банка, `moderate` — снимать с карты чужое
+/// оформление. Deposit и withdraw и есть «банкир»: они двигают деньги между
+/// казной сервера и картой игрока.
+///
+/// Разделены намеренно. Кассир, принимающий наличные, и тот, кто уносит деньги
+/// со счёта, — разные доверия, и выдавать их одной кнопкой нельзя.
+pub fn perm_hub_bank(server_id: &str, action: &str) -> String {
+    format!("noro.hub.{server_id}.bank.{action}")
+}
+
+/// Действия над официальным счётом подсайта.
+pub const ACCOUNT_VIEW: &str = "view";
+pub const ACCOUNT_SPEND: &str = "spend";
+pub const ACCOUNT_MANAGE: &str = "manage";
+
+pub const ACCOUNT_ACTIONS: &[&str] = &[ACCOUNT_VIEW, ACCOUNT_SPEND, ACCOUNT_MANAGE];
+
+/// Право на действие с официальным счётом: мэрией, полицией, судом.
+///
+/// `view` — баланс и выписка, `spend` — переводить с него, `manage` — название
+/// и оформление. Разделены по тому же правилу, что у банка: смотреть кассу и
+/// брать из неё — разные доверия.
+///
+/// Счёт называется своим кодом, а не идентификатором: `noro.hub.<id>.account.
+/// mayor.spend` читается в списке прав и переживает пересоздание счёта, тогда
+/// как право с UUID после этого молча перестало бы совпадать.
+pub fn perm_hub_account(server_id: &str, code: &str, action: &str) -> String {
+    format!("noro.hub.{server_id}.account.{code}.{action}")
+}
+
+/// Действия над списком официальных счетов.
+pub const ACCOUNTS_CREATE: &str = "create";
+pub const ACCOUNTS_EDIT: &str = "edit";
+pub const ACCOUNTS_DELETE: &str = "delete";
+
+pub const ACCOUNTS_ACTIONS: &[&str] = &[ACCOUNTS_CREATE, ACCOUNTS_EDIT, ACCOUNTS_DELETE];
+
+/// Право заводить, переименовывать и закрывать официальные счета.
+///
+/// Отдельно от прав на сам счёт: `account.<code>.spend` распоряжается деньгами
+/// одной структуры, а это — управление списком структур, и доверяют его тем,
+/// кто ведёт сервер, а не казначею мэрии.
+pub fn perm_hub_accounts(server_id: &str, action: &str) -> String {
+    format!("noro.hub.{server_id}.accounts.{action}")
+}
+
+/// Право закрепить запись наверху ленты подсайта.
+///
+/// Отдельно от модерации: закрепление — это голос сервера, а скрытие — уборка,
+/// и доверяют их обычно разным людям.
+pub fn perm_hub_pin(server_id: &str) -> String {
+    format!("noro.hub.{server_id}.pin")
+}
+
+/// Право выдавать одну роль одного сервера.
+///
+/// Ветка под `PERM_USERS_ROLES`, чтобы работали два уровня выдачи:
+/// `noro.admin.users.roles.<server>.*` — все роли этой сборки,
+/// полный узел — ровно одна роль.
+///
+/// Глобальные роли так не выдаются, и это не оплошность, а условие
+/// безопасности: делегируя серверу его роли, мы отдаём власть внутри одной
+/// сборки. Глобальная роль властью внутри сборки не ограничена, поэтому её
+/// выдача остаётся за целым `noro.admin.users.roles`. Wildcard роли `.*` этого
+/// не обходит: `noro.admin.users.roles.<server>.*` не покрывает сам
+/// `noro.admin.users.roles`.
+pub fn perm_grant_role(server_id: &str, role_name: &str) -> String {
+    format!("{PERM_USERS_ROLES}.{server_id}.{role_name}")
 }
 
 #[cfg(test)]
