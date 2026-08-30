@@ -257,14 +257,15 @@ impl UserProfile {
         &'a self,
         roles: impl Iterator<Item = &'a Role> + 'a,
     ) -> impl Iterator<Item = &'a str> + 'a {
-        self.permissions.iter().map(String::as_str).chain(
-            roles.flat_map(|r| {
+        self.permissions
+            .iter()
+            .map(String::as_str)
+            .chain(roles.flat_map(|r| {
                 r.permissions
                     .iter()
                     .chain(r.inherited_permissions.iter())
                     .map(String::as_str)
-            }),
-        )
+            }))
     }
 
     /// Есть ли у пользователя право (с учётом wildcard'ов).
