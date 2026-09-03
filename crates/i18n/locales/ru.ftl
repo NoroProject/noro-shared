@@ -2477,3 +2477,7 @@ accounts-tab-towns = Города
 towns-emblem = Герб
 towns-banner = Баннер
 towns-image-pick = Загрузить
+towns-open-map = Открыть карту
+towns-filter-all = Все города
+towns-filter-mine = Проживаю
+towns-banner-change = Сменить баннер

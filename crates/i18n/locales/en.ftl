@@ -2472,3 +2472,7 @@ accounts-tab-towns = Towns
 towns-emblem = Emblem
 towns-banner = Banner
 towns-image-pick = Upload
+towns-open-map = Open the map
+towns-filter-all = All towns
+towns-filter-mine = Mine
+towns-banner-change = Change the banner
