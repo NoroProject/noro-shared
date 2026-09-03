@@ -2490,3 +2490,4 @@ ministry-right-land = Править границы
 ministry-right-limit = Лимиты чанков
 ministry-right-dissolve = Роспуск
 ministry-right-mark = Метки на карте
+map-claim-for = Занимать за город

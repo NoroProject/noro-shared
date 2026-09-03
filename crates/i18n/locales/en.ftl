@@ -2485,3 +2485,4 @@ ministry-right-land = Edit borders
 ministry-right-limit = Chunk limits
 ministry-right-dissolve = Dissolve
 ministry-right-mark = Map markers
+map-claim-for = Claim for
