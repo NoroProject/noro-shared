@@ -2509,3 +2509,5 @@ map-claim-no-town = You have no town to claim for
 map-release = Release chunks
 map-release-hint = Drag to release chunks, hold Shift for a rectangle
 map-release-done = Released: { $taken }
+map-mark-colour = Colour
+map-mark-remove = Remove the marker
