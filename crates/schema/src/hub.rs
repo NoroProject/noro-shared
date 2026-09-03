@@ -149,6 +149,12 @@ impl Default for FineSettings {
 #[serde(default)]
 pub struct PetitionSettings {
     pub filing_price: i64,
+    /// Сколько часов надо наиграть, чтобы подписать петицию.
+    ///
+    /// Ноль — подписывает любой участник. Порог нужен не против злого умысла, а
+    /// против пустых аккаунтов: подпись должна что-то стоить, иначе счётчик
+    /// перестаёт значить «столько людей этого хотят».
+    pub min_playtime_hours: i32,
     /// Код официального счёта, куда идёт пошлина. Пусто — в казну.
     ///
     /// У штрафа получателя выбирает тот, кто его выписывает; здесь выбирать
@@ -162,6 +168,7 @@ impl Default for PetitionSettings {
     fn default() -> Self {
         Self {
             filing_price: 0,
+            min_playtime_hours: 0,
             payee: String::new(),
             votes_needed: 10,
             days_open: 14,
@@ -394,6 +401,9 @@ impl HubSettings {
         }
         if !(1..=365).contains(&self.petitions.days_open) {
             bad.push("petitions.days_open");
+        }
+        if !(0..=10_000).contains(&self.petitions.min_playtime_hours) {
+            bad.push("petitions.min_playtime_hours");
         }
 
         if self.courts.claim_price < 0 {
