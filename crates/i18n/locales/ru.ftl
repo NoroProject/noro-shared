@@ -2436,3 +2436,24 @@ admin-hub-set-town-gap = Пустых чанков между городами
 admin-hub-set-town-playtime = Часов игры для основания
 admin-hub-set-town-exclaves = Разрешить оторванные куски
 admin-hub-set-town-exclaves-hint = Выключено — новый чанк обязан касаться своей земли
+
+nav-hub-map = Карта
+map-empty = Пока ничего не нарисовано: агент рисует карту там, где ходят игроки
+map-towns = Города на карте
+map-pick = Занимать кликом
+map-picking-on = Кликните по чанку
+
+admin-hub-settings-map = Карта
+admin-hub-set-map-worlds = Миры на карте
+admin-hub-set-map-worlds-hint = Через запятую. Пусто — только основной мир
+admin-hub-set-map-rate = Чанков в секунду
+admin-hub-set-map-interval = Секунд между отправками
+admin-hub-set-map-zooms = Уровней отдаления
+admin-hub-set-map-players = Показывать игроков онлайн
+admin-hub-set-map-players-hint = На PvP-сервере живые точки — это оружие
+admin-hub-set-map-labels = Показывать названия городов
+admin-hub-set-map-labels-hint = Имена городов поверх их границ
+admin-hub-set-map-markers = Показывать метки сервера
+admin-hub-set-map-markers-hint = Спавн, рынки, достопримечательности от персонала
+admin-hub-set-map-disputes = Показывать спорные чанки
+admin-hub-set-map-disputes-hint = Претензии на чужую землю, штриховкой

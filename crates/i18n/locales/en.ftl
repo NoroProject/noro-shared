@@ -2431,3 +2431,24 @@ admin-hub-set-town-gap = Empty chunks between towns
 admin-hub-set-town-playtime = Hours played to found a town
 admin-hub-set-town-exclaves = Allow detached land
 admin-hub-set-town-exclaves-hint = Off, a new chunk must touch the town's own land
+
+nav-hub-map = Map
+map-empty = Nothing is drawn yet: the agent renders the map as players explore it
+map-towns = Towns on the map
+map-pick = Claim by clicking
+map-picking-on = Click a chunk
+
+admin-hub-settings-map = Map
+admin-hub-set-map-worlds = Worlds on the map
+admin-hub-set-map-worlds-hint = Comma separated. Empty — only the main world
+admin-hub-set-map-rate = Chunks per second
+admin-hub-set-map-interval = Seconds between uploads
+admin-hub-set-map-zooms = Zoom-out levels
+admin-hub-set-map-players = Show players online
+admin-hub-set-map-players-hint = On a PvP server live dots are a weapon
+admin-hub-set-map-labels = Show town names
+admin-hub-set-map-labels-hint = Names of towns drawn over their borders
+admin-hub-set-map-markers = Show server markers
+admin-hub-set-map-markers-hint = Spawn, markets, landmarks put by staff
+admin-hub-set-map-disputes = Show disputed chunks
+admin-hub-set-map-disputes-hint = Claims on someone else's land, hatched

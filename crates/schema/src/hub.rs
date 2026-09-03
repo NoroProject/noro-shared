@@ -25,6 +25,7 @@ pub struct HubSettings {
     pub petitions: PetitionSettings,
     pub courts: CourtSettings,
     pub towns: TownSettings,
+    pub map: MapSettings,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -255,6 +256,50 @@ impl Default for TownSettings {
     }
 }
 
+/// Карта сервера: что рендерить, как часто и что показывать поверх.
+///
+/// Живёт в секции городов не случайно — карту заводят ради границ, — но
+/// секцией отдельной: тайлы рисуются и без единого города, а слои включаются
+/// по одному.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct MapSettings {
+    /// Какие миры рендерить. Пусто — только основной мир сервера.
+    ///
+    /// Список, а не «всё подряд»: модовая сборка приносит десятки технических
+    /// измерений, и каждое из них — это гигабайты тайлов ни для кого.
+    pub worlds: Vec<String>,
+    /// Как часто агент отдаёт накопленное. Реже — дешевле, но карта старее.
+    pub push_interval_seconds: i32,
+    /// Потолок темпа рендера. Ноль — не рендерить вовсе: так карту выключают,
+    /// не теряя уже нарисованного.
+    pub chunks_per_second: i32,
+    /// Сколько уровней уменьшения строит мастер поверх базового.
+    pub zoom_levels: i32,
+
+    /// Слои. Каждый включается отдельно: живые точки игроков на PvP-сборке —
+    /// оружие, а метки администрации нужны и там, где всё остальное выключено.
+    pub show_players: bool,
+    pub show_town_labels: bool,
+    pub show_admin_markers: bool,
+    pub show_disputes: bool,
+}
+
+impl Default for MapSettings {
+    fn default() -> Self {
+        Self {
+            worlds: Vec::new(),
+            push_interval_seconds: 30,
+            chunks_per_second: 8,
+            zoom_levels: 4,
+            show_players: false,
+            show_town_labels: true,
+            show_admin_markers: true,
+            show_disputes: true,
+        }
+    }
+}
+
 /// Жёсткий потолок картинок на запись.
 ///
 /// Ограничение не вкусовое: каждая картинка это загрузка в CAS и строка в
@@ -373,6 +418,20 @@ impl HubSettings {
         }
         if !(0..=10_000).contains(&self.towns.min_playtime_hours) {
             bad.push("towns.min_playtime_hours");
+        }
+
+        if !(5..=3600).contains(&self.map.push_interval_seconds) {
+            bad.push("map.push_interval_seconds");
+        }
+        // Ноль — законное значение: так рендер останавливают, не стирая карту.
+        if !(0..=256).contains(&self.map.chunks_per_second) {
+            bad.push("map.chunks_per_second");
+        }
+        if !(0..=8).contains(&self.map.zoom_levels) {
+            bad.push("map.zoom_levels");
+        }
+        if self.map.worlds.len() > 32 {
+            bad.push("map.worlds");
         }
 
         bad
