@@ -2481,3 +2481,4 @@ towns-open-map = Открыть карту
 towns-filter-all = Все города
 towns-filter-mine = Проживаю
 towns-banner-change = Сменить баннер
+map-town-open = Открыть страницу города

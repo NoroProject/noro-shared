@@ -2476,3 +2476,4 @@ towns-open-map = Open the map
 towns-filter-all = All towns
 towns-filter-mine = Mine
 towns-banner-change = Change the banner
+map-town-open = Open the town page
