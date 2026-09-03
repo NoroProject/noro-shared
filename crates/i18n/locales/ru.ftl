@@ -2491,3 +2491,5 @@ ministry-right-limit = Лимиты чанков
 ministry-right-dissolve = Роспуск
 ministry-right-mark = Метки на карте
 map-claim-for = Занимать за город
+ministry-rename = Переименовать
+ministry-rename-hint = Адрес и код казны при этом не меняются

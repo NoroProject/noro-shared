@@ -2486,3 +2486,5 @@ ministry-right-limit = Chunk limits
 ministry-right-dissolve = Dissolve
 ministry-right-mark = Map markers
 map-claim-for = Claim for
+ministry-rename = Rename
+ministry-rename-hint = The address and the treasury code stay the same
