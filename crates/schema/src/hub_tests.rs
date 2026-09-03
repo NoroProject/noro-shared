@@ -168,3 +168,30 @@ fn defaults_are_free_and_pass_without_a_bank() {
     let s = HubSettings::default();
     assert!(crate::unmet_prices(|_| false, |p| s.price(p).unwrap_or(0)).is_empty());
 }
+
+/// Режим регистрации городов — строка в JSONB, и опечатка в нём означала бы
+/// сервер, где город нельзя ни основать, ни одобрить. Ловим до сохранения.
+#[test]
+fn an_unknown_town_mode_is_rejected() {
+    let mut settings = HubSettings::default();
+    settings.towns.registration_mode = "ministry".into();
+    assert!(settings.violations().is_empty());
+
+    settings.towns.registration_mode = "по-звонку".into();
+    assert!(settings.violations().contains(&"towns.registration_mode"));
+}
+
+/// Ноль в слагаемом лимита выключает его, отрицательное число — бессмыслица:
+/// «минус два чанка на жителя» отняло бы территорию за приход человека.
+#[test]
+fn town_limits_cannot_go_below_zero() {
+    let mut settings = HubSettings::default();
+    settings.towns.base_chunks = -1;
+    settings.towns.chunks_per_resident = -1;
+    settings.towns.max_chunks = -1;
+
+    let bad = settings.violations();
+    assert!(bad.contains(&"towns.base_chunks"));
+    assert!(bad.contains(&"towns.chunks_per_resident"));
+    assert!(bad.contains(&"towns.max_chunks"));
+}

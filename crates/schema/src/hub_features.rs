@@ -59,6 +59,7 @@ pub const PAID_SETTINGS: &[(&str, &str)] = &[
     ("courts.claim_price", FEATURE_BANK),
     ("petitions.filing_price", FEATURE_BANK),
     ("towns.founding_price", FEATURE_BANK),
+    ("towns.chunk_price", FEATURE_BANK),
     // Цены самого банка сюда не входят: они лежат в его же секции, которая без
     // банка не показывается и не применяется. Требовать их обнуления при
     // выключении банка значило бы терять настроенное на ровном месте.

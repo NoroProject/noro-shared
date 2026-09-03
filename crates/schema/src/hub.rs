@@ -187,12 +187,72 @@ impl Default for CourtSettings {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+/// Как на сервере заводят города.
+pub const TOWNS_FREE: &str = "free";
+pub const TOWNS_APPLICATION: &str = "application";
+pub const TOWNS_MINISTRY: &str = "ministry";
+
+pub const TOWN_MODES: &[&str] = &[TOWNS_FREE, TOWNS_APPLICATION, TOWNS_MINISTRY];
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct TownSettings {
+    /// `free` — город появляется сразу; `application` — заявка ждёт минюста;
+    /// `ministry` — заводит только сотрудник.
+    ///
+    /// Строка, а не перечисление: настройки живут в JSONB, и незнакомое
+    /// значение из будущей версии не должно ронять разбор всего подсайта.
+    /// Проверяет его `violations`, как и всё остальное здесь.
+    pub registration_mode: String,
     pub founding_price: i64,
     /// Код официального счёта, куда идёт плата. Пусто — в казну.
     pub payee: String,
+
+    /// Лимит чанков собирается из четырёх слагаемых:
+    /// `base_chunks + chunks_per_resident × жители + бонус минюста + куплено`.
+    ///
+    /// Так «по числу жителей», «за деньги», «выдаёт минюст» и «без лимита» —
+    /// это четыре набора чисел, а не четыре ветки кода. Ноль выключает
+    /// слагаемое, `max_chunks = 0` снимает потолок.
+    pub base_chunks: i32,
+    pub chunks_per_resident: i32,
+    /// Цена чанка сверх бесплатного лимита. Ноль — докупать нельзя.
+    pub chunk_price: i64,
+    /// Жёсткий потолок территории. Ноль — без потолка.
+    pub max_chunks: i32,
+
+    /// Сколько пустых чанков обязано лежать между городами. Ноль — можно
+    /// вплотную.
+    pub min_gap_chunks: i32,
+    /// Разрешены ли оторванные куски территории.
+    ///
+    /// По умолчанию нет: «граница города» подразумевает связную область, а
+    /// разбросанные по всей карте одиночные чанки — это способ застолбить
+    /// места впрок, а не построить город. Серверу с портами и колониями
+    /// правило мешает, поэтому оно снимается настройкой, а не переписыванием.
+    pub allow_exclaves: bool,
+    /// Сколько часов надо наиграть на сервере, чтобы основать город.
+    ///
+    /// Считается из `player_sessions`; второго счётчика времени в проекте нет
+    /// и заводить его ради городов нельзя — он разойдётся с первым.
+    pub min_playtime_hours: i32,
+}
+
+impl Default for TownSettings {
+    fn default() -> Self {
+        Self {
+            registration_mode: TOWNS_FREE.into(),
+            founding_price: 0,
+            payee: String::new(),
+            base_chunks: 16,
+            chunks_per_resident: 0,
+            chunk_price: 0,
+            max_chunks: 0,
+            min_gap_chunks: 0,
+            allow_exclaves: false,
+            min_playtime_hours: 0,
+        }
+    }
 }
 
 /// Жёсткий потолок картинок на запись.
@@ -293,6 +353,27 @@ impl HubSettings {
         if self.towns.founding_price < 0 {
             bad.push("towns.founding_price");
         }
+        if !TOWN_MODES.contains(&self.towns.registration_mode.as_str()) {
+            bad.push("towns.registration_mode");
+        }
+        if !(0..=10_000).contains(&self.towns.base_chunks) {
+            bad.push("towns.base_chunks");
+        }
+        if !(0..=1_000).contains(&self.towns.chunks_per_resident) {
+            bad.push("towns.chunks_per_resident");
+        }
+        if self.towns.chunk_price < 0 {
+            bad.push("towns.chunk_price");
+        }
+        if !(0..=100_000).contains(&self.towns.max_chunks) {
+            bad.push("towns.max_chunks");
+        }
+        if !(0..=64).contains(&self.towns.min_gap_chunks) {
+            bad.push("towns.min_gap_chunks");
+        }
+        if !(0..=10_000).contains(&self.towns.min_playtime_hours) {
+            bad.push("towns.min_playtime_hours");
+        }
 
         bad
     }
@@ -306,6 +387,7 @@ impl HubSettings {
             "courts.claim_price" => self.courts.claim_price,
             "petitions.filing_price" => self.petitions.filing_price,
             "towns.founding_price" => self.towns.founding_price,
+            "towns.chunk_price" => self.towns.chunk_price,
             _ => return None,
         })
     }

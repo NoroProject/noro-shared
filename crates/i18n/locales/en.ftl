@@ -2337,3 +2337,97 @@ admin-hub-set-fine-max = Maximum fine
 
 game-fine-issued = You have been fined { $amount }: { $reason }.
 game-fine-issued-due = You have been fined { $amount }: { $reason }. Pay before { $date }.
+
+## Города подсайта
+
+nav-hub-towns = Towns
+nav-hub-ministry = Ministry
+
+towns-all = Towns
+towns-none = No towns yet
+towns-my-town = My town
+towns-invites = Invitations and applications
+towns-accept = Accept
+towns-apply = Ask to join
+towns-applied = Applied
+towns-invited = Invited
+towns-edit = Edit
+towns-save = Save
+towns-cancel = Cancel
+
+towns-found = Found a town
+towns-found-needs-approval = The ministry approves new towns
+towns-found-price = Founding costs { $price }
+towns-found-playtime = Requires { $hours } hours played here
+towns-found-pay-from = Pay from
+towns-founded = The town is founded
+towns-requested = The application is sent
+
+towns-name = Name
+towns-address = Address
+towns-description = About the town
+towns-no-description = Nothing written yet
+towns-world = World
+
+towns-status-pending = Application
+towns-status-active = Active
+towns-status-dissolved = Dissolved
+
+towns-mayor-is = Mayor { $name }
+towns-no-mayor = No mayor
+towns-residents = Residents
+towns-residents-count = { $count } residents
+towns-no-residents = Nobody lives here yet
+towns-invite = Invite
+
+towns-post-mayor = Mayor
+towns-post-deputy = Deputy
+towns-post-treasurer = Treasurer
+towns-post-citizen = Citizen
+
+towns-land = Land
+towns-land-count = { $used } of { $limit } chunks
+towns-land-empty = No land claimed
+towns-land-more = and { $count } more
+towns-chunk-x = Chunk X
+towns-chunk-z = Chunk Z
+towns-claim = Claim
+towns-unclaim = Release
+towns-claim-buy = Buy the chunk if the free limit is used up
+
+towns-disputes = Disputes
+towns-dispute-line = { $from } claims land of { $to }
+towns-nobody = nobody
+towns-dispute-open = Open
+towns-dispute-in_court = In court
+towns-dispute-granted = Granted
+towns-dispute-rejected = Rejected
+towns-dispute-withdrawn = Withdrawn
+towns-dispute-withdraw = Withdraw
+
+ministry-applications = Applications
+ministry-applications-off = Players do not apply on this server
+ministry-no-applications = Nothing to decide
+ministry-approve = Approve
+ministry-reject = Reject
+ministry-create = Create a town
+ministry-create-hint = A town created here needs no fee and no approval
+ministry-created = The town is created
+ministry-mayor = Mayor
+ministry-towns = Towns of the server
+ministry-bonus = Extra chunks
+ministry-dissolve = Dissolve
+ministry-dissolve-confirm = Dissolve { $name }? Its land will be released.
+
+admin-hub-set-town-mode = How towns are founded
+admin-hub-set-town-mode-free = Players found them freely
+admin-hub-set-town-mode-application = Players apply, the ministry approves
+admin-hub-set-town-mode-ministry = Only the ministry founds them
+admin-hub-set-town-base = Chunks at founding
+admin-hub-set-town-per-resident = Chunks per resident
+admin-hub-set-town-chunk-price = Price of an extra chunk
+admin-hub-set-town-max = Hard cap on chunks
+admin-hub-set-town-gap = Empty chunks between towns
+admin-hub-set-town-playtime = Hours played to found a town
+admin-hub-set-town-exclaves = Allow detached land
+admin-hub-set-town-exclaves-hint = Off, a new chunk must touch the town's own land

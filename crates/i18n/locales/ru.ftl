@@ -2342,3 +2342,97 @@ admin-hub-set-fine-max = Предел штрафа
 
 game-fine-issued = Вам выписан штраф { $amount }: { $reason }.
 game-fine-issued-due = Вам выписан штраф { $amount }: { $reason }. Оплатить до { $date }.
+
+## Города подсайта
+
+nav-hub-towns = Города
+nav-hub-ministry = Минюст
+
+towns-all = Города
+towns-none = Городов пока нет
+towns-my-town = Мой город
+towns-invites = Приглашения и заявки
+towns-accept = Принять
+towns-apply = Проситься в город
+towns-applied = Заявка подана
+towns-invited = Приглашён
+towns-edit = Править
+towns-save = Сохранить
+towns-cancel = Отмена
+
+towns-found = Основать город
+towns-found-needs-approval = Новые города одобряет минюст
+towns-found-price = Основание стоит { $price }
+towns-found-playtime = Нужно наиграть { $hours } ч на этом сервере
+towns-found-pay-from = Списать с карты
+towns-founded = Город основан
+towns-requested = Заявка отправлена
+
+towns-name = Название
+towns-address = Адрес
+towns-description = О городе
+towns-no-description = Пока ничего не написано
+towns-world = Мир
+
+towns-status-pending = Заявка
+towns-status-active = Действует
+towns-status-dissolved = Распущен
+
+towns-mayor-is = Мэр { $name }
+towns-no-mayor = Мэра нет
+towns-residents = Жители
+towns-residents-count = Жителей: { $count }
+towns-no-residents = Здесь пока никто не живёт
+towns-invite = Пригласить
+
+towns-post-mayor = Мэр
+towns-post-deputy = Заместитель
+towns-post-treasurer = Казначей
+towns-post-citizen = Житель
+
+towns-land = Территория
+towns-land-count = { $used } из { $limit } чанков
+towns-land-empty = Земля не занята
+towns-land-more = и ещё { $count }
+towns-chunk-x = Чанк X
+towns-chunk-z = Чанк Z
+towns-claim = Занять
+towns-unclaim = Освободить
+towns-claim-buy = Купить чанк, если бесплатный лимит исчерпан
+
+towns-disputes = Споры
+towns-dispute-line = { $from } претендует на землю { $to }
+towns-nobody = никого
+towns-dispute-open = Заявлена
+towns-dispute-in_court = В суде
+towns-dispute-granted = Удовлетворена
+towns-dispute-rejected = Отклонена
+towns-dispute-withdrawn = Отозвана
+towns-dispute-withdraw = Отозвать
+
+ministry-applications = Заявки
+ministry-applications-off = На этом сервере игроки заявок не подают
+ministry-no-applications = Решать нечего
+ministry-approve = Одобрить
+ministry-reject = Отклонить
+ministry-create = Завести город
+ministry-create-hint = Заведённый здесь город не требует ни пошлины, ни одобрения
+ministry-created = Город заведён
+ministry-mayor = Мэр
+ministry-towns = Города сервера
+ministry-bonus = Прибавка чанков
+ministry-dissolve = Распустить
+ministry-dissolve-confirm = Распустить { $name }? Его земля освободится.
+
+admin-hub-set-town-mode = Как заводят города
+admin-hub-set-town-mode-free = Игроки основывают сами
+admin-hub-set-town-mode-application = Игрок подаёт заявку, минюст одобряет
+admin-hub-set-town-mode-ministry = Заводит только минюст
+admin-hub-set-town-base = Чанков при основании
+admin-hub-set-town-per-resident = Чанков за жителя
+admin-hub-set-town-chunk-price = Цена дополнительного чанка
+admin-hub-set-town-max = Жёсткий потолок чанков
+admin-hub-set-town-gap = Пустых чанков между городами
+admin-hub-set-town-playtime = Часов игры для основания
+admin-hub-set-town-exclaves = Разрешить оторванные куски
+admin-hub-set-town-exclaves-hint = Выключено — новый чанк обязан касаться своей земли
