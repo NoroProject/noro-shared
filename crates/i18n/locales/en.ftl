@@ -2505,3 +2505,4 @@ map-home-point = Town centre
 map-home-hint = Click the map to set the town centre
 towns-centre = Centre
 towns-home-clear = Remove the point
+map-claim-no-town = You have no town to claim for
