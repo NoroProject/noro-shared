@@ -2511,3 +2511,6 @@ map-home-hint = Кликните по карте, чтобы поставить 
 towns-centre = Центр
 towns-home-clear = Убрать точку
 map-claim-no-town = Нет города, за который занимать
+map-release = Освободить чанки
+map-release-hint = Ведите мышью, чтобы освободить чанки; с Shift — прямоугольник
+map-release-done = Освобождено: { $taken }
