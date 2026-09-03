@@ -2504,3 +2504,4 @@ map-claim-partial = Claimed { $taken }, refused { $refused }
 map-home-point = Town centre
 map-home-hint = Click the map to set the town centre
 towns-centre = Centre
+towns-home-clear = Remove the point

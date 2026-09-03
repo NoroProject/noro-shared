@@ -2509,3 +2509,4 @@ map-claim-partial = Занято { $taken }, отказано { $refused }
 map-home-point = Центр города
 map-home-hint = Кликните по карте, чтобы поставить центр города
 towns-centre = Центр
+towns-home-clear = Убрать точку
