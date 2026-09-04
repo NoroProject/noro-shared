@@ -2611,3 +2611,5 @@ petition-answered-by = Ответил { $name }
 petition-withdraw = Отозвать
 petition-withdrawn = Петиция отозвана
 petition-playtime = Для подписи нужно { $hours } часов игры здесь
+
+court-award-to = Взыскание получает

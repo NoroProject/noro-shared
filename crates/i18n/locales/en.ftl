@@ -2606,3 +2606,5 @@ petition-answered-by = Answered by { $name }
 petition-withdraw = Withdraw
 petition-withdrawn = The petition is withdrawn
 petition-playtime = Signing needs { $hours } hours played here
+
+court-award-to = The award goes to
