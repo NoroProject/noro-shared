@@ -142,7 +142,13 @@ pub fn requires_all(feature: &str) -> Vec<&'static str> {
 pub fn dependents(feature: &str) -> Vec<&'static str> {
     ALL_FEATURES
         .iter()
-        .filter(|what| requires_all(what).iter().any(|needs| *needs == feature))
+        .filter(|what| {
+            // Список берётся с укороченным временем жизни, чтобы `contains`
+            // принял искомое: `Vec` ковариантен, а без этого сравнивались бы
+            // ссылки разной длительности.
+            let needs: Vec<&str> = requires_all(what);
+            needs.contains(&feature)
+        })
         .copied()
         .collect()
 }
