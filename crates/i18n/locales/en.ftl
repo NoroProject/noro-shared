@@ -2984,3 +2984,5 @@ court-trade-price = Per pack
 court-trade-total = Paid
 court-trade-bought = Bought
 court-trade-escrow = The payment is held on the deals account and does not move until the ruling. Uphold the claim and it goes back to the buyer; dismiss it and the seller is paid.
+cabinet-light-title = Lighter interface
+cabinet-light-hint = Turns off the animated background. Kept per device, not per account: what strains a laptop is fine on a desktop.
