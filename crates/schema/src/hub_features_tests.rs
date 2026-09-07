@@ -10,10 +10,7 @@ fn fines_need_a_bank() {
 /// оператор упёрся бы в тот же серый тумблер по второй причине.
 #[test]
 fn ads_need_both_a_feed_and_a_bank() {
-    assert_eq!(
-        requires_all(FEATURE_ADS),
-        vec![FEATURE_FEED, FEATURE_BANK]
-    );
+    assert_eq!(requires_all(FEATURE_ADS), vec![FEATURE_FEED, FEATURE_BANK]);
 
     let feed_only = unmet(|f| f == FEATURE_ADS || f == FEATURE_FEED);
     assert_eq!(feed_only, vec![(FEATURE_ADS, FEATURE_BANK)]);
@@ -61,12 +58,7 @@ fn the_basic_sections_depend_on_nothing() {
 fn turning_off_a_base_names_what_falls_with_it() {
     assert_eq!(
         dependents(FEATURE_BANK),
-        vec![
-            FEATURE_FINES,
-            FEATURE_ADS,
-            FEATURE_MARKET,
-            FEATURE_DELIVERY
-        ],
+        vec![FEATURE_FINES, FEATURE_ADS, FEATURE_MARKET, FEATURE_DELIVERY],
         "доставка держится на банке через рынок и обязана быть в списке"
     );
     assert_eq!(

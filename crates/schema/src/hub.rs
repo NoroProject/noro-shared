@@ -374,11 +374,8 @@ pub const COMMUNITIES_FREE: &str = "free";
 pub const COMMUNITIES_APPLICATION: &str = "application";
 pub const COMMUNITIES_STAFF: &str = "staff";
 
-pub const COMMUNITY_MODES: &[&str] = &[
-    COMMUNITIES_FREE,
-    COMMUNITIES_APPLICATION,
-    COMMUNITIES_STAFF,
-];
+pub const COMMUNITY_MODES: &[&str] =
+    &[COMMUNITIES_FREE, COMMUNITIES_APPLICATION, COMMUNITIES_STAFF];
 
 /// Сообщества подсайта: новостные каналы, городские паблики, магазины, кланы.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
