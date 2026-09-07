@@ -345,6 +345,61 @@ pub fn perm_hub_court(server_id: &str, action: &str) -> String {
     format!("noro.hub.{server_id}.court.{action}")
 }
 
+/// Действия штаба над сообществами подсайта.
+///
+/// Дробно по образцу минюста: завести паблик, разобрать заявку, переписать
+/// чужую карточку, поставить галочку и заморозить — разные доверия. Тому, кто
+/// принимает заявки, незачем уметь править чужое описание.
+///
+/// Ветка выдаётся и целиком: `noro.hub.<server>.community.*`.
+pub const COMMUNITY_CREATE: &str = "create";
+pub const COMMUNITY_APPROVE: &str = "approve";
+pub const COMMUNITY_EDIT: &str = "edit";
+pub const COMMUNITY_VERIFY: &str = "verify";
+pub const COMMUNITY_BLOCK: &str = "block";
+
+/// Все действия штаба над сообществами. По нему собирается подсказка прав и
+/// решается, показывать ли вкладку.
+pub const COMMUNITY_ACTIONS: &[&str] = &[
+    COMMUNITY_CREATE,
+    COMMUNITY_APPROVE,
+    COMMUNITY_EDIT,
+    COMMUNITY_VERIFY,
+    COMMUNITY_BLOCK,
+];
+
+/// Право штаба на одно действие над сообществами сервера.
+///
+/// Это власть сервера над списком сообществ, а не власть внутри сообщества:
+/// редактора назначает владелец строкой в `hub_community_staff`. Смешать их
+/// значило бы звать администрацию к каждому назначению в каждом паблике.
+pub fn perm_hub_community(server_id: &str, action: &str) -> String {
+    format!("noro.hub.{server_id}.community.{action}")
+}
+
+/// Действия над маркетом, которые сервер доверяет отдельным ролям.
+///
+/// Разделены по тому же правилу, что и остальные ветки: вносить построенные
+/// пункты, убирать чужой лот с витрины и прощать страйки — разные доверия.
+/// Последнее особенно: снять запрет торговать значит простить долг, а не
+/// прибраться на витрине, и вручать это каждому модератору незачем.
+///
+/// Ветка выдаётся и целиком: `noro.hub.<server>.market.*`.
+pub const MARKET_POINT: &str = "point";
+pub const MARKET_MODERATE: &str = "moderate";
+pub const MARKET_STRIKE: &str = "strike";
+
+pub const MARKET_ACTIONS: &[&str] = &[MARKET_POINT, MARKET_MODERATE, MARKET_STRIKE];
+
+/// Право на одно действие над маркетом сервера.
+///
+/// `point` — то самое право «регистратора пунктов», которое сервер выдаёт
+/// президенту или минюсту: отдельного вида роли для него не заводится, узел
+/// вешается на обычную роль сборки.
+pub fn perm_hub_market(server_id: &str, action: &str) -> String {
+    format!("noro.hub.{server_id}.market.{action}")
+}
+
 /// Право минюста на одно действие над городами сервера.
 ///
 /// Это власть сервера над списком городов, а не власть внутри города: мэра и

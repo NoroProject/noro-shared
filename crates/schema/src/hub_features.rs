@@ -22,6 +22,10 @@ pub const FEATURE_FINES: &str = "fines";
 pub const FEATURE_COURTS: &str = "courts";
 pub const FEATURE_PETITIONS: &str = "petitions";
 pub const FEATURE_TOWNS: &str = "towns";
+pub const FEATURE_ADS: &str = "ads";
+pub const FEATURE_COMMUNITIES: &str = "communities";
+pub const FEATURE_MARKET: &str = "market";
+pub const FEATURE_DELIVERY: &str = "delivery";
 
 pub const ALL_FEATURES: &[&str] = &[
     FEATURE_FEED,
@@ -31,18 +35,40 @@ pub const ALL_FEATURES: &[&str] = &[
     FEATURE_COURTS,
     FEATURE_PETITIONS,
     FEATURE_TOWNS,
+    FEATURE_ADS,
+    FEATURE_COMMUNITIES,
+    FEATURE_MARKET,
+    FEATURE_DELIVERY,
 ];
 
-/// Что без чего не работает: `(раздел, его основа)`.
+/// Что без чего не работает: `(раздел, его прямая основа)`.
 ///
-/// Список плоский, а не дерево: цепочек глубже одной пока нет, и разворачивать
-/// их рекурсивно — усложнение под задачу, которой не существует. Если появится
-/// раздел, зависящий от штрафов, проверку придётся сделать транзитивной, и это
-/// будет видно по тесту `every_dependency_is_a_known_feature`.
+/// Только прямые связи. Основы основ разворачиваются сами — доставке незачем
+/// объявлять банк, который ей нужен через рынок: выписанная руками вторая
+/// строка однажды разойдётся с первой, а забытая заставит оператора включать
+/// разделы в два круга, упираясь в тот же серый тумблер по новой причине.
+///
+/// Основ у раздела может быть несколько — это по-прежнему одна ступень.
 pub const FEATURE_DEPENDENCIES: &[(&str, &str)] = &[
     // Штраф — требование заплатить: без счетов платить нечем и некуда, и
     // раздел выродился бы в список долгов, которые невозможно закрыть.
     (FEATURE_FINES, FEATURE_BANK),
+    // Рекламируют запись из ленты, и платят за это деньгами. Без ленты в
+    // карусель нечего положить, без банка — нечем оплатить: раздел, который
+    // умеет только отказывать, лучше не включать вовсе.
+    (FEATURE_ADS, FEATURE_FEED),
+    (FEATURE_ADS, FEATURE_BANK),
+    // Сообщество — второй вид автора в ленте. Без неё паблику некуда писать, и
+    // раздел выродился бы в список названий.
+    (FEATURE_COMMUNITIES, FEATURE_FEED),
+    // Покупатель платит вперёд, и деньги ждут закрытия сделки на служебном
+    // счёте. Без банка их негде держать, а торговля «под честное слово, но
+    // через сайт» — это чат, а не маркет.
+    (FEATURE_MARKET, FEATURE_BANK),
+    // Курьер везёт купленное — без рынка везти нечего. Банк здесь не назван
+    // намеренно: он нужен доставке через рынок, и `requires_all` дойдёт до него
+    // сам.
+    (FEATURE_DELIVERY, FEATURE_MARKET),
 ];
 
 /// Платные настройки: `(путь параметра, раздел, без которого он не работает)`.
@@ -56,29 +82,68 @@ pub const FEATURE_DEPENDENCIES: &[(&str, &str)] = &[
 /// намеренно: молчаливое обнуление превратило бы платный раздел в бесплатный
 /// так, что никто бы не заметил.
 pub const PAID_SETTINGS: &[(&str, &str)] = &[
+    // Закреп живёт в ленте и остаётся бесплатной возможностью сервера, пока
+    // цена нулевая. Раздел «реклама» здесь не упоминается: он и так требует
+    // банка целиком.
+    ("feed.pin_price_per_hour", FEATURE_BANK),
     ("courts.claim_price", FEATURE_BANK),
     ("petitions.filing_price", FEATURE_BANK),
     ("towns.founding_price", FEATURE_BANK),
     ("towns.chunk_price", FEATURE_BANK),
+    ("communities.founding_price", FEATURE_BANK),
+    // Только пошлина за лот. Доля сервиса (`market.fee_percent`) сюда не идёт
+    // по тому же правилу, что и цены банка: она лежит в секции, которая без
+    // включённого маркета не показывается и не применяется.
+    ("market.listing_price", FEATURE_BANK),
+    // Обе цены рейса, а не одна: нулевая база с ненулевой ставкой за сотню
+    // блоков — такая же платная доставка, просто с другой стороны.
+    ("delivery.base_price", FEATURE_BANK),
+    ("delivery.price_per_step", FEATURE_BANK),
     // Цены самого банка сюда не входят: они лежат в его же секции, которая без
     // банка не показывается и не применяется. Требовать их обнуления при
     // выключении банка значило бы терять настроенное на ровном месте.
 ];
 
-/// Чего не хватает разделу.
-pub fn requires(feature: &str) -> Option<&'static str> {
-    FEATURE_DEPENDENCIES
-        .iter()
-        .find(|(what, _)| *what == feature)
-        .map(|(_, needs)| *needs)
+/// На чём держится раздел — вместе с основами его основ.
+///
+/// Список, а не одно значение: рекламе нужны и лента, и банк, и назвать в
+/// подсказке только первую основу значило бы отправить оператора включать её,
+/// после чего тумблер остался бы серым по второй причине. Доставке по той же
+/// причине называются и рынок, и банк, хотя объявлен только рынок.
+///
+/// Порядок — от ближней основы к дальней, и повторов нет: подсказка читается
+/// как путь, которым оператор пойдёт по тумблерам.
+pub fn requires_all(feature: &str) -> Vec<&'static str> {
+    let mut found: Vec<&'static str> = Vec::new();
+    let mut ahead = vec![feature];
+
+    // Обход в ширину, а не рекурсией: глубина здесь всегда мала, а повторный
+    // визит отсекается тем же списком, который и возвращается, — поэтому кольцо
+    // в описании зависимостей даёт конечный ответ, а не зависание мастера.
+    let mut at = 0;
+    while at < ahead.len() {
+        let current = ahead[at];
+        at += 1;
+        for (what, needs) in FEATURE_DEPENDENCIES {
+            if *what == current && !found.contains(needs) {
+                found.push(*needs);
+                ahead.push(*needs);
+            }
+        }
+    }
+
+    found
 }
 
-/// Разделы, которые погаснут вместе с этим.
+/// Разделы, которые погаснут вместе с этим, — включая зависящие через другой.
+///
+/// Выключая банк, оператор обязан увидеть и доставку: она держится на рынке, а
+/// рынок на банке, и «погаснет только рынок» было бы неправдой.
 pub fn dependents(feature: &str) -> Vec<&'static str> {
-    FEATURE_DEPENDENCIES
+    ALL_FEATURES
         .iter()
-        .filter(|(_, needs)| *needs == feature)
-        .map(|(what, _)| *what)
+        .filter(|what| requires_all(what).iter().any(|needs| *needs == feature))
+        .copied()
         .collect()
 }
 
@@ -88,10 +153,15 @@ pub fn dependents(feature: &str) -> Vec<&'static str> {
 /// собирать ради проверки ещё один тип — лишний слой, который придётся
 /// синхронизировать при каждом новом разделе.
 pub fn unmet(is_on: impl Fn(&str) -> bool) -> Vec<(&'static str, &'static str)> {
-    FEATURE_DEPENDENCIES
+    ALL_FEATURES
         .iter()
-        .filter(|(what, needs)| is_on(what) && !is_on(needs))
-        .map(|(what, needs)| (*what, *needs))
+        .filter(|what| is_on(what))
+        .flat_map(|what| {
+            requires_all(what)
+                .into_iter()
+                .filter(|needs| !is_on(needs))
+                .map(move |needs| (*what, needs))
+        })
         .collect()
 }
 
