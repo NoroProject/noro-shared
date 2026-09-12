@@ -77,6 +77,7 @@ which are.
 | | `sign` | `hub::sign`, `hub::unsign` |
 | `fines` | `read` | `hub::fines`, `hub::fines_of` |
 | | `issue` | `hub::fine` |
+| `events` | `emit` | `events::emit`, `events::emit_on` |
 | `store` | `true` | the whole key-value store |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |
@@ -94,7 +95,6 @@ is no call to make with it.
 | `court` | `file` | filing a claim, with its fee |
 | `petitions` | `create` | starting a petition rather than only signing one |
 | `builds` | `files` | reading and writing the files inside a build |
-| `events` | `emit` | publishing your own events for other modules to handle |
 
 Each of these is bigger than a host function, for a different reason.
 
@@ -102,10 +102,6 @@ The three hub writes — founding a town, listing a lot, filing a claim — all 
 and run several steps that have to hold together: a fee charged, a vault stocked, a
 deadline started. Half of that sequence executed is worse than none of it, and getting it
 right means more than wrapping an existing query.
-
-`events = ["emit"]` needs the reentrancy guard that `EventCtx.depth` is there for —
-without it, two modules reacting to each other's events make a loop the master has to
-break rather than merely notice.
 
 `builds = ["files"]` touches what the launcher downloads and verifies by signature, so
 writing there means resigning the manifest — the same reason publishing a build stays

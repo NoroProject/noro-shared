@@ -117,3 +117,46 @@ fn a_route_is_found_by_method_and_path() {
     assert!(r.route("POST", "/me").is_none());
     assert!(r.route("GET", "/other").is_none());
 }
+
+/// Имя события модуля обязано быть трёхчастным.
+///
+/// Двухчастное `mod.shop` прошло бы проверку «начинается с mod.» и разошлось бы
+/// с тем, что публикует мастер: он собирает имя как `mod.<id>.<событие>`. Тогда
+/// подписка молча не сработала бы ни на что.
+#[test]
+fn a_module_event_needs_its_own_name() {
+    let short = Registration {
+        events: vec![EventReg {
+            name: "mod.shop".to_string(),
+            handler: "on_thing".to_string(),
+            priority: Priority::Normal,
+        }],
+        ..Default::default()
+    };
+    assert_eq!(short.violations().len(), 1);
+
+    let full = Registration {
+        events: vec![EventReg {
+            name: "mod.shop.purchase".to_string(),
+            handler: "on_purchase".to_string(),
+            priority: Priority::Normal,
+        }],
+        ..Default::default()
+    };
+    assert!(full.violations().is_empty());
+}
+
+/// А события мастера по-прежнему сверяются с каталогом: подписка на выдуманное
+/// имя — это мёртвый обработчик, и найти его надо при установке.
+#[test]
+fn a_core_event_is_still_checked() {
+    let made_up = Registration {
+        events: vec![EventReg {
+            name: "player.teleported".to_string(),
+            handler: "on_tp".to_string(),
+            priority: Priority::Normal,
+        }],
+        ..Default::default()
+    };
+    assert_eq!(made_up.violations().len(), 1);
+}

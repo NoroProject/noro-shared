@@ -689,6 +689,24 @@ pub struct PetitionVote {
     pub player: PlayerRef,
 }
 
+/// An event a module publishes for other modules to handle.
+///
+/// The name must start with `mod.<your-id>.` — checked on the way out, the same
+/// way locale keys are. Without that rule a module could publish
+/// `player.banned` and every handler of the real event would believe it.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ModuleEvent {
+    /// `mod.shop.purchase`, for instance.
+    pub name: String,
+    /// Whatever the event carries. Its shape is your contract with whoever
+    /// subscribes, and the master does not look inside.
+    pub payload: serde_json::Value,
+    /// The server it concerns, when it concerns one. Modules scoped to a server
+    /// only hear events carrying theirs.
+    #[serde(default)]
+    pub server_id: Option<Uuid>,
+}
+
 #[cfg(test)]
 #[path = "ops_tests.rs"]
 mod tests;

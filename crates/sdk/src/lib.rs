@@ -76,6 +76,7 @@ pub mod bank;
 pub mod cases;
 pub mod chat;
 pub mod db;
+pub mod events;
 pub mod files;
 pub mod host;
 pub mod http;

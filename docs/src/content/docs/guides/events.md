@@ -98,3 +98,50 @@ raising `amount` on a transfer will not conjure money.
 
 And if a module is slow or fails, the default is **fail-open**: the action goes through.
 A broken module must not keep players out.
+
+## Events of your own
+
+The catalog is what the platform announces. Your module can announce things too, so that
+a second module reacts without either knowing the other exists.
+
+```rust
+// in the shop module
+events::emit("purchase", json!({ "player": id.to_string(), "item": "vip" }))?;
+```
+
+```rust
+// in some other module
+#[event("mod.shop.purchase")]
+fn on_purchase(e: serde_json::Value) -> Result<()> { … }
+```
+
+You pass the last part of the name; the master publishes it as
+`mod.<your-id>.<name>`. The prefix is added rather than trusted, for the same reason
+locale keys carry one: otherwise a module could publish `player.banned` and every handler
+of the real event would believe it.
+
+`emit_on(name, server_id, payload)` attaches a server, which is what makes the event
+reach modules scoped to it.
+
+### Loops
+
+Module A announces, B reacts and announces, A reacts to that. Left alone this spins until
+somebody notices the load.
+
+Every event carries how deeply it is nested. An event you emit from inside a handler
+inherits that depth and adds one, and past a ceiling of three the master refuses to
+publish — you get an error rather than silence, because a module that has accidentally
+built a loop should find out from the call, not from a graph.
+
+The other half is yours. Before reacting to something, check whether you caused it:
+
+```rust
+if e.ctx.caused_by("my-module") { return Ok(()) }
+```
+
+### What emitting does not do
+
+Handlers run after your call returns, not during it. `emit` hands the event to the master
+and comes straight back, exactly like the platform's own `Post` events — so you cannot
+learn from it whether anybody handled anything, and a handler that fails does not fail
+your call.

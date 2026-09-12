@@ -75,8 +75,19 @@ impl Registration {
         let mut out = Vec::new();
 
         for e in &self.events {
-            if crate::events::find(&e.name).is_none() {
+            // Событие модуля именуется `mod.<id>.<что-то>` и в каталоге не
+            // значится: каталог — это события мастера. Проверить владельца
+            // здесь нельзя, идентификатор сюда не передан; мастер сверяет его
+            // при установке, где он известен.
+            let is_module_event = e.name.starts_with("mod.");
+            if !is_module_event && crate::events::find(&e.name).is_none() {
                 out.push(format!("the event `{}` does not exist", e.name));
+            }
+            if is_module_event && e.name.split('.').count() < 3 {
+                out.push(format!(
+                    "the event `{}` needs a name of the form mod.<module>.<event>",
+                    e.name
+                ));
             }
             if e.handler.is_empty() {
                 out.push(format!(

@@ -5,10 +5,17 @@ use quote::quote;
 use syn::parse::{Parse, ParseStream};
 use syn::{Ident, LitStr, Token};
 
-/// `#[event]` · `#[event(priority = high)]`
+/// `#[event]` · `#[event(priority = high)]` · `#[event("mod.shop.purchase")]`
 #[derive(Default)]
 pub struct EventArgs {
     pub priority: Option<Ident>,
+    /// An explicit event name.
+    ///
+    /// Needed for events published by another module: those have no struct
+    /// implementing `Event`, so there is no type to take the name from. For the
+    /// platform's own events leave it out — the argument type says it, and a
+    /// name written by hand is a name that can be wrong.
+    pub name: Option<LitStr>,
 }
 
 impl EventArgs {
@@ -42,16 +49,40 @@ impl Parse for EventArgs {
         if input.is_empty() {
             return Ok(Self::default());
         }
+
+        // A string first means an explicit name: `#[event("mod.shop.purchase")]`.
+        let name = if input.peek(LitStr) {
+            let lit: LitStr = input.parse()?;
+            if !lit.value().starts_with("mod.") {
+                return Err(syn::Error::new(
+                    lit.span(),
+                    "only another module's event is named by hand (`mod.<module>.<event>`); \
+                     for a platform event the argument type says which one",
+                ));
+            }
+            if input.is_empty() {
+                return Ok(Self {
+                    priority: None,
+                    name: Some(lit),
+                });
+            }
+            input.parse::<Token![,]>()?;
+            Some(lit)
+        } else {
+            None
+        };
+
         let key: Ident = input.parse()?;
         if key != "priority" {
             return Err(syn::Error::new(
                 key.span(),
-                "an event only takes priority = …",
+                "an event takes a name and priority = …",
             ));
         }
         input.parse::<Token![=]>()?;
         Ok(Self {
             priority: Some(input.parse()?),
+            name,
         })
     }
 }

@@ -35,6 +35,7 @@ use args::{EventArgs, RouteArgs, TaskArgs};
 /// |---|---|---|
 /// | `#[event]` | `fn(E) -> Result<()>` | a subscription; the event name comes from the type `E` |
 /// | `#[event(priority = high)]` | same | `lowest` · `low` · `normal` · `high` · `highest` · `monitor` |
+/// | `#[event("mod.shop.purchase")]` | `fn(T) -> Result<()>` | another module's event, which has no type to name it |
 /// | `#[route(GET, "/path")]` | `fn(HttpRequest) -> Result<T>` | an endpoint under `/api/modules/<id>/path` |
 /// | `#[route(POST, "/path", auth = public)]` | same | `public` · `user` · `permission("node")` · `admin("node")` |
 /// | `#[task("1h")]` | `fn() -> Result<()>` | on a schedule: `30s` · `5m` · `1h` · `2d` |
@@ -129,12 +130,21 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
             };
             let priority = args.priority_tokens();
 
-            // The event name comes from the type via `Event::NAME`:
-            // subscribing to one and accepting another's struct is now
-            // impossible.
+            // The name comes from the type via `Event::NAME`: subscribing to
+            // one event and accepting another's struct is impossible that way.
+            // A written name is accepted only for another module's event, which
+            // has no such type — see `EventArgs::name`.
+            // Не `name`: так уже назван идентификатор метода, и затенение
+            // подставило бы строку туда, где макрос объявляет функцию.
+            let event_name = match &args.name {
+                Some(lit) => quote!(#lit.to_string()),
+                None => {
+                    quote!(<#arg_ty as ::noro_sdk::abi::events::Event>::NAME.to_string())
+                }
+            };
             events.push(quote! {
                 reg.events.push(::noro_sdk::abi::registration::EventReg {
-                    name: <#arg_ty as ::noro_sdk::abi::events::Event>::NAME.to_string(),
+                    name: #event_name,
                     handler: #handler.to_string(),
                     priority: #priority,
                 });
