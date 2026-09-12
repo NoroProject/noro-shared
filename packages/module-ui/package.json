@@ -1,0 +1,17 @@
+{
+  "name": "@noro/module-ui",
+  "version": "1.0.0",
+  "description": "Типы и компоненты панели Noro для мини-аппов модулей",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  }
+}

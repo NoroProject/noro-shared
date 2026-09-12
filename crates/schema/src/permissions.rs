@@ -186,6 +186,11 @@ nodes! {
     PERM_STORAGE              = "noro.admin.storage", "perm-group-system", "perm-node-storage";
     PERM_BACKUP               = "noro.admin.backup", "perm-group-system", "perm-node-backup";
     PERM_BACKUP_RESTORE       = "noro.admin.backup.restore", "perm-group-system", "perm-node-backup-restore";
+    PERM_MODULES_VIEW         = "noro.admin.modules.view", "perm-group-system", "perm-node-modules-view";
+    PERM_MODULES_INSTALL      = "noro.admin.modules.install", "perm-group-system", "perm-node-modules-install";
+    PERM_MODULES_ENABLE       = "noro.admin.modules.enable", "perm-group-system", "perm-node-modules-enable";
+    PERM_MODULES_SETTINGS     = "noro.admin.modules.settings", "perm-group-system", "perm-node-modules-settings";
+    PERM_MODULES_DELETE       = "noro.admin.modules.delete", "perm-group-system", "perm-node-modules-delete";
 
     // --- Игрок ----------------------------------------------------------------
     PERM_LAUNCHER_BETA        = "noro.launcher.beta", "perm-group-player", "perm-node-launcher-beta";
@@ -423,6 +428,30 @@ pub fn perm_hub_town(server_id: &str, action: &str) -> String {
 /// `noro.admin.users.roles`.
 pub fn perm_grant_role(server_id: &str, role_name: &str) -> String {
     format!("{PERM_USERS_ROLES}.{server_id}.{role_name}")
+}
+
+/// Право, которое проверяет сам модуль: `noro.module.<id>.<действие>`.
+///
+/// Заранее эти узлы знать неоткуда — их приносит манифест, — поэтому здесь
+/// билдер, а не строка в реестре. Та же модель, что у узлов, которые заявляет
+/// игровой агент: список прав — заявка, а не перечень.
+///
+/// Ветка выдаётся и целиком: `noro.module.<id>.*` — «всё, что умеет модуль».
+pub fn perm_module(module_id: &str, action: &str) -> String {
+    format!("noro.module.{module_id}.{action}")
+}
+
+/// То же право, но только на одной сборке: `noro.module.<id>.<server>.<действие>`.
+///
+/// Нужно модулям со `scope = "server"` по той же причине, по какой нужен
+/// `perm_hub_market`: доверие выдаётся на конкретный сервер, а не сразу на все.
+pub fn perm_module_on(module_id: &str, server_id: &str, action: &str) -> String {
+    format!("noro.module.{module_id}.{server_id}.{action}")
+}
+
+/// Все права модуля разом. Выдаётся оператором, когда модулю доверяют целиком.
+pub fn perm_module_all(module_id: &str) -> String {
+    format!("noro.module.{module_id}.*")
 }
 
 #[cfg(test)]

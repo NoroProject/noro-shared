@@ -1,0 +1,18 @@
+[package]
+name = "noro-sdk"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "SDK для написания модулей Noro"
+
+[dependencies]
+noro-module-abi = { workspace = true }
+noro-sdk-macros = { workspace = true }
+extism-pdk = "1"
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Те же ограничения цели `wasm32-unknown-unknown`, что и у noro-module-abi:
+# ни источника случайности для `uuid`, ни системных часов для `chrono`.
+uuid = { version = "1", default-features = false, features = ["serde"] }
+chrono = { version = "0.4", default-features = false, features = ["serde", "alloc"] }

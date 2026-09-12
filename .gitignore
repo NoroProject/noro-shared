@@ -1,3 +1,16 @@
 /target
 Cargo.lock
 .DS_Store
+
+# Артефакты сборки примеров.
+#
+# `target/` и `node_modules/` — по 150 МБ на пример; `dist/` и `web/app.js` —
+# результат сборки, который автор получает одной командой и который разошёлся
+# бы с исходником при первой же правке.
+examples/*/target/
+examples/*/node_modules/
+examples/*/dist/
+examples/*/web/app.js
+examples/*/web/app.css
+examples/*/bun.lock
+examples/*/package-lock.json

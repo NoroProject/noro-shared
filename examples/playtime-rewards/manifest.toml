@@ -1,0 +1,28 @@
+# Паспорт модуля: только то, что мастеру нужно знать до запуска его кода.
+#
+# Подписки, ручки и задачи объявляются в самом коде — см. src/lib.rs.
+
+[module]
+id = "playtime-rewards"
+name = "Награды за время в игре"
+version = "1.0.0"
+api = "1.0"
+scope = "instance"
+author = "noro"
+description = "Считает наигранное время и начисляет за него очки"
+
+# Что модуль просит. Выдаёт это оператор при установке, и выдать он может меньше.
+[capabilities]
+players = ["read"]
+store = true
+
+# Страница в личном кабинете игрока.
+#
+# kind = "vue" — панель смонтирует компонент модуля у себя: полный Vue, её
+# атомы и её вид. Альтернатива — kind = "page", страница в песочнице.
+[[apps]]
+placement = "cabinet"
+kind = "vue"
+entry = "app.js"
+title = "mod-playtime-rewards-title"
+icon = "i-lucide-gift"

@@ -1,0 +1,20 @@
+[package]
+name = "noro-module-abi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Типы на границе между мастером Noro и модулем: события, сущности, манифест"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Не через workspace: там uuid идёт с `v4`, а генерация требует источника
+# случайности, которого в `wasm32-unknown-unknown` нет — крейт прямо
+# отказывается собираться. Модулю генерация и не нужна: идентификаторы он
+# получает от мастера.
+uuid = { version = "1", default-features = false, features = ["serde"] }
+
+# По той же причине без `clock`: системных часов у wasm нет. Время модуль берёт
+# у мастера через `noro_sdk::now()`.
+chrono = { version = "0.4", default-features = false, features = ["serde", "alloc"] }

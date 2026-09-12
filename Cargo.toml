@@ -4,6 +4,9 @@ members = [
     "crates/schema",
     "crates/i18n",
     "crates/mc_mod_utils",
+    "crates/module_abi",
+    "crates/sdk",
+    "crates/sdk_macros",
 ]
 
 [workspace.package]
@@ -31,3 +34,6 @@ zip = "2"
 schema = { path = "crates/schema" }
 i18n = { path = "crates/i18n" }
 mc_mod_utils = { path = "crates/mc_mod_utils" }
+noro-module-abi = { path = "crates/module_abi" }
+noro-sdk = { path = "crates/sdk" }
+noro-sdk-macros = { path = "crates/sdk_macros" }
