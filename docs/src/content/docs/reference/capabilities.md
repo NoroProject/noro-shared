@@ -71,8 +71,11 @@ which are.
 | `hub` | `read` | `hub::feed`, `members`, `playtime` |
 | | `post` | `hub::post` |
 | `towns` | `read` | `hub::towns`, `hub::town` |
+| | `manage` | `hub::found_town` |
 | `market` | `read` | `hub::market`, `hub::lot` |
+| | `sell` | `hub::list_lot` |
 | `court` | `read` | `hub::court`, `hub::court_case` |
+| | `file` | `hub::file_claim` |
 | `petitions` | `read` | `hub::petitions` |
 | | `sign` | `hub::sign`, `hub::unsign` |
 | `fines` | `read` | `hub::fines`, `hub::fines_of` |
@@ -84,28 +87,26 @@ which are.
 
 ## What is not there yet
 
-These are the ones worth having next, in roughly the order they are worth it. Asking for
-one in the manifest is harmless — the field parses and the operator sees it — but there
-is no call to make with it.
+These are the ones worth having next. The domain exists, so the manifest takes the line;
+the action does not, so there is no call to make with it. `cargo noro check` says so
+before you upload.
 
 | Capability | Actions | What it would give you |
 |---|---|---|
-| `towns` | `manage` | founding a town, moving its borders, its treasury |
-| `market` | `sell` | listing a lot and stocking it from a vault |
-| `court` | `file` | filing a claim, with its fee |
 | `petitions` | `create` | starting a petition rather than only signing one |
 | `builds` | `files` | reading and writing the files inside a build |
-
-Each of these is bigger than a host function, for a different reason.
-
-The three hub writes — founding a town, listing a lot, filing a claim — all move money
-and run several steps that have to hold together: a fee charged, a vault stocked, a
-deadline started. Half of that sequence executed is worse than none of it, and getting it
-right means more than wrapping an existing query.
 
 `builds = ["files"]` touches what the launcher downloads and verifies by signature, so
 writing there means resigning the manifest — the same reason publishing a build stays
 with the operator.
+
+:::note[The list and the code cannot drift]
+Every action in the first table is checked by a test that reads the master's own source:
+a capability nobody checks, and a check for a capability nobody can ask for, both fail
+the build. Seventeen domains once had host functions and no manifest field at all —
+asking for them was dropped without a word, and every call was refused no matter what the
+operator granted.
+:::
 
 ## Acting for somebody
 

@@ -24,7 +24,9 @@
 //! someone.
 
 use noro_module_abi::error::ModuleError;
-use noro_module_abi::ops::{FineDraft, HubItem, HubPage, HubPost, HubQuery, PetitionVote};
+use noro_module_abi::ops::{
+    ClaimDraft, FineDraft, HubItem, HubPage, HubPost, HubQuery, LotDraft, PetitionVote, TownDraft,
+};
 use noro_module_abi::player::IntoPlayerRef;
 use uuid::Uuid;
 
@@ -187,4 +189,45 @@ pub fn fines_of(server_id: Uuid, who: impl IntoPlayerRef) -> Result<HubPage, Mod
 /// Requires `fines = ["read", "issue"]`.
 pub fn fine(draft: FineDraft) -> Result<serde_json::Value, ModuleError> {
     crate::host::hub_fine_call(draft)
+}
+
+/// Founds a town, in the name of the player who becomes its mayor.
+///
+/// Everything the hub asks of a person is asked here too: one citizenship, the
+/// playtime requirement, a free address, and the founding fee off their primary
+/// card. A refusal comes back as it is — "already a citizen of another town" is
+/// a rule, not a failure, and you should see that sentence rather than a shrug.
+///
+/// The fee leaves the founder's own money. A module that founds towns for
+/// people it did not ask will be spending their money, and they will notice.
+///
+/// Requires `towns = ["read", "manage"]`.
+pub fn found_town(draft: TownDraft) -> Result<serde_json::Value, ModuleError> {
+    crate::host::hub_found_town_call(draft)
+}
+
+/// Lists a lot on the market, in the seller's name.
+///
+/// Only reachable on a server that keeps goods in the seller's barrels. Where
+/// the hub keeps them in a vault the item itself has to be handed over, encoded
+/// by the platform the agent runs on — a module has nothing to hand over, and
+/// the call is refused rather than inventing goods.
+///
+/// `idempotency_key` is worth setting: a retry after a timeout otherwise puts
+/// the same goods on the shelf twice.
+///
+/// Requires `market = ["read", "sell"]`.
+pub fn list_lot(draft: LotDraft) -> Result<serde_json::Value, ModuleError> {
+    crate::host::hub_list_lot_call(draft)
+}
+
+/// Files a claim in court, in the plaintiff's name.
+///
+/// Filed from the player themselves, never from their town: suing on a town's
+/// behalf is the mayor's decision and cannot be taken for them by a field in a
+/// request.
+///
+/// Requires `court = ["read", "file"]`.
+pub fn file_claim(draft: ClaimDraft) -> Result<serde_json::Value, ModuleError> {
+    crate::host::hub_file_claim_call(draft)
 }

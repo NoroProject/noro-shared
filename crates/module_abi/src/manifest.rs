@@ -66,76 +66,121 @@ pub enum Scope {
 /// An empty set is a denial. The operator sees this entire list at install
 /// time, so the field names have to read as human language rather than be a
 /// bitmask.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct Capabilities {
+///
+/// The fields and the lookup are generated from one list on purpose. Written by
+/// hand they drifted: seventeen domains had host functions and no field, so the
+/// manifest dropped the request without a word and every call into them was
+/// refused no matter what the operator granted.
+macro_rules! capabilities {
+    ($( $(#[$doc:meta])* $domain:ident => [$($action:literal),* $(,)?] ; )*) => {
+        #[derive(Debug, Clone, Default, Serialize, Deserialize)]
+        #[serde(deny_unknown_fields)]
+        pub struct Capabilities {
+            $(
+                $(#[$doc])*
+                #[serde(default)]
+                pub $domain: Vec<String>,
+            )*
+            /// Its own KV store.
+            #[serde(default)]
+            pub store: bool,
+            /// Its own Postgres schema.
+            #[serde(default)]
+            pub db: bool,
+            /// The hosts a module may reach. Empty means no outbound access.
+            #[serde(default)]
+            pub http: Vec<String>,
+        }
+
+        /// Every domain and the actions it recognises.
+        ///
+        /// The install dialog is drawn from this, and so is `cargo noro check`:
+        /// an action nobody implements is a typo, and the author should hear
+        /// about it before the upload rather than at the first call.
+        pub const ALL_CAPABILITIES: &[(&str, &[&str])] = &[
+            $( (stringify!($domain), &[$($action),*]), )*
+            ("store", &[]),
+            ("db", &[]),
+        ];
+
+        impl Capabilities {
+            /// Whether an action in a domain is allowed. A domain with no
+            /// actions is closed entirely.
+            pub fn allows(&self, domain: &str, action: &str) -> bool {
+                let list = match domain {
+                    $( stringify!($domain) => &self.$domain, )*
+                    "store" => return self.store,
+                    "db" => return self.db,
+                    _ => return false,
+                };
+                list.iter().any(|a| a == action)
+            }
+        }
+    };
+}
+
+capabilities! {
     /// `read`, `ban`, `rename`, `skin`.
-    #[serde(default)]
-    pub players: Vec<String>,
+    players => ["read", "ban", "rename", "skin"];
     /// `read`, `link`.
-    #[serde(default)]
-    pub identities: Vec<String>,
+    identities => ["read", "link"];
+    /// `read`, `grant`, `manage` — the last one creates and deletes roles.
+    roles => ["read", "grant", "manage"];
     /// `read`, `grant`.
-    #[serde(default)]
-    pub roles: Vec<String>,
-    /// `read`, `grant`.
-    #[serde(default)]
-    pub permissions: Vec<String>,
+    permissions => ["read", "grant"];
     /// `grant` — handing out access to servers and builds.
-    #[serde(default)]
-    pub access: Vec<String>,
+    access => ["grant"];
+    /// `grant` — letting a player use an optional mod.
+    optional_mods => ["grant"];
     /// `read`.
-    #[serde(default)]
-    pub servers: Vec<String>,
+    servers => ["read"];
     /// `read`, `maintenance`.
-    #[serde(default)]
-    pub gameservers: Vec<String>,
+    gameservers => ["read", "maintenance"];
+    /// `read` — who is in the game right now.
+    roster => ["read"];
+    /// `read` — tick rate, memory, the numbers the agent reports.
+    telemetry => ["read"];
+    /// `read`, `manage` — the restart schedule.
+    restarts => ["read", "manage"];
+    /// `read`, `revoke` — sessions in the panel and the launcher.
+    sessions => ["read", "revoke"];
     /// `read`, `publish`. `publish` covers taking a build *out* of publication;
     /// putting one in rebuilds and signs the manifest, which takes minutes and
     /// stays with the operator.
-    #[serde(default)]
-    pub builds: Vec<String>,
+    builds => ["read", "publish"];
     /// `read`, `transfer`.
-    #[serde(default)]
-    pub bank: Vec<String>,
+    bank => ["read", "transfer"];
     /// `read`, `issue`, `revoke`.
-    #[serde(default)]
-    pub punish: Vec<String>,
+    punish => ["read", "issue", "revoke"];
     /// `tell`, `announce`, `kick`.
-    #[serde(default)]
-    pub agent: Vec<String>,
-    /// Its own KV store.
-    #[serde(default)]
-    pub store: bool,
-    /// Its own Postgres schema.
-    #[serde(default)]
-    pub db: bool,
-    /// The hosts a module may reach. Empty means no outbound access.
-    #[serde(default)]
-    pub http: Vec<String>,
+    agent => ["tell", "announce", "kick"];
+    /// `read`, `post` — the hub feed.
+    hub => ["read", "post"];
+    /// `read`, `manage` — founding a town and its treasury.
+    towns => ["read", "manage"];
+    /// `read`, `sell` — listing a lot on the market.
+    market => ["read", "sell"];
+    /// `read`, `file` — filing a claim, with its fee.
+    court => ["read", "file"];
+    /// `read`, `sign`.
+    petitions => ["read", "sign"];
+    /// `read`, `issue`.
+    fines => ["read", "issue"];
+    /// `read`, `publish`, `edit`.
+    news => ["read", "publish", "edit"];
+    /// `read`, `reply` — support tickets.
+    tickets => ["read", "reply"];
+    /// `read`, `claim`, `resolve` — moderation cases.
+    cases => ["read", "claim", "resolve"];
+    /// `read`, `write` — instance settings.
+    instance => ["read", "write"];
+    /// `read`, `write` — the file store.
+    files => ["read", "write"];
+    /// `emit` — publishing the module's own event for other modules.
+    events => ["emit"];
 }
 
 impl Capabilities {
-    /// Whether an action in a domain is allowed. A domain with no actions is closed entirely.
-    pub fn allows(&self, domain: &str, action: &str) -> bool {
-        let list = match domain {
-            "players" => &self.players,
-            "identities" => &self.identities,
-            "roles" => &self.roles,
-            "permissions" => &self.permissions,
-            "access" => &self.access,
-            "servers" => &self.servers,
-            "gameservers" => &self.gameservers,
-            "builds" => &self.builds,
-            "bank" => &self.bank,
-            "punish" => &self.punish,
-            "agent" => &self.agent,
-            "store" => return self.store,
-            "db" => return self.db,
-            _ => return false,
-        };
-        list.iter().any(|a| a == action)
-    }
-
     /// Whether this host may be reached.
     pub fn allows_host(&self, host: &str) -> bool {
         self.http.iter().any(|h| {

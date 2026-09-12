@@ -74,6 +74,9 @@ extern "ExtismHost" {
     fn hub_fines(input: String) -> String;
     fn hub_fines_of(input: String) -> String;
     fn hub_fine(input: String) -> String;
+    fn hub_found_town(input: String) -> String;
+    fn hub_list_lot(input: String) -> String;
+    fn hub_file_claim(input: String) -> String;
     fn tickets_queue(input: String) -> String;
     fn ticket_get(input: String) -> String;
     fn ticket_messages(input: String) -> String;
@@ -448,6 +451,21 @@ pub(crate) fn hub_fines_of_call<A: Serialize, R: DeserializeOwned>(
 
 pub(crate) fn hub_fine_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(hub_fine, arg)
+}
+pub(crate) fn hub_found_town_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_found_town, arg)
+}
+pub(crate) fn hub_list_lot_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_list_lot, arg)
+}
+pub(crate) fn hub_file_claim_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_file_claim, arg)
 }
 pub(crate) fn tickets_queue_call<A: Serialize, R: DeserializeOwned>(
     arg: A,

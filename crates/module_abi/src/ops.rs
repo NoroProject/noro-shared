@@ -681,6 +681,78 @@ pub struct FineDraft {
     pub due_days: i32,
 }
 
+/// Founding a town on somebody's behalf.
+///
+/// The founding fee comes off the player's primary card. A module does not
+/// choose the card: the fee is the player's money, and picking which of their
+/// cards it leaves is their decision, not an automation's. Without a card, and
+/// with a fee to pay, the call fails rather than finding a way.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TownDraft {
+    pub server_id: Uuid,
+    /// Who founds it, and becomes its mayor.
+    pub founder: PlayerRef,
+    pub name: String,
+    /// The address the town lives at: `[a-z0-9-]`, 26 characters at most.
+    pub slug: String,
+}
+
+/// Listing a lot on the market on somebody's behalf.
+///
+/// Only the vanilla mode is reachable: there the goods stay in the seller's
+/// barrels and the lot carries their addresses. The vault mode takes the item
+/// itself, encoded by the platform the agent runs on, and a module has no item
+/// in hand to give.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LotDraft {
+    pub server_id: Uuid,
+    /// Whose lot it is, and who gets paid.
+    pub seller: PlayerRef,
+    /// The item key: `minecraft:cobblestone`.
+    pub item: String,
+    /// What it is called in the game. Empty — derived from the key.
+    #[serde(default)]
+    pub name: String,
+    /// The seller's own name for the stack: "a shulker of food".
+    #[serde(default)]
+    pub custom_name: String,
+    #[serde(default)]
+    pub description: String,
+    /// Items in one pack.
+    pub pack_size: i32,
+    /// The price of one pack, in the hub's minor units.
+    pub pack_price: i64,
+    /// How many packs are on offer.
+    pub packs: i32,
+    /// Repeating the same key returns the same lot instead of a second one.
+    #[serde(default)]
+    pub idempotency_key: String,
+}
+
+/// Filing a claim in court on somebody's behalf.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClaimDraft {
+    pub server_id: Uuid,
+    /// Who files it, and answers for it.
+    pub plaintiff: PlayerRef,
+    /// The kind of claim the hub's court recognises.
+    pub kind: String,
+    pub title: String,
+    pub body: String,
+    /// The defendant's game name. Empty when suing a town or an account.
+    #[serde(default)]
+    pub defendant: String,
+    /// The defendant town's address.
+    #[serde(default)]
+    pub defendant_town: String,
+    /// The defendant account's code.
+    #[serde(default)]
+    pub defendant_account: String,
+    /// What is being claimed: chunks, a fine number, an amount.
+    #[serde(default)]
+    pub subject: serde_json::Value,
+}
+
 /// Signing or unsigning a petition, as a named player.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PetitionVote {
