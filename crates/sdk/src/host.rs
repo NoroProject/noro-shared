@@ -57,6 +57,22 @@ extern "ExtismHost" {
     fn gameservers_list(input: String) -> String;
     fn gameserver_get(input: String) -> String;
     fn gameserver_maintenance(input: String) -> String;
+    fn hub_feed(input: String) -> String;
+    fn hub_members(input: String) -> String;
+    fn hub_playtime(input: String) -> String;
+    fn hub_post(input: String) -> String;
+    fn hub_towns(input: String) -> String;
+    fn hub_town(input: String) -> String;
+    fn hub_market(input: String) -> String;
+    fn hub_lot(input: String) -> String;
+    fn hub_court(input: String) -> String;
+    fn hub_court_case(input: String) -> String;
+    fn hub_petitions(input: String) -> String;
+    fn hub_sign(input: String) -> String;
+    fn hub_unsign(input: String) -> String;
+    fn hub_fines(input: String) -> String;
+    fn hub_fines_of(input: String) -> String;
+    fn hub_fine(input: String) -> String;
     fn tickets_queue(input: String) -> String;
     fn ticket_get(input: String) -> String;
     fn ticket_messages(input: String) -> String;
@@ -354,6 +370,79 @@ pub(crate) fn gameserver_maintenance_call<A: Serialize, R: DeserializeOwned>(
     arg: A,
 ) -> Result<R, ModuleError> {
     call!(gameserver_maintenance, arg)
+}
+pub(crate) fn hub_feed_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_feed, arg)
+}
+
+pub(crate) fn hub_members_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_members, arg)
+}
+
+pub(crate) fn hub_playtime_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_playtime, arg)
+}
+
+pub(crate) fn hub_post_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_post, arg)
+}
+
+pub(crate) fn hub_towns_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_towns, arg)
+}
+
+pub(crate) fn hub_town_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_town, arg)
+}
+
+pub(crate) fn hub_market_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_market, arg)
+}
+
+pub(crate) fn hub_lot_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_lot, arg)
+}
+
+pub(crate) fn hub_court_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_court, arg)
+}
+
+pub(crate) fn hub_court_case_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_court_case, arg)
+}
+
+pub(crate) fn hub_petitions_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_petitions, arg)
+}
+
+pub(crate) fn hub_sign_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_sign, arg)
+}
+
+pub(crate) fn hub_unsign_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_unsign, arg)
+}
+
+pub(crate) fn hub_fines_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_fines, arg)
+}
+
+pub(crate) fn hub_fines_of_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(hub_fines_of, arg)
+}
+
+pub(crate) fn hub_fine_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(hub_fine, arg)
 }
 pub(crate) fn tickets_queue_call<A: Serialize, R: DeserializeOwned>(
     arg: A,

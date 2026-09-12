@@ -615,6 +615,80 @@ pub struct CaseVerdict {
     pub rule_code: Option<String>,
 }
 
+/// A page of hub documents.
+///
+/// The documents come through as JSON rather than as typed structs, and that is
+/// deliberate. The hub's model is large and still moving — posts, towns, lots,
+/// claims, petitions, each with a dozen fields and their own history. Freezing
+/// it here would make every one of those fields a public contract and every
+/// change to the hub a breaking ABI release, which is exactly what this crate
+/// exists to avoid.
+///
+/// Read what you need out of the object and treat a missing field as possible.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HubPage {
+    pub items: Vec<serde_json::Value>,
+    pub total: i64,
+}
+
+/// Which hub, and how much of it.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HubQuery {
+    pub server_id: Uuid,
+    #[serde(default)]
+    pub page: i64,
+    #[serde(default)]
+    pub per_page: i64,
+    /// Filters the list where the list supports it.
+    #[serde(default)]
+    pub status: Option<String>,
+    /// Free-text search, where the list supports it.
+    #[serde(default)]
+    pub search: Option<String>,
+}
+
+/// One document of a hub.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HubItem {
+    pub server_id: Uuid,
+    pub id: Uuid,
+}
+
+/// A post to write into the feed, on behalf of a player.
+///
+/// The author is named because a post is something a *player* did. A module has
+/// no person behind it, and a feed entry from nobody is not a thing the hub can
+/// represent — nor something a reader could reply to.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HubPost {
+    pub server_id: Uuid,
+    pub author: PlayerRef,
+    pub body: String,
+}
+
+/// A fine, issued by a named member of staff.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FineDraft {
+    pub server_id: Uuid,
+    /// Who is issuing it. Their name goes on the fine, and they answer for it.
+    pub issuer: PlayerRef,
+    pub target: PlayerRef,
+    /// In the hub's minor units.
+    pub amount: i64,
+    pub reason: String,
+    /// Days to pay. Zero — no deadline.
+    #[serde(default)]
+    pub due_days: i32,
+}
+
+/// Signing or unsigning a petition, as a named player.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PetitionVote {
+    pub server_id: Uuid,
+    pub petition_id: Uuid,
+    pub player: PlayerRef,
+}
+
 #[cfg(test)]
 #[path = "ops_tests.rs"]
 mod tests;

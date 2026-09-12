@@ -68,6 +68,15 @@ which are.
 | `cases` | `read` | `cases::get`, `events`, `open_on` |
 | | `claim` | `cases::claim` |
 | | `resolve` | `cases::resolve` |
+| `hub` | `read` | `hub::feed`, `members`, `playtime` |
+| | `post` | `hub::post` |
+| `towns` | `read` | `hub::towns`, `hub::town` |
+| `market` | `read` | `hub::market`, `hub::lot` |
+| `court` | `read` | `hub::court`, `hub::court_case` |
+| `petitions` | `read` | `hub::petitions` |
+| | `sign` | `hub::sign`, `hub::unsign` |
+| `fines` | `read` | `hub::fines`, `hub::fines_of` |
+| | `issue` | `hub::fine` |
 | `store` | `true` | the whole key-value store |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |
@@ -80,16 +89,19 @@ is no call to make with it.
 
 | Capability | Actions | What it would give you |
 |---|---|---|
-| `hub` | `read`, `post` | the server's feed: posts, comments, members |
-| `towns` | `read`, `manage` | towns, their treasuries and their members |
-| `market` | `read`, `list`, `sell` | lots, orders and deliveries |
-| `court` | `read`, `file` | claims, hearings, rulings |
-| `petitions` | `read`, `create` | petitions and their votes |
-| `fines` | `read`, `issue` | fines, and what became of them |
+| `towns` | `manage` | founding a town, moving its borders, its treasury |
+| `market` | `sell` | listing a lot and stocking it from a vault |
+| `court` | `file` | filing a claim, with its fee |
+| `petitions` | `create` | starting a petition rather than only signing one |
 | `builds` | `files` | reading and writing the files inside a build |
 | `events` | `emit` | publishing your own events for other modules to handle |
 
-Three of these are bigger than a host function.
+Each of these is bigger than a host function, for a different reason.
+
+The three hub writes — founding a town, listing a lot, filing a claim — all move money
+and run several steps that have to hold together: a fee charged, a vault stocked, a
+deadline started. Half of that sequence executed is worse than none of it, and getting it
+right means more than wrapping an existing query.
 
 `events = ["emit"]` needs the reentrancy guard that `EventCtx.depth` is there for —
 without it, two modules reacting to each other's events make a loop the master has to
@@ -99,9 +111,16 @@ break rather than merely notice.
 writing there means resigning the manifest — the same reason publishing a build stays
 with the operator.
 
-And everything under `hub`, `towns`, `market`, `court`, `petitions` and `fines` is most
-useful to a module with `scope = "server"`, which also wants widgets and a section in the
-hub. That is a wave of its own rather than a row in this table.
+## Acting for somebody
+
+Some writes name a player: posting to the feed, issuing a fine, signing a petition,
+claiming a case. These are things a **person** does, and a module has no person behind
+it — a feed entry from nobody is not something the hub can represent, and not something a
+reader could reply to.
+
+So the module says whose act it is, and that name is what appears. Automation can act for
+someone; it cannot be someone. The audit entry records both: the module that made the
+call, and the player it acted for.
 
 ## Writes are audited as if you were staff
 

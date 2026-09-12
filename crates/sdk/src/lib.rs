@@ -79,6 +79,7 @@ pub mod db;
 pub mod files;
 pub mod host;
 pub mod http;
+pub mod hub;
 pub mod identities;
 pub mod instance;
 pub mod log;
@@ -118,7 +119,9 @@ pub mod prelude {
     pub use crate::abi::events::*;
     pub use crate::abi::http_out::{HttpCall, HttpReply};
     pub use crate::abi::manifest::{Priority, SettingKind};
-    pub use crate::abi::ops::{IntoRoleRef, PunishKind, RoleDraft, RoleRef, ScheduleDraft};
+    pub use crate::abi::ops::{
+        FineDraft, IntoRoleRef, PunishKind, RoleDraft, RoleRef, ScheduleDraft,
+    };
     pub use crate::abi::sql::Query;
     pub use crate::abi::HttpRequest;
     pub use crate::abi::Registration;
