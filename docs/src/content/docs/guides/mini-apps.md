@@ -15,6 +15,46 @@ title = "mod-my-module-title"
 icon = "i-lucide-gift"
 ```
 
+## Where it can go
+
+| `placement` | Where it appears |
+|---|---|
+| `admin` | a section in the admin panel |
+| `cabinet` | a page in the player's cabinet |
+| `hub` | a section of a server's hub, at `/s/<slug>/m/<your-id>` |
+| `widget` | a block inside somebody else's page — see below |
+
+`hub` sections are listed for the server they belong to. A module scoped to a server has
+its section on that hub and not on the neighbouring one.
+
+### Widgets
+
+A widget goes into a **named slot** on a page the panel owns. Name it in the manifest:
+
+```toml
+[[apps]]
+placement = "widget"
+slot = "cabinet.home.cards"
+kind = "vue"
+entry = "widget.js"
+title = "mod-my-module-widget"
+```
+
+The slots are a closed list:
+
+| Slot | Where it is |
+|---|---|
+| `admin.user.panel` | a player's card in the admin panel |
+| `hub.feed.aside` | the column beside a hub's feed |
+| `cabinet.home.cards` | the cabinet's front page, after its own cards |
+
+Closed on purpose. An open list would make the markup of every page a public contract:
+move a block and somebody's widget moves with it, into a place nobody designed it for. A
+new slot gets added deliberately, together with the promise that it stays.
+
+A slot with no widgets draws nothing — no frame, no heading. Most pages have none, and a
+"an extension could go here" strip on every one of them is noise.
+
 ## Two kinds
 
 | `kind` | How it runs | When to use it |
