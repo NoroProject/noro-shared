@@ -57,6 +57,30 @@ extern "ExtismHost" {
     fn gameservers_list(input: String) -> String;
     fn gameserver_get(input: String) -> String;
     fn gameserver_maintenance(input: String) -> String;
+    fn file_put(input: String) -> String;
+    fn file_read(input: String) -> String;
+    fn file_exists(input: String) -> String;
+    fn file_url(input: String) -> String;
+    fn roster_online(input: String) -> String;
+    fn roster_where(input: String) -> String;
+    fn telemetry_of(input: String) -> String;
+    fn role_save(input: String) -> String;
+    fn role_delete(input: String) -> String;
+    fn optional_grant(input: String) -> String;
+    fn optional_revoke(input: String) -> String;
+    fn news_list(input: String) -> String;
+    fn news_get(input: String) -> String;
+    fn news_save(input: String) -> String;
+    fn news_delete(input: String) -> String;
+    fn instance_all(input: String) -> String;
+    fn instance_get(input: String) -> String;
+    fn instance_set(input: String) -> String;
+    fn sessions_of(input: String) -> String;
+    fn session_revoke(input: String) -> String;
+    fn sessions_revoke_all(input: String) -> String;
+    fn restarts_of(input: String) -> String;
+    fn restart_add(input: String) -> String;
+    fn restart_remove(input: String) -> String;
     fn http_send(input: String) -> String;
     fn db_query(input: String) -> String;
     fn db_execute(input: String) -> String;
@@ -319,6 +343,134 @@ pub(crate) fn gameserver_maintenance_call<A: Serialize, R: DeserializeOwned>(
     arg: A,
 ) -> Result<R, ModuleError> {
     call!(gameserver_maintenance, arg)
+}
+pub(crate) fn file_put_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(file_put, arg)
+}
+
+pub(crate) fn file_read_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(file_read, arg)
+}
+
+pub(crate) fn file_exists_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(file_exists, arg)
+}
+
+pub(crate) fn file_url_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(file_url, arg)
+}
+
+pub(crate) fn roster_online_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(roster_online, arg)
+}
+
+pub(crate) fn roster_where_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(roster_where, arg)
+}
+
+pub(crate) fn telemetry_of_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(telemetry_of, arg)
+}
+
+pub(crate) fn role_save_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(role_save, arg)
+}
+
+pub(crate) fn role_delete_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(role_delete, arg)
+}
+
+pub(crate) fn optional_grant_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(optional_grant, arg)
+}
+
+pub(crate) fn optional_revoke_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(optional_revoke, arg)
+}
+pub(crate) fn news_list_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(news_list, arg)
+}
+
+pub(crate) fn news_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(news_get, arg)
+}
+
+pub(crate) fn news_save_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(news_save, arg)
+}
+
+pub(crate) fn news_delete_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(news_delete, arg)
+}
+
+pub(crate) fn instance_all_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(instance_all, arg)
+}
+
+pub(crate) fn instance_get_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(instance_get, arg)
+}
+
+pub(crate) fn instance_set_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(instance_set, arg)
+}
+
+pub(crate) fn sessions_of_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(sessions_of, arg)
+}
+
+pub(crate) fn session_revoke_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(session_revoke, arg)
+}
+
+pub(crate) fn sessions_revoke_all_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(sessions_revoke_all, arg)
+}
+
+pub(crate) fn restarts_of_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(restarts_of, arg)
+}
+
+pub(crate) fn restart_add_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(restart_add, arg)
+}
+
+pub(crate) fn restart_remove_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(restart_remove, arg)
 }
 pub(crate) fn http_send_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(http_send, arg)

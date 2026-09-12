@@ -32,6 +32,7 @@ which are.
 | | `link` | `identities::link`, `identities::unlink` |
 | `roles` | `read` | `roles::list`, `roles::get`, `roles::of` |
 | | `grant` | `roles::grant`, `roles::revoke` |
+| | `manage` | `roles::create`, `update`, `delete` |
 | `permissions` | `read` | `permissions::has`, `permissions::effective` (and the `_on` variants) |
 | | `grant` | `permissions::grant`, `permissions::revoke` |
 | `access` | `grant` | `access::allow_join`, `access::allow_build`, and their `revoke_*` |
@@ -48,6 +49,20 @@ which are.
 | `agent` | `tell` | `chat::tell` |
 | | `announce` | `chat::announce`, `chat::announce_on` |
 | | `kick` | `chat::kick` |
+| `optional_mods` | `grant` | `access::allow_mod`, `revoke_mod` |
+| `news` | `read` | `news::list`, `news::get` |
+| | `publish` | `news::publish`, `publish_pinned` |
+| | `edit` | `news::edit`, `news::delete` |
+| `instance` | `read` | `instance::all`, `instance::get` |
+| | `write` | `instance::set` |
+| `sessions` | `read` | `sessions::of` |
+| | `revoke` | `sessions::revoke`, `revoke_all` |
+| `restarts` | `read` | `restarts::of` |
+| | `manage` | `restarts::add`, `restarts::remove` |
+| `roster` | `read` | `roster::online`, `locate`, `is_online` |
+| `telemetry` | `read` | `telemetry::of` |
+| `files` | `read` | `files::read`, `exists`, `url` |
+| | `write` | `files::put` |
 | `store` | `true` | the whole key-value store |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |
@@ -68,23 +83,22 @@ is no call to make with it.
 | `fines` | `read`, `issue` | fines, and what became of them |
 | `tickets` | `read`, `reply` | player conversations, in the panel and in game |
 | `cases` | `read`, `claim`, `resolve` | moderation cases and their timelines |
-| `news` | `read`, `publish` | the instance's news |
-| `files` | `read`, `write` | the shared file store, deduplicated by hash |
-| `roster` | `read` | who is in game right now, and where |
-| `telemetry` | `read` | a game server's load, TPS and memory |
-| `restarts` | `read`, `manage` | restart schedules |
-| `instance` | `read`, `write` | instance settings |
-| `optional_mods` | `grant` | access to individual optional mods of a build |
-| `sessions` | `read`, `revoke` | a player's sessions, and closing them |
-| `roles` | `manage` | creating, editing and deleting roles, not just granting |
 | `builds` | `files` | reading and writing the files inside a build |
 | `events` | `emit` | publishing your own events for other modules to handle |
 
-Two of these are bigger than a host function. `events = ["emit"]` needs the reentrancy
-guard that `EventCtx.depth` is there for. And everything under `hub`, `towns`, `market`,
-`court` and `petitions` is most useful to a module with `scope = "server"`, which also
-wants widgets and a section in the hub — that is a wave of its own rather than a row in
-this table.
+Three of these are bigger than a host function.
+
+`events = ["emit"]` needs the reentrancy guard that `EventCtx.depth` is there for —
+without it, two modules reacting to each other's events make a loop the master has to
+break rather than merely notice.
+
+`builds = ["files"]` touches what the launcher downloads and verifies by signature, so
+writing there means resigning the manifest — the same reason publishing a build stays
+with the operator.
+
+And everything under `hub`, `towns`, `market`, `court`, `petitions` and `fines` is most
+useful to a module with `scope = "server"`, which also wants widgets and a section in the
+hub. That is a wave of its own rather than a row in this table.
 
 ## Writes are audited as if you were staff
 
@@ -113,5 +127,9 @@ Hosts, not URLs — a path or a port in there is refused at install time. `*.exa
 matches subdomains but **not** `example.org` itself: a wildcard should not quietly grant
 the parent nobody named.
 
-When outbound HTTP does arrive it will resolve DNS and refuse private address ranges,
-because otherwise an allow-list is bypassed by pointing a permitted name at `127.0.0.1`.
+The list is only the first of three checks. The name is resolved and the request refused
+if any address it resolves to is inside the machine or the private network, and the
+connection then goes to the address that was checked rather than to whatever the name
+resolves to a moment later. An allow-list on its own is worth very little: a permitted
+name pointed at `127.0.0.1` would turn a module into a way to reach the master's own
+services. See [reaching outside](../../guides/platform/#reaching-outside).

@@ -8,7 +8,7 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::player::PlayerRef;
+use crate::player::{Player, PlayerRef};
 
 /// How to name a role in a call.
 ///
@@ -323,6 +323,200 @@ pub struct Cape {
     pub id: Uuid,
     pub name: String,
     pub url: String,
+}
+
+/// A news item as a module sees it.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NewsItem {
+    pub id: Uuid,
+    pub title: String,
+    pub body: String,
+    #[serde(default)]
+    pub preview_url: Option<String>,
+    /// Kept at the top of the list regardless of date.
+    pub pinned: bool,
+    pub published_at: chrono::DateTime<chrono::Utc>,
+}
+
+/// A news item to publish, or the new content of one.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NewsDraft {
+    /// Set when editing; absent when publishing something new.
+    #[serde(default)]
+    pub id: Option<Uuid>,
+    pub title: String,
+    /// Markdown, the same as the panel's editor writes.
+    pub body: String,
+    #[serde(default)]
+    pub preview_url: Option<String>,
+    #[serde(default)]
+    pub pinned: bool,
+}
+
+/// An instance setting to write.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SettingWrite {
+    pub key: String,
+    /// Whatever the setting holds. The master stores settings as JSON and does
+    /// not type them: the set grows, and freezing it in the ABI would mean a
+    /// new setting needing an ABI release.
+    pub value: serde_json::Value,
+}
+
+/// A player's session — one signed-in launcher or browser.
+///
+/// There is no address and no user agent here, because the master does not keep
+/// them: a session is a token with a scope and a lifetime, and inventing fields
+/// for the ABI that the database has never held would be worse than their
+/// absence.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Session {
+    pub id: Uuid,
+    /// What the token is allowed to do: `launcher`, `web`, an OAuth scope.
+    pub scope: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+    pub expires_at: chrono::DateTime<chrono::Utc>,
+    /// Opened by staff acting as this player, rather than by the player.
+    #[serde(default)]
+    pub impersonated: bool,
+}
+
+/// Which session of which player.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SessionRef {
+    pub player: PlayerRef,
+    /// Absent — every session they have.
+    #[serde(default)]
+    pub session_id: Option<Uuid>,
+}
+
+/// A restart schedule of one game server.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RestartSchedule {
+    pub id: Uuid,
+    pub game_server_id: Uuid,
+    /// A cron expression, when that is how it was set.
+    #[serde(default)]
+    pub cron: Option<String>,
+    /// Times of day, when it was set that way instead.
+    #[serde(default)]
+    pub at_times: Vec<String>,
+    #[serde(default)]
+    pub interval_minutes: Option<i32>,
+    /// How long players are warned for.
+    pub notice_minutes: i32,
+    /// What to do when people are still playing: `wait`, `force`, `skip`.
+    pub online_policy: String,
+    pub active: bool,
+    #[serde(default)]
+    pub next_run_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+/// A restart schedule to create.
+///
+/// Exactly one of `cron`, `at_times` and `interval_minutes` says *when* — the
+/// master refuses a draft that names none or several, because "every two hours
+/// and also at 04:00" has no single answer.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct ScheduleDraft {
+    pub game_server_id: Uuid,
+    #[serde(default)]
+    pub cron: Option<String>,
+    #[serde(default)]
+    pub at_times: Vec<String>,
+    #[serde(default)]
+    pub interval_minutes: Option<i32>,
+    /// Minutes of warning. Zero means no warning at all.
+    #[serde(default)]
+    pub notice_minutes: i32,
+    /// `wait` by default — a restart that kicks people mid-fight is rarely what
+    /// was meant.
+    #[serde(default)]
+    pub online_policy: Option<String>,
+    #[serde(default)]
+    pub max_defer_minutes: Option<i32>,
+}
+
+/// A file in the shared store.
+///
+/// The store is addressed by content hash, so putting the same bytes twice
+/// stores them once — and the hash you get back is the address.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StoredFile {
+    /// The sha1 of the content. Its identity and its address both.
+    pub sha1: String,
+    pub size: i64,
+    /// Where it is served from, ready to put in a page.
+    pub url: String,
+}
+
+/// Bytes to store.
+///
+/// Base64, because JSON is what crosses the wasm boundary and raw bytes do not
+/// survive it. That is also why files are capped: the payload passes through
+/// the sandbox's memory twice, encoded and decoded.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FileWrite {
+    pub base64: String,
+}
+
+/// A player in game right now, and where.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OnlinePlayer {
+    pub player: Player,
+    pub game_server_id: Uuid,
+    /// Hidden from other players by staff tooling.
+    #[serde(default)]
+    pub vanished: bool,
+}
+
+/// One load measurement of a game server.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Telemetry {
+    pub game_server_id: Uuid,
+    /// Ticks per second. Twenty is healthy.
+    #[serde(default)]
+    pub tps: Option<f64>,
+    /// Milliseconds per tick. Rises before tps falls, so it notices trouble
+    /// first.
+    #[serde(default)]
+    pub mspt: Option<f64>,
+    #[serde(default)]
+    pub heap_used_mb: Option<i32>,
+    #[serde(default)]
+    pub heap_max_mb: Option<i32>,
+    #[serde(default)]
+    pub online_players: Option<i32>,
+    pub at: chrono::DateTime<chrono::Utc>,
+}
+
+/// A role to create or rewrite.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RoleDraft {
+    /// Set when editing an existing role.
+    #[serde(default)]
+    pub id: Option<Uuid>,
+    /// The machine name: `vip`, `moderator`.
+    pub name: String,
+    pub display_name: String,
+    /// A hex colour, `#5865F2`.
+    #[serde(default)]
+    pub color: Option<String>,
+    /// Given to every new player automatically.
+    #[serde(default)]
+    pub is_default: bool,
+    /// The server the role belongs to. `None` — it applies everywhere.
+    #[serde(default)]
+    pub server_id: Option<Uuid>,
+}
+
+/// Access to one optional mod of a server.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OptionalMod {
+    pub player: PlayerRef,
+    pub server_id: Uuid,
+    /// The mod's name as the build lists it.
+    pub mod_name: String,
 }
 
 #[cfg(test)]

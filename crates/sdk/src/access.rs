@@ -12,7 +12,7 @@
 //! ```
 
 use noro_module_abi::error::ModuleError;
-use noro_module_abi::ops::{BuildAccess, ServerAccess};
+use noro_module_abi::ops::{BuildAccess, OptionalMod, ServerAccess};
 use noro_module_abi::player::IntoPlayerRef;
 use uuid::Uuid;
 
@@ -56,5 +56,39 @@ pub fn revoke_build(who: impl IntoPlayerRef, build_id: Uuid) -> Result<(), Modul
     crate::host::access_build_revoke_call(BuildAccess {
         player: who.into_player_ref(),
         build_id,
+    })
+}
+
+/// Lets a player use one optional mod of a server.
+///
+/// Optional mods are the ones the launcher offers rather than installs: a
+/// minimap, a shader pack. Which of them a given player may enable is a
+/// permission, and this is the node for it spelled correctly.
+///
+/// Requires `optional_mods = ["grant"]`.
+pub fn allow_mod(
+    who: impl IntoPlayerRef,
+    server_id: Uuid,
+    mod_name: &str,
+) -> Result<(), ModuleError> {
+    crate::host::optional_grant_call(OptionalMod {
+        player: who.into_player_ref(),
+        server_id,
+        mod_name: mod_name.to_string(),
+    })
+}
+
+/// Takes that away again.
+///
+/// Requires `optional_mods = ["grant"]`.
+pub fn revoke_mod(
+    who: impl IntoPlayerRef,
+    server_id: Uuid,
+    mod_name: &str,
+) -> Result<(), ModuleError> {
+    crate::host::optional_revoke_call(OptionalMod {
+        player: who.into_player_ref(),
+        server_id,
+        mod_name: mod_name.to_string(),
     })
 }

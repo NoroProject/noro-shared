@@ -47,10 +47,12 @@ pub use http::HttpRequest;
 pub use http_out::{HttpCall, HttpReply};
 pub use manifest::Manifest;
 pub use ops::{
-    AccountQuery, Announcement, BanRequest, BuildAccess, Cape, CapeRequest, Identity, IntoRoleRef,
-    LinkRequest, Maintenance, PermissionOn, PermissionQuery, PlayerMessage, PresetRef,
-    ProviderQuery, PublishRequest, PunishKind, PunishRequest, RenameRequest, RoleGrant, RoleRef,
-    SavePreset, ServerAccess, SkinPreset, SkinRequest, Transfer,
+    AccountQuery, Announcement, BanRequest, BuildAccess, Cape, CapeRequest, FileWrite, Identity,
+    IntoRoleRef, LinkRequest, Maintenance, NewsDraft, NewsItem, OnlinePlayer, OptionalMod,
+    PermissionOn, PermissionQuery, PlayerMessage, PresetRef, ProviderQuery, PublishRequest,
+    PunishKind, PunishRequest, RenameRequest, RestartSchedule, RoleDraft, RoleGrant, RoleRef,
+    SavePreset, ScheduleDraft, ServerAccess, Session, SessionRef, SettingWrite, SkinPreset,
+    SkinRequest, StoredFile, Telemetry, Transfer,
 };
 pub use player::{IntoPlayerRef, Player, PlayerRef};
 pub use registration::{EventReg, Registration, RouteReg, TaskReg};

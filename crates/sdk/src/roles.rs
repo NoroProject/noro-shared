@@ -8,7 +8,7 @@
 
 use noro_module_abi::entity::Role;
 use noro_module_abi::error::ModuleError;
-use noro_module_abi::ops::{IntoRoleRef, RoleGrant};
+use noro_module_abi::ops::{IntoRoleRef, RoleDraft, RoleGrant};
 use noro_module_abi::player::IntoPlayerRef;
 
 /// Every role on the instance.
@@ -54,4 +54,33 @@ pub fn revoke(who: impl IntoPlayerRef, role: impl IntoRoleRef) -> Result<(), Mod
         player: who.into_player_ref(),
         role: role.into_role_ref(),
     })
+}
+
+/// Creates a role and returns its identifier.
+///
+/// Separate from granting on purpose: `grant` hands an existing role to a
+/// player, while this decides what roles the instance has at all. An operator
+/// can reasonably trust a module with the first and not the second.
+///
+/// Requires `roles = ["read", "manage"]`.
+pub fn create(draft: RoleDraft) -> Result<uuid::Uuid, ModuleError> {
+    crate::host::role_save_call(RoleDraft { id: None, ..draft })
+}
+
+/// Rewrites a role. Every field is replaced, not merged.
+///
+/// Requires `roles = ["read", "manage"]`.
+pub fn update(id: uuid::Uuid, draft: RoleDraft) -> Result<(), ModuleError> {
+    crate::host::role_save_call(RoleDraft {
+        id: Some(id),
+        ..draft
+    })
+    .map(|_: uuid::Uuid| ())
+}
+
+/// Deletes a role. Players holding it simply stop holding it.
+///
+/// Requires `roles = ["read", "manage"]`.
+pub fn delete(id: uuid::Uuid) -> Result<(), ModuleError> {
+    crate::host::role_delete_call(id)
 }
