@@ -127,6 +127,99 @@ pub struct BanRequest {
     pub reason: Option<String>,
 }
 
+/// A message to one player, in game.
+///
+/// The text is finished text, not a Fluent key: the module's catalog is built
+/// for the web and is not installed in the master's own `i18n`, so resolving a
+/// key here would quietly hand the player the key itself.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PlayerMessage {
+    pub player: PlayerRef,
+    pub message: String,
+}
+
+/// A message to everyone, or to everyone on one server build.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Announcement {
+    pub message: String,
+    /// `None` — the whole instance.
+    #[serde(default)]
+    pub server_id: Option<Uuid>,
+}
+
+/// What kind of sanction to issue.
+///
+/// An enum rather than a string: the master stores it as text, but a typo in
+/// `"mute"` would arrive as a warning and nobody would notice for a week.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum PunishKind {
+    /// Out of the game and the launcher both.
+    Ban,
+    /// Out of one server build only.
+    ServerBan,
+    /// Cannot speak.
+    Mute,
+    /// A note the player has to acknowledge.
+    Warn,
+}
+
+impl PunishKind {
+    /// How the master stores it.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            PunishKind::Ban => "ban",
+            PunishKind::ServerBan => "server_ban",
+            PunishKind::Mute => "mute",
+            PunishKind::Warn => "warn",
+        }
+    }
+}
+
+/// A sanction to issue.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PunishRequest {
+    pub player: PlayerRef,
+    pub kind: PunishKind,
+    /// What the player will read. Not a key — see [`PlayerMessage`].
+    pub reason: String,
+    /// How long it lasts. `None` — until it is lifted by hand.
+    #[serde(default)]
+    pub seconds: Option<i64>,
+    /// Which server build it applies to. `None` — all of them.
+    #[serde(default)]
+    pub server_id: Option<Uuid>,
+}
+
+/// Which account, on which server.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AccountQuery {
+    pub server_id: Uuid,
+    pub player: PlayerRef,
+}
+
+/// Moving money between two accounts.
+///
+/// Accounts, not players: a player can hold several, and "their money" is not a
+/// well-defined place to take it from. Take the account you mean from
+/// [`AccountQuery`] or from the treasury.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Transfer {
+    pub server_id: Uuid,
+    pub from: Uuid,
+    pub to: Uuid,
+    /// In the smallest unit. Must be above zero — a transfer of nothing is a
+    /// mistake, and a negative one is a transfer the other way written wrong.
+    pub amount: i64,
+    /// Shown in the bank's ledger to both sides.
+    pub comment: String,
+    /// Repeat protection. Send the same key again and the master returns the
+    /// transfer already made instead of making a second one — which is what you
+    /// want when your handler ran twice.
+    #[serde(default)]
+    pub idempotency_key: Option<String>,
+}
+
 #[cfg(test)]
 #[path = "ops_tests.rs"]
 mod tests;

@@ -116,3 +116,66 @@ players, and that stays the operator's decision for now.
 A role granted, a permission given, a player banned — all of it lands in the audit log
 under the same action an operator's would, signed with your module's id. See
 [capabilities](../../reference/capabilities/).
+
+## Sanctions
+
+A punishment is not the account ban flag. It has a kind, a reason the player reads, a
+duration, and it reaches the running game the moment you issue it — a ban throws the
+player out, a mute stops them mid-sentence.
+
+```rust
+punish::mute(player, "spam", Some(600))?;
+punish::ban(player, "cheating", None)?;            // None — until lifted
+punish::server_ban(player, server_id, "griefing", Some(7 * 24 * 3600))?;
+punish::warn(player, "language")?;
+
+for p in punish::active(player)? { … }
+punish::revoke(p.id)?;
+```
+
+Issuing does all four things an operator's sanction does: the row, the `users` ban flag
+that the launcher and Yggdrasil read, the updated profile pushed to open launchers, and
+the frame to the agents. Skip any one of them and you get a ban that is not a ban.
+
+A duration of zero or less is refused rather than treated as "already expired", and an
+empty reason is refused too — the player is going to read it.
+
+## Money
+
+Money lives in accounts, and a player can hold several, so every call names an account
+rather than a player.
+
+```rust
+let from = bank::treasury(server_id)?;
+let to = bank::account(server_id, player)?.ok_or(/* no account yet */)?;
+bank::transfer(server_id, from.id, to.id, 100, "playtime reward")?;
+```
+
+The transfer runs through the same code a transfer from the cabinet does: the balance is
+checked inside a transaction under a row lock, and accounts are taken in id order so two
+opposing transfers cannot deadlock. Insufficient funds come back as a `Conflict`.
+
+If your handler might run twice — a retried event, a task that overlapped itself — use
+`transfer_once` with a key. The second call returns the transfer already made instead of
+paying again.
+
+Transfers are not written to the audit log: the bank keeps its own ledger, and one
+operation in two histories is one history too many.
+
+## Talking to players
+
+```rust
+if !chat::tell(player, "Your rank is now VIP.")? {
+    // not in game — tell them in the cabinet instead
+}
+chat::announce_on(server_id, "Maintenance in 10 minutes.")?;
+chat::kick(player, "Take a break.")?;
+```
+
+`tell` and `kick` return `false` when the player is not in game. That is an ordinary
+outcome, not an error — telling a player who has just left is exactly what a "player
+left" handler does.
+
+The text is finished text, not a locale key. Your catalog is built for the panel and is
+not installed in the master's own `i18n`, so a key here would reach the player as the key
+itself.

@@ -25,6 +25,8 @@ cd docs
 [ -d node_modules ] || bun install
 
 if [ "$MODE" = dev ]; then
+    # Префикс пути в дев-режиме снимает сам конфиг: он смотрит на команду, а не
+    # на переменную, — иначе `bun run dev` напрямую вёл бы себя иначе.
     exec bun run dev
 fi
 

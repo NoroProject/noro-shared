@@ -36,12 +36,17 @@ which are.
 | `builds` | `read` | `servers::builds`, `servers::published_build` |
 | `gameservers` | `read` | `servers::game_servers`, `servers::game_server` |
 | | `maintenance` | `servers::set_maintenance` |
+| `punish` | `read` | `punish::active`, `punish::history` |
+| | `issue` | `punish::ban`, `mute`, `warn`, `server_ban`, `issue` |
+| | `revoke` | `punish::revoke` |
+| `bank` | `read` | `bank::account`, `accounts`, `balance`, `treasury` |
+| | `transfer` | `bank::transfer`, `bank::transfer_once` |
+| `agent` | `tell` | `chat::tell` |
+| | `announce` | `chat::announce`, `chat::announce_on` |
+| | `kick` | `chat::kick` |
 | `players` | `rename` | not yet |
 | `identities` | `read`, `link` | not yet |
 | `builds` | `publish` | not yet |
-| `bank` | `read`, `transfer` | not yet |
-| `punish` | `issue`, `revoke` | not yet |
-| `agent` | `tell`, `announce`, `kick` | not yet |
 | `db` | `true` | schema and migrations yes, queries not yet |
 | `http` | a host allow-list | not yet |
 

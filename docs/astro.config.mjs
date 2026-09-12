@@ -5,7 +5,17 @@ import { defineConfig } from 'astro/config'
 // GitHub Pages serves a project site from a subdirectory, so every absolute
 // path needs this prefix. Kept in one place because the link to the rustdoc
 // below is not an Astro route and gets no prefix of its own.
-const base = '/noro-shared'
+//
+// In dev the prefix only gets in the way: the page would sit at
+// /noro-shared/start/… instead of /start/…, which is not the address anyone
+// would guess. So dev serves from the root.
+//
+// The command is read from argv rather than from an environment variable
+// because `bun run dev` has to behave the same as `scripts/docs.sh dev` — a
+// variable only the script sets is a trap for whoever starts the server
+// directly. DOCS_BASE still overrides, for previewing the built prefix.
+const dev = process.argv.includes('dev')
+const base = process.env.DOCS_BASE ?? (dev ? '/' : '/noro-shared')
 
 export default defineConfig({
     site: 'https://noroproject.github.io',

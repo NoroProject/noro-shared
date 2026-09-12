@@ -86,6 +86,72 @@ fn requests_survive_json() {
     assert_eq!(back.game_server_id, server);
 }
 
+#[test]
+fn a_punishment_kind_is_spelled_the_way_the_master_stores_it() {
+    // The master keeps the kind as text, and `actions::punishment` matches on
+    // that text to pick the audit action. A rename here silently files bans as
+    // warnings.
+    assert_eq!(PunishKind::Ban.as_str(), "ban");
+    assert_eq!(PunishKind::ServerBan.as_str(), "server_ban");
+    assert_eq!(PunishKind::Mute.as_str(), "mute");
+    assert_eq!(PunishKind::Warn.as_str(), "warn");
+
+    let raw = serde_json::to_value(PunishKind::ServerBan).unwrap();
+    assert_eq!(raw, "server_ban");
+}
+
+#[test]
+fn a_punishment_survives_json() {
+    let req = PunishRequest {
+        player: PlayerRef::id(Uuid::from_u128(4)),
+        kind: PunishKind::Mute,
+        reason: "spam".to_string(),
+        seconds: Some(600),
+        server_id: None,
+    };
+    let back = round(&req);
+    assert_eq!(back.kind, PunishKind::Mute);
+    assert_eq!(back.seconds, Some(600));
+    assert_eq!(back.server_id, None);
+
+    // Forever is the absence of a duration, not a zero.
+    let raw = r#"{"player":{"by":"name","name":"x"},"kind":"ban","reason":"cheating"}"#;
+    let req: PunishRequest = serde_json::from_str(raw).expect("parsed");
+    assert_eq!(req.seconds, None);
+    assert_eq!(req.kind, PunishKind::Ban);
+}
+
+#[test]
+fn a_transfer_survives_json() {
+    let t = Transfer {
+        server_id: Uuid::from_u128(5),
+        from: Uuid::from_u128(6),
+        to: Uuid::from_u128(7),
+        amount: 100,
+        comment: "reward".to_string(),
+        idempotency_key: None,
+    };
+    let back = round(&t);
+    assert_eq!(back.amount, 100);
+    assert_eq!(back.idempotency_key, None);
+
+    // The repeat key is what stops a retried handler from paying twice, so it
+    // has to arrive intact rather than be dropped as an empty option.
+    let t = Transfer {
+        idempotency_key: Some("payout:42".to_string()),
+        ..t
+    };
+    assert_eq!(round(&t).idempotency_key.as_deref(), Some("payout:42"));
+}
+
+#[test]
+fn an_announcement_without_a_server_goes_everywhere() {
+    let raw = r#"{"message":"hello"}"#;
+    let a: Announcement = serde_json::from_str(raw).expect("parsed");
+    assert_eq!(a.server_id, None);
+    assert_eq!(round(&a).message, "hello");
+}
+
 /// A ban with no reason is a normal ban, not a malformed request.
 #[test]
 fn a_ban_without_a_reason_parses() {

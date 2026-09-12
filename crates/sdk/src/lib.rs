@@ -72,10 +72,13 @@
 //! inside the `.wasm` and occupies the instance's memory.
 
 pub mod access;
+pub mod bank;
+pub mod chat;
 pub mod host;
 pub mod log;
 pub mod permissions;
 pub mod players;
+pub mod punish;
 pub mod roles;
 pub mod servers;
 pub mod store;
@@ -102,14 +105,17 @@ pub mod prelude {
     pub use crate::abi::error::{ErrorKind, ModuleError};
     pub use crate::abi::events::*;
     pub use crate::abi::manifest::{Priority, SettingKind};
-    pub use crate::abi::ops::{IntoRoleRef, RoleRef};
+    pub use crate::abi::ops::{IntoRoleRef, PunishKind, RoleRef};
     pub use crate::abi::HttpRequest;
     pub use crate::abi::Registration;
     pub use crate::abi::{
         Account, ActorRef, Build, EventCtx, GameServer, IntoPlayerRef, Origin, Player, PlayerRef,
         Punishment, Role, Server,
     };
-    pub use crate::{access, log, noro, now, permissions, players, roles, servers, store, Result};
+    pub use crate::{
+        access, bank, chat, log, noro, now, permissions, players, punish, roles, servers, store,
+        Result,
+    };
 
     // The crate itself, not just its names: the `plugin_fn` macro expands into
     // `extism_pdk::…`, and without this import the module would not build.

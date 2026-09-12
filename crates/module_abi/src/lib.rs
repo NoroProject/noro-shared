@@ -44,8 +44,9 @@ pub use events::{Cancel, Event, EventKind, EventMeta, ALL_EVENTS};
 pub use http::HttpRequest;
 pub use manifest::Manifest;
 pub use ops::{
-    BanRequest, BuildAccess, IntoRoleRef, Maintenance, PermissionOn, PermissionQuery, RoleGrant,
-    RoleRef, ServerAccess,
+    AccountQuery, Announcement, BanRequest, BuildAccess, IntoRoleRef, Maintenance, PermissionOn,
+    PermissionQuery, PlayerMessage, PunishKind, PunishRequest, RoleGrant, RoleRef, ServerAccess,
+    Transfer,
 };
 pub use player::{IntoPlayerRef, Player, PlayerRef};
 pub use registration::{EventReg, Registration, RouteReg, TaskReg};

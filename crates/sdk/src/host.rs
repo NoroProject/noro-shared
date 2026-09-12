@@ -13,6 +13,17 @@ use serde::Serialize;
 #[host_fn]
 extern "ExtismHost" {
     fn player_get(input: String) -> String;
+    fn chat_tell(input: String) -> String;
+    fn punish_issue(input: String) -> String;
+    fn bank_account(input: String) -> String;
+    fn bank_accounts(input: String) -> String;
+    fn bank_treasury(input: String) -> String;
+    fn bank_transfer(input: String) -> String;
+    fn punish_revoke(input: String) -> String;
+    fn punish_active(input: String) -> String;
+    fn punish_list(input: String) -> String;
+    fn chat_announce(input: String) -> String;
+    fn chat_kick(input: String) -> String;
     fn player_ban(input: String) -> String;
     fn roles_list(input: String) -> String;
     fn role_get(input: String) -> String;
@@ -55,6 +66,66 @@ macro_rules! call {
 
 pub(crate) fn player_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(player_get, arg)
+}
+
+pub(crate) fn bank_account_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(bank_account, arg)
+}
+
+pub(crate) fn bank_accounts_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(bank_accounts, arg)
+}
+
+pub(crate) fn bank_treasury_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(bank_treasury, arg)
+}
+
+pub(crate) fn bank_transfer_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(bank_transfer, arg)
+}
+pub(crate) fn punish_issue_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(punish_issue, arg)
+}
+
+pub(crate) fn punish_revoke_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(punish_revoke, arg)
+}
+
+pub(crate) fn punish_active_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(punish_active, arg)
+}
+
+pub(crate) fn punish_list_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(punish_list, arg)
+}
+pub(crate) fn chat_tell_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(chat_tell, arg)
+}
+
+pub(crate) fn chat_announce_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(chat_announce, arg)
+}
+
+pub(crate) fn chat_kick_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(chat_kick, arg)
 }
 
 pub(crate) fn player_ban_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {

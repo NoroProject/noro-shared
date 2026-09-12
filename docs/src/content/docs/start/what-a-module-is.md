@@ -41,6 +41,9 @@ properties are what make module authoring possible in the first place.
 | `permissions` | asking what a player effectively has, and granting personal permissions |
 | `access` | letting a player into a server or one of its client builds |
 | `servers` | servers, their builds, their game servers, and maintenance mode |
+| `punish` | bans, mutes and warnings, issued the way staff issue them |
+| `bank` | accounts, balances and transfers on a hub |
+| `chat` | private messages, announcements and kicks, in game |
 | `store` | your own key-value data, scoped to the instance, a server or a player |
 | `log` | lines into the master's `tracing`, tagged with your module |
 | `#[event]` | ~50 events across players, access, infrastructure, moderation and economy |
