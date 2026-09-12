@@ -131,8 +131,9 @@ pub mod prelude {
         Punishment, Role, Server,
     };
     pub use crate::{
-        access, bank, chat, log, noro, now, permissions, players, punish, roles, servers, store,
-        Result,
+        access, bank, cases, chat, db, events, files, http, hub, identities, instance, log, news,
+        noro, now, permissions, players, punish, restarts, roles, roster, servers, sessions, store,
+        telemetry, tickets, Result,
     };
 
     // The crate itself, not just its names: the `plugin_fn` macro expands into
@@ -150,4 +151,43 @@ pub mod prelude {
 /// epoch.
 pub fn now() -> chrono::DateTime<chrono::Utc> {
     chrono::DateTime::from_timestamp(host::now_secs(), 0).unwrap_or_default()
+}
+
+#[cfg(test)]
+mod prelude_tests {
+    /// Каждый домен обязан быть в prelude.
+    ///
+    /// Список собирался правками по месту и отставал молча: `db`, `http` и ещё
+    /// десяток модулей существовали, документировались и не экспортировались —
+    /// автор модуля упирался в «cannot find module `db`» и не понимал, почему
+    /// документация врёт. Здесь список сверяется с исходником самого файла,
+    /// потому что иначе он снова разойдётся при добавлении домена.
+    #[test]
+    fn every_domain_is_in_the_prelude() {
+        let source = include_str!("lib.rs");
+
+        let declared: Vec<&str> = source
+            .lines()
+            .filter_map(|l| l.strip_prefix("pub mod "))
+            .filter_map(|l| l.strip_suffix(';'))
+            // `host` — внутренний мост: модуль зовёт домены, а не его.
+            .filter(|m| *m != "host")
+            .collect();
+
+        let block = source
+            .split("pub use crate::{")
+            .nth(1)
+            .expect("в prelude есть общий реэкспорт")
+            .split("};")
+            .next()
+            .expect("реэкспорт закрыт");
+
+        for module in declared {
+            assert!(
+                block.split([',', '\n', ' ']).any(|w| w.trim() == module),
+                "домен `{module}` не экспортирован из prelude — \
+                 автор модуля его не увидит"
+            );
+        }
+    }
 }
