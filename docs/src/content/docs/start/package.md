@@ -86,7 +86,7 @@ mistake does not compile.
 | `#[event(priority = high)]` | same | `lowest` · `low` · `normal` · `high` · `highest` · `monitor` |
 | `#[route(GET, "/path")]` | `fn(HttpRequest) -> Result<T>` | an endpoint under `/api/modules/<id>/path` |
 | `#[route(POST, "/p", auth = public)]` | same | `public` · `user` · `permission("node")` · `admin("node")` |
-| `#[task("1h")]` | `fn() -> Result<()>` | on a schedule: `30s` · `5m` · `1h` · `2d` |
+| `#[task("1h")]` | `fn() -> Result<()>` | on a schedule: `30s` · `5m` · `1h` · `2d` — see [tasks](../../guides/tasks/) |
 | `#[register]` | `fn(&mut Registration)` | adds settings fields |
 | `#[init]` | `fn() -> Result<()>` | one-off work when enabled |
 

@@ -61,6 +61,7 @@ export default defineConfig({
                         { label: 'Storing data', slug: 'guides/data' },
                         { label: 'Your own endpoints', slug: 'guides/endpoints' },
                         { label: 'Mini-apps', slug: 'guides/mini-apps' },
+                        { label: 'Scheduled work', slug: 'guides/tasks' },
                         { label: 'Development mode', slug: 'guides/dev-mode' },
                     ],
                 },
