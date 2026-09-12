@@ -3,8 +3,8 @@ import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 
 // GitHub Pages serves a project site from a subdirectory, so every absolute
-// path needs this prefix. Kept in one place because the link to the rustdoc
-// below is not an Astro route and gets no prefix of its own.
+// path needs this prefix. Astro adds it itself — including to a plain `link:`
+// in the sidebar — so nothing here should prepend it by hand.
 //
 // In dev the prefix only gets in the way: the page would sit at
 // /noro-shared/start/… instead of /start/…, which is not the address anyone
@@ -72,8 +72,11 @@ export default defineConfig({
                         { label: 'Event catalog', slug: 'reference/events' },
                         { label: 'Capabilities', slug: 'reference/capabilities' },
                         { label: 'Errors', slug: 'reference/errors' },
-                        // Built by `cargo doc`, not by Astro — hence a raw link.
-                        { label: 'API reference (rustdoc)', link: `${base}/api/`, attrs: { target: '_blank' } },
+                        // Built by `cargo doc`, not by Astro — hence a raw
+                        // link rather than a slug. The `base` prefix is not
+                        // written here: Astro prepends it to a leading slash,
+                        // and adding it manually gave /noro-shared/noro-shared/api/.
+                        { label: 'API reference (rustdoc)', link: '/api/', attrs: { target: '_blank' } },
                     ],
                 },
             ],
