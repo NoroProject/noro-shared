@@ -32,7 +32,9 @@ pub fn violations(m: &Manifest) -> Vec<String> {
     }
     // A Postgres schema name is capped at 63 bytes, and the `mod_` prefix goes in there too.
     if id.len() > 58 {
-        out.push(format!("the identifier `{id}` is longer than 58 characters"));
+        out.push(format!(
+            "the identifier `{id}` is longer than 58 characters"
+        ));
     }
     if m.module.version.is_empty() {
         out.push("no version given".to_string());
@@ -68,7 +70,9 @@ pub fn violations(m: &Manifest) -> Vec<String> {
 
     for host in &m.capabilities.http {
         if host.contains('/') || host.contains(':') {
-            out.push(format!("the allow-list expects a host, not an address: `{host}`"));
+            out.push(format!(
+                "the allow-list expects a host, not an address: `{host}`"
+            ));
         }
     }
 

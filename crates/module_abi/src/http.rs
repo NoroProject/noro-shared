@@ -43,7 +43,8 @@ impl HttpRequest {
 
     /// Who is calling, when the endpoint requires a sign-in.
     pub fn require_user(&self) -> Result<Uuid, crate::error::ModuleError> {
-        self.user
-            .ok_or_else(|| crate::error::ModuleError::invalid("the endpoint was called without a sign-in"))
+        self.user.ok_or_else(|| {
+            crate::error::ModuleError::invalid("the endpoint was called without a sign-in")
+        })
     }
 }

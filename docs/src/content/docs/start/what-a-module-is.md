@@ -36,7 +36,11 @@ properties are what make module authoring possible in the first place.
 
 | Through | What for |
 |---|---|
-| `players` | finding a player by id, username, Minecraft uuid, Discord, or any linked login |
+| `players` | finding a player by id, username, Minecraft uuid, Discord or any linked login; banning one |
+| `roles` | reading roles, and granting or revoking them |
+| `permissions` | asking what a player effectively has, and granting personal permissions |
+| `access` | letting a player into a server or one of its client builds |
+| `servers` | servers, their builds, their game servers, and maintenance mode |
 | `store` | your own key-value data, scoped to the instance, a server or a player |
 | `log` | lines into the master's `tracing`, tagged with your module |
 | `#[event]` | ~50 events across players, access, infrastructure, moderation and economy |

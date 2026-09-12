@@ -79,7 +79,10 @@ impl Registration {
                 out.push(format!("the event `{}` does not exist", e.name));
             }
             if e.handler.is_empty() {
-                out.push(format!("the subscription to `{}` has an empty handler", e.name));
+                out.push(format!(
+                    "the subscription to `{}` has an empty handler",
+                    e.name
+                ));
             }
         }
 
@@ -93,7 +96,10 @@ impl Registration {
             }
             if let Auth::Permission(node) | Auth::Admin(node) = &r.auth {
                 if node.is_empty() {
-                    out.push(format!("the endpoint `{}` has an empty permission node", r.path));
+                    out.push(format!(
+                        "the endpoint `{}` has an empty permission node",
+                        r.path
+                    ));
                 }
             }
         }
@@ -104,7 +110,10 @@ impl Registration {
         for r in &self.routes {
             let key = (r.method.to_ascii_uppercase(), r.path.clone());
             if seen.contains(&key) {
-                out.push(format!("the endpoint {} {} is declared twice", key.0, key.1));
+                out.push(format!(
+                    "the endpoint {} {} is declared twice",
+                    key.0, key.1
+                ));
             }
             seen.push(key);
         }
@@ -115,7 +124,10 @@ impl Registration {
             }
             if let (Some(min), Some(max)) = (s.min, s.max) {
                 if min > max {
-                    out.push(format!("the setting `{}` has a minimum above its maximum", s.key));
+                    out.push(format!(
+                        "the setting `{}` has a minimum above its maximum",
+                        s.key
+                    ));
                 }
             }
         }

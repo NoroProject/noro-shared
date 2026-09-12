@@ -120,7 +120,12 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
             };
             let arg_ty = match first_arg_type(method) {
                 Some(t) => t,
-                None => return err(&name, "an event handler needs an argument — the event itself"),
+                None => {
+                    return err(
+                        &name,
+                        "an event handler needs an argument — the event itself",
+                    )
+                }
             };
             let priority = args.priority_tokens();
 

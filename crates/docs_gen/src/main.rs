@@ -43,7 +43,10 @@ fn main() {
     if let Some(root) = args.next() {
         let missing = check_links(Path::new(&root));
         if !missing.is_empty() {
-            eprintln!("{} event links point at missing rustdoc pages:", missing.len());
+            eprintln!(
+                "{} event links point at missing rustdoc pages:",
+                missing.len()
+            );
             for m in &missing {
                 eprintln!("  {m}");
             }
@@ -55,7 +58,11 @@ fn main() {
     fs::create_dir_all(dir).expect("create the reference directory");
     fs::write(dir.join("events.md"), events_page()).expect("write events.md");
 
-    println!("generated {} events into {}", ALL_EVENTS.len(), dir.display());
+    println!(
+        "generated {} events into {}",
+        ALL_EVENTS.len(),
+        dir.display()
+    );
 }
 
 /// The rustdoc pages named by the catalog that do not exist.
@@ -103,7 +110,10 @@ fn events_page() -> String {
             continue;
         }
 
-        let _ = write!(page, "\n## {title}\n\n| Event | Kind | Payload |\n|---|---|---|\n");
+        let _ = write!(
+            page,
+            "\n## {title}\n\n| Event | Kind | Payload |\n|---|---|---|\n"
+        );
         for e in rows {
             let kind = match e.kind {
                 EventKind::Pre => "`Pre`",

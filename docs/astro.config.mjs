@@ -47,6 +47,7 @@ export default defineConfig({
                     label: 'Guides',
                     items: [
                         { label: 'Events', slug: 'guides/events' },
+                        { label: 'Reaching the platform', slug: 'guides/platform' },
                         { label: 'Storing data', slug: 'guides/data' },
                         { label: 'Your own endpoints', slug: 'guides/endpoints' },
                         { label: 'Mini-apps', slug: 'guides/mini-apps' },

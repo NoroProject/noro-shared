@@ -31,6 +31,7 @@ pub mod error;
 pub mod events;
 pub mod http;
 pub mod manifest;
+pub mod ops;
 pub mod player;
 pub mod registration;
 pub mod store;
@@ -42,6 +43,10 @@ pub use error::{ModuleError, ModuleResult};
 pub use events::{Cancel, Event, EventKind, EventMeta, ALL_EVENTS};
 pub use http::HttpRequest;
 pub use manifest::Manifest;
+pub use ops::{
+    BanRequest, BuildAccess, IntoRoleRef, Maintenance, PermissionOn, PermissionQuery, RoleGrant,
+    RoleRef, ServerAccess,
+};
 pub use player::{IntoPlayerRef, Player, PlayerRef};
 pub use registration::{EventReg, Registration, RouteReg, TaskReg};
 

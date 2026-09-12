@@ -71,9 +71,13 @@
 //! The second thing worth keeping in mind is size: everything you add travels
 //! inside the `.wasm` and occupies the instance's memory.
 
+pub mod access;
 pub mod host;
 pub mod log;
+pub mod permissions;
 pub mod players;
+pub mod roles;
+pub mod servers;
 pub mod store;
 
 pub use noro_module_abi as abi;
@@ -98,13 +102,14 @@ pub mod prelude {
     pub use crate::abi::error::{ErrorKind, ModuleError};
     pub use crate::abi::events::*;
     pub use crate::abi::manifest::{Priority, SettingKind};
+    pub use crate::abi::ops::{IntoRoleRef, RoleRef};
     pub use crate::abi::HttpRequest;
     pub use crate::abi::Registration;
     pub use crate::abi::{
         Account, ActorRef, Build, EventCtx, GameServer, IntoPlayerRef, Origin, Player, PlayerRef,
         Punishment, Role, Server,
     };
-    pub use crate::{log, noro, now, players, store, Result};
+    pub use crate::{access, log, noro, now, permissions, players, roles, servers, store, Result};
 
     // The crate itself, not just its names: the `plugin_fn` macro expands into
     // `extism_pdk::…`, and without this import the module would not build.

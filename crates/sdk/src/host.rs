@@ -13,6 +13,28 @@ use serde::Serialize;
 #[host_fn]
 extern "ExtismHost" {
     fn player_get(input: String) -> String;
+    fn player_ban(input: String) -> String;
+    fn roles_list(input: String) -> String;
+    fn role_get(input: String) -> String;
+    fn roles_of(input: String) -> String;
+    fn role_grant(input: String) -> String;
+    fn role_revoke(input: String) -> String;
+    fn perm_has(input: String) -> String;
+    fn perm_effective(input: String) -> String;
+    fn perm_grant(input: String) -> String;
+    fn perm_revoke(input: String) -> String;
+    fn access_join(input: String) -> String;
+    fn access_join_revoke(input: String) -> String;
+    fn access_build(input: String) -> String;
+    fn access_build_revoke(input: String) -> String;
+    fn servers_list(input: String) -> String;
+    fn server_get(input: String) -> String;
+    fn server_by_slug(input: String) -> String;
+    fn builds_list(input: String) -> String;
+    fn build_published(input: String) -> String;
+    fn gameservers_list(input: String) -> String;
+    fn gameserver_get(input: String) -> String;
+    fn gameserver_maintenance(input: String) -> String;
     fn store_get(input: String) -> String;
     fn store_set(input: String) -> String;
     fn store_delete(input: String) -> String;
@@ -35,6 +57,121 @@ pub(crate) fn player_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Resu
     call!(player_get, arg)
 }
 
+pub(crate) fn player_ban_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(player_ban, arg)
+}
+
+pub(crate) fn roles_list_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(roles_list, arg)
+}
+
+pub(crate) fn role_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(role_get, arg)
+}
+
+pub(crate) fn roles_of_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(roles_of, arg)
+}
+
+pub(crate) fn role_grant_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(role_grant, arg)
+}
+
+pub(crate) fn role_revoke_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(role_revoke, arg)
+}
+
+pub(crate) fn perm_has_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(perm_has, arg)
+}
+
+pub(crate) fn perm_effective_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(perm_effective, arg)
+}
+
+pub(crate) fn perm_grant_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(perm_grant, arg)
+}
+
+pub(crate) fn perm_revoke_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(perm_revoke, arg)
+}
+
+pub(crate) fn access_join_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(access_join, arg)
+}
+
+pub(crate) fn access_join_revoke_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(access_join_revoke, arg)
+}
+
+pub(crate) fn access_build_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(access_build, arg)
+}
+
+pub(crate) fn access_build_revoke_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(access_build_revoke, arg)
+}
+
+pub(crate) fn servers_list_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(servers_list, arg)
+}
+
+pub(crate) fn server_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(server_get, arg)
+}
+
+pub(crate) fn server_by_slug_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(server_by_slug, arg)
+}
+
+pub(crate) fn builds_list_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(builds_list, arg)
+}
+
+pub(crate) fn build_published_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(build_published, arg)
+}
+
+pub(crate) fn gameservers_list_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(gameservers_list, arg)
+}
+
+pub(crate) fn gameserver_get_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(gameserver_get, arg)
+}
+
+pub(crate) fn gameserver_maintenance_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(gameserver_maintenance, arg)
+}
 pub(crate) fn store_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(store_get, arg)
 }
@@ -92,7 +229,10 @@ fn decode<R: DeserializeOwned>(raw: &str) -> Result<R, ModuleError> {
 }
 
 fn encode_failed(e: serde_json::Error) -> ModuleError {
-    ModuleError::new(ErrorKind::Invalid, format!("the argument was not serialized: {e}"))
+    ModuleError::new(
+        ErrorKind::Invalid,
+        format!("the argument was not serialized: {e}"),
+    )
 }
 
 /// Only breakages of the bridge itself land here: the master could not write
