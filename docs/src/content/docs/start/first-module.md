@@ -1,36 +1,50 @@
 ---
 title: Your first module
-description: From the template repository to a running module in the panel.
+description: From an empty directory to a running module in the panel.
 ---
 
 ## What you need
 
 - The Rust toolchain with the wasm target: `rustup target add wasm32-unknown-unknown`
 - [Bun](https://bun.sh) — only if your module has a mini-app
-- `zip`, and optionally [`wasm-opt`](https://github.com/WebAssembly/binaryen) (it cuts
-  the `.wasm` down by about a third; the build works without it)
+- Optionally [`wasm-opt`](https://github.com/WebAssembly/binaryen); it cuts the `.wasm`
+  down by about a third, and the build works without it
 
-## Start from the template
-
-Press **Use this template** on
-[NoroProject/noro-module-template](https://github.com/NoroProject/noro-module-template),
-clone the result, and give your module its identity:
+## Get the tool
 
 ```bash
-./scripts/rename.sh my-module "My Module"
+cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
 ```
 
-That one script renames the crate, the manifest `id`, the locale key prefix and the
-mini-app package. Doing it by hand means missing one of the four and finding out at
-install time.
+It becomes a cargo subcommand: `cargo noro …` from anywhere inside your module.
+
+## Create it
+
+```bash
+cargo noro new my-module
+cd my-module
+```
+
+You get a working module: a settings field, a startup step, an event handler and an
+endpoint, one of each and all of them deletable. `--ui none` leaves out the mini-app;
+`--name "My Module"` sets the display name.
+
+The identifier is asked for once because it travels: into the crate name, the manifest,
+the prefix of every locale key and the mini-app package. `cargo noro new` fills all four
+in at the same time.
 
 ## Build it
 
 ```bash
-./scripts/build.sh
+cargo noro package
 ```
 
 The result is `dist/my-module.noromod`. That single file is what you upload.
+
+`cargo noro check` runs first, every time. It reads the manifest with the same types the
+master uses, so an unknown capability action, a locale key without its prefix or a
+mini-app pointing at a file that is not there are all refused here — before the upload,
+rather than after it.
 
 ## Install it
 
@@ -44,7 +58,8 @@ restarted at any point.
 :::tip[Do not rebuild a package while developing]
 Point the master at your module's folder instead — admin panel → **Modules** → **Dev
 mode**. It then reads the wasm, the mini-app and the locales straight from disk and
-reloads the module whenever you rebuild. See [development mode](../../guides/dev-mode/).
+reloads the module whenever you rebuild — `cargo noro dev` is the other half. See
+[development mode](../../guides/dev-mode/).
 :::
 
 ## What the identifier is used for

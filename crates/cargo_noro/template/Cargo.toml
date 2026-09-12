@@ -1,0 +1,25 @@
+# A workspace of its own: the module is built for wasm32-unknown-unknown as a
+# cdylib, so it cannot belong to a workspace that builds for the host.
+[workspace]
+
+[package]
+name = "{{id}}"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+noro-sdk = { git = "https://github.com/NoroProject/noro-shared.git", package = "noro-sdk", branch = "master" }
+serde = { version = "1", features = ["derive"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+# `panic = "abort"` is not allowed here: the master catches a module's panic and
+# survives it, while abort takes the whole instance down.
+panic = "unwind"

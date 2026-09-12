@@ -20,7 +20,7 @@ From then on the master reads three things straight from disk:
 ## The loop
 
 ```bash
-./scripts/dev.sh
+cargo noro dev
 ```
 
 That rebuilds on every save. The master notices the new wasm and **reloads the module
@@ -31,7 +31,8 @@ For the mini-app there is nothing to reload: reload the browser tab.
 
 ## What it watches, and how
 
-A one-second poll, not filesystem notifications. `notify`-style watchers behave
+`cargo noro dev` polls once a second rather than subscribing to filesystem
+notifications. `notify`-style watchers behave
 differently on macOS and Linux, and both stumble over the atomic rename a compiler does
 when writing output — you get told about a file that is momentarily not there. A poll is
 duller and does not lie.
@@ -54,7 +55,7 @@ check that you are not looking at a cached bundle before you look at your code.
 Build the real package once and install it the normal way:
 
 ```bash
-./scripts/build.sh
+cargo noro package
 ```
 
 Dev mode reads loose files; a package is a zip with a manifest the master validates on

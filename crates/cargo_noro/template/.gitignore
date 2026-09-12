@@ -1,0 +1,13 @@
+target/
+node_modules/
+dist/
+
+# Built by vite from ui/. Keeping the output in the repository would mean
+# committing an artifact that gets rebuilt before packaging anyway.
+web/
+
+# A template should start from the current SDK and current packages, not from
+# whatever was current when the template itself was written. Commit these once
+# your module is real and you want reproducible builds.
+Cargo.lock
+bun.lock

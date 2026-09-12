@@ -15,6 +15,13 @@ Short agent cheatsheet: **[./AGENTS.md](./AGENTS.md)** / **[./CLAUDE.md](./CLAUD
 | `schema` | `crates/schema` | Wire contract, shared API data types, pagination envelopes (`Page<T>`) |
 | `i18n` | `crates/i18n` | Fluent translation catalogues (`en.ftl`, `ru.ftl`) and formatting helpers |
 | `mc_mod_utils` | `crates/mc_mod_utils` | Minecraft mod jar parsing, metadata extraction (Fabric, Forge, NeoForge) |
+| `noro-module-abi` | `crates/module_abi` | The module boundary: events, entities, the manifest and its validation |
+| `noro-sdk` | `crates/sdk` | What a module author writes against, one file per domain |
+| `noro-sdk-macros` | `crates/sdk_macros` | `#[noro::module]` and its attributes |
+| `cargo-noro` | `crates/cargo_noro` | `cargo noro new / check / build / package / dev` |
+| `noro-docs-gen` | `crates/docs_gen` | Generates the event catalog and checks the rustdoc links |
+
+> The module manifest is validated by **one** implementation, `noro_module_abi::validate`, called by both `cargo noro check` and the master on install. A second copy would let an author build a package the master silently refuses.
 
 ### 1.1 Dependency & Distribution Model
 - Both `noro-launcher` and `noro-server` consume `noro-shared` over **git by branch**.

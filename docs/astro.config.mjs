@@ -68,6 +68,7 @@ export default defineConfig({
                 {
                     label: 'Reference',
                     items: [
+                        { label: 'cargo noro', slug: 'reference/cli' },
                         { label: 'Event catalog', slug: 'reference/events' },
                         { label: 'Capabilities', slug: 'reference/capabilities' },
                         { label: 'Errors', slug: 'reference/errors' },

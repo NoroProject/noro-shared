@@ -1,0 +1,22 @@
+[package]
+name = "cargo-noro"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Создание, сборка и проверка модулей Noro"
+
+# Имя обязано быть `cargo-noro`: по нему cargo и находит подкоманду `cargo noro`.
+[[bin]]
+name = "cargo-noro"
+path = "src/main.rs"
+
+[dependencies]
+noro-module-abi = { workspace = true }
+serde_json = { workspace = true }
+zip = { workspace = true }
+
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+sha2 = "0.10"
+toml = "0.8"

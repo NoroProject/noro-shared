@@ -1,0 +1,33 @@
+# The module's passport: only what the master has to know before running its
+# code.
+#
+# Events, endpoints and tasks are declared in the code itself — see src/lib.rs.
+# They are not repeated here, and the handler names are not strings anywhere.
+
+[module]
+id = "{{id}}"
+name = "{{name}}"
+version = "0.1.0"
+api = "1.0"
+scope = "instance"
+author = "you"
+description = "A starting point for a Noro module"
+
+# What the module asks for. The operator grants this at install time, and may
+# grant less: a call into something ungranted returns an error rather than
+# crashing.
+[capabilities]
+players = ["read"]
+store = true
+
+# A page in the player's cabinet.
+#
+# kind = "vue" means the panel mounts the module's component inside its own
+# tree: full Vue, the panel's atoms, the panel's look. The alternative is
+# kind = "page" — a static page in a sandboxed iframe.
+[[apps]]
+placement = "cabinet"
+kind = "vue"
+entry = "app.js"
+title = "mod-{{id}}-title"
+icon = "i-lucide-box"
