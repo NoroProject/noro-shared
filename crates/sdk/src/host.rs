@@ -57,6 +57,17 @@ extern "ExtismHost" {
     fn gameservers_list(input: String) -> String;
     fn gameserver_get(input: String) -> String;
     fn gameserver_maintenance(input: String) -> String;
+    fn tickets_queue(input: String) -> String;
+    fn ticket_get(input: String) -> String;
+    fn ticket_messages(input: String) -> String;
+    fn ticket_reply(input: String) -> String;
+    fn ticket_open(input: String) -> String;
+    fn ticket_close(input: String) -> String;
+    fn case_get(input: String) -> String;
+    fn case_events(input: String) -> String;
+    fn case_open_on(input: String) -> String;
+    fn case_claim(input: String) -> String;
+    fn case_resolve(input: String) -> String;
     fn file_put(input: String) -> String;
     fn file_read(input: String) -> String;
     fn file_exists(input: String) -> String;
@@ -343,6 +354,65 @@ pub(crate) fn gameserver_maintenance_call<A: Serialize, R: DeserializeOwned>(
     arg: A,
 ) -> Result<R, ModuleError> {
     call!(gameserver_maintenance, arg)
+}
+pub(crate) fn tickets_queue_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(tickets_queue, arg)
+}
+
+pub(crate) fn ticket_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(ticket_get, arg)
+}
+
+pub(crate) fn ticket_messages_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(ticket_messages, arg)
+}
+
+pub(crate) fn ticket_reply_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(ticket_reply, arg)
+}
+
+pub(crate) fn ticket_open_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(ticket_open, arg)
+}
+
+pub(crate) fn ticket_close_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(ticket_close, arg)
+}
+
+pub(crate) fn case_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(case_get, arg)
+}
+
+pub(crate) fn case_events_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(case_events, arg)
+}
+
+pub(crate) fn case_open_on_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(case_open_on, arg)
+}
+
+pub(crate) fn case_claim_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(case_claim, arg)
+}
+
+pub(crate) fn case_resolve_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(case_resolve, arg)
 }
 pub(crate) fn file_put_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(file_put, arg)

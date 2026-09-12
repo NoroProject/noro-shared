@@ -259,3 +259,38 @@ you want it.
 The call blocks your handler. A `Post` handler has five seconds in total and the request
 itself is capped at four, so a slow endpoint is a handler that times out. An answer over
 a megabyte is refused rather than loaded: it would come into the sandbox's memory.
+
+## Conversations and cases
+
+A ticket is one thread with a player — from the cabinet, from `/support` in game, or
+opened out of a moderation case. A case is what a report becomes: a target, a timeline,
+and eventually a verdict.
+
+```rust
+for t in tickets::queue(1, 25)? {
+    if t.unread > 0 { … }
+}
+tickets::reply(t.id, "Lifted, sorry about that.")?;
+let id = tickets::open(player, "Your appeal", "We have looked at it again.")?;
+
+let case = cases::get(case_id)?;
+cases::claim(case_id, on_duty_moderator)?;
+cases::resolve(case_id, "confirmed", "Chat log speaks for itself.", Some("3.2"))?;
+```
+
+Two things are deliberate here.
+
+**A module's message is signed with the module.** There is no person behind it, and
+putting the name of whoever enabled the module on those words would be putting words in
+their mouth — the player is going to read them and ask. It appears the way an admin
+token's messages do, which is the same situation.
+
+**Claiming a case names a moderator.** A case belongs to someone who will answer for it;
+one claimed by a module would be a case nobody is working on. Automation can assign, it
+cannot take responsibility.
+
+Opening a conversation with a player who already has one open uses theirs. Two threads
+about one thing is how an answer gets lost.
+
+Resolving a case closes the reports behind it with the same outcome. A resolved case with
+its reports still open is the state in which the work gets done twice.

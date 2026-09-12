@@ -519,6 +519,102 @@ pub struct OptionalMod {
     pub mod_name: String,
 }
 
+/// A conversation with a player — from the panel, from the game, or opened out
+/// of a moderation case.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Ticket {
+    pub id: Uuid,
+    pub player_id: Uuid,
+    pub player_name: String,
+    pub subject: String,
+    /// `open`, `answered`, `closed`.
+    pub status: String,
+    /// The case it came out of, when it did.
+    #[serde(default)]
+    pub case_id: Option<Uuid>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+    pub last_message_at: chrono::DateTime<chrono::Utc>,
+    /// Messages from the player that staff have not read.
+    pub unread: i64,
+}
+
+/// One message in a conversation.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TicketMessage {
+    pub id: Uuid,
+    /// `player`, `staff` or `system`.
+    pub side: String,
+    /// The name as it was when the message was sent: names change, history
+    /// does not.
+    pub author_name: String,
+    #[serde(default)]
+    pub author_role: Option<String>,
+    pub content: String,
+    pub at: chrono::DateTime<chrono::Utc>,
+}
+
+/// A reply to write into a conversation.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TicketReply {
+    pub ticket_id: Uuid,
+    pub content: String,
+}
+
+/// Opening a conversation with a player.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TicketDraft {
+    pub player: PlayerRef,
+    pub subject: String,
+    /// The first message. Without one the player sees a subject and nothing
+    /// else, which reads as a mistake.
+    pub content: String,
+}
+
+/// A moderation case.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Case {
+    pub id: Uuid,
+    /// The number staff quote to each other.
+    pub number: i64,
+    pub target_id: Uuid,
+    /// `open`, `claimed`, `resolved`, `rejected`.
+    pub status: String,
+    /// The game server it was opened on, when it was opened from in game.
+    #[serde(default)]
+    pub game_server_id: Option<Uuid>,
+    /// The moderator it is claimed by, if any.
+    #[serde(default)]
+    pub claimed_by: Option<Uuid>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+/// One entry in a case's timeline.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CaseEvent {
+    pub id: Uuid,
+    /// What happened: `claim`, `punishment`, `note`, `chat`.
+    pub kind: String,
+    #[serde(default)]
+    pub actor_name: Option<String>,
+    /// The details, shape depending on `kind`.
+    #[serde(default)]
+    pub details: serde_json::Value,
+    pub at: chrono::DateTime<chrono::Utc>,
+}
+
+/// Closing a case.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CaseVerdict {
+    pub case_id: Uuid,
+    /// `confirmed` — the report held up; anything else rejects it.
+    pub verdict: String,
+    /// What staff will read later, when the player asks.
+    pub resolution: String,
+    /// The rule it was decided under, when there was one.
+    #[serde(default)]
+    pub rule_code: Option<String>,
+}
+
 #[cfg(test)]
 #[path = "ops_tests.rs"]
 mod tests;

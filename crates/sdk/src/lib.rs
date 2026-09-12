@@ -73,6 +73,7 @@
 
 pub mod access;
 pub mod bank;
+pub mod cases;
 pub mod chat;
 pub mod db;
 pub mod files;
@@ -92,6 +93,7 @@ pub mod servers;
 pub mod sessions;
 pub mod store;
 pub mod telemetry;
+pub mod tickets;
 
 pub use noro_module_abi as abi;
 

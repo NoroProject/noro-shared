@@ -52,7 +52,7 @@ pub use ops::{
     PermissionOn, PermissionQuery, PlayerMessage, PresetRef, ProviderQuery, PublishRequest,
     PunishKind, PunishRequest, RenameRequest, RestartSchedule, RoleDraft, RoleGrant, RoleRef,
     SavePreset, ScheduleDraft, ServerAccess, Session, SessionRef, SettingWrite, SkinPreset,
-    SkinRequest, StoredFile, Telemetry, Transfer,
+    SkinRequest, StoredFile, Telemetry, Ticket, TicketDraft, TicketMessage, TicketReply, Transfer,
 };
 pub use player::{IntoPlayerRef, Player, PlayerRef};
 pub use registration::{EventReg, Registration, RouteReg, TaskReg};

@@ -63,6 +63,11 @@ which are.
 | `telemetry` | `read` | `telemetry::of` |
 | `files` | `read` | `files::read`, `exists`, `url` |
 | | `write` | `files::put` |
+| `tickets` | `read` | `tickets::queue`, `get`, `messages` |
+| | `reply` | `tickets::reply`, `open`, `close` |
+| `cases` | `read` | `cases::get`, `events`, `open_on` |
+| | `claim` | `cases::claim` |
+| | `resolve` | `cases::resolve` |
 | `store` | `true` | the whole key-value store |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |
@@ -81,8 +86,6 @@ is no call to make with it.
 | `court` | `read`, `file` | claims, hearings, rulings |
 | `petitions` | `read`, `create` | petitions and their votes |
 | `fines` | `read`, `issue` | fines, and what became of them |
-| `tickets` | `read`, `reply` | player conversations, in the panel and in game |
-| `cases` | `read`, `claim`, `resolve` | moderation cases and their timelines |
 | `builds` | `files` | reading and writing the files inside a build |
 | `events` | `emit` | publishing your own events for other modules to handle |
 
