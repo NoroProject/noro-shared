@@ -6,7 +6,7 @@
  * приходят из `@noroproject/module-ui` — это те же атомы, которыми нарисована сама
  * панель, поэтому вид совпадает без единой строки стилей.
  */
-import { AtomBadge, EmptyState, NoroCard, useNoro } from '@noroproject/module-ui'
+import { AtomBadge, AtomButton, EmptyState, NoroCard, useNoro } from '@noroproject/module-ui'
 import { onMounted, ref } from 'vue'
 
 interface Points {
@@ -31,10 +31,19 @@ onMounted(async () => {
     }
 })
 
-function played(seconds: number) {
-    const h = Math.floor(seconds / 3600)
-    const m = Math.floor((seconds % 3600) / 60)
-    return `${h} ч ${m} мин`
+/** Право модуля: кнопка сброса есть только у тех, кому можно. */
+const canReset = noro.can('noro.module.playtime-rewards.reset')
+
+async function reset() {
+    const ok = await noro.confirm({
+        title: noro.t('mod-playtime-rewards-reset-title', 'Сбросить очки?'),
+        text: noro.t('mod-playtime-rewards-reset-text', 'Начисленное вернуть будет нельзя.'),
+        danger: true,
+    })
+    if (!ok) return
+    await noro.api('/reset', { method: 'POST' })
+    data.value = await noro.api<Points>('/me')
+    noro.notify.ok()
 }
 </script>
 
@@ -49,7 +58,7 @@ function played(seconds: number) {
                 <span class="grow text-sm">
                     {{ noro.t('mod-playtime-rewards-played', 'Наиграно') }}
                 </span>
-                <AtomBadge tone="outline" mono>{{ played(data.seconds_played) }}</AtomBadge>
+                <AtomBadge tone="outline" mono>{{ noro.format.duration(data.seconds_played) }}</AtomBadge>
             </div>
             <div class="flex items-center gap-2">
                 <span class="grow text-sm">
@@ -57,6 +66,10 @@ function played(seconds: number) {
                 </span>
                 <AtomBadge tone="success">{{ data.points }}</AtomBadge>
             </div>
+
+            <AtomButton v-if="canReset" variant="danger-soft" size="sm" @click="reset">
+                {{ noro.t('mod-playtime-rewards-reset', 'Сбросить') }}
+            </AtomButton>
         </div>
     </NoroCard>
 </template>

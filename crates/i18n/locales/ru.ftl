@@ -3047,3 +3047,6 @@ admin-modules-dev-hint = Мастер будет читать модуль с д
 admin-modules-dev-path = Каталог с manifest.toml
 admin-modules-dev-connect = Подключить
 admin-modules-dev-linked = Модуль подключён из каталога
+
+common-cancel = Отменить
+common-confirm = Подтвердить

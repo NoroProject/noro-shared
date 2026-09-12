@@ -174,6 +174,130 @@ export interface NoroUser {
     [key: string]: unknown
 }
 
+
+/** A page of something, the shape every list endpoint answers with. */
+export interface NoroPage<T> {
+    items: T[]
+    total: number
+}
+
+/**
+ * Reading platform data.
+ *
+ * Functions rather than addresses on purpose: the panel's endpoints are its own
+ * business, and a module built against `/api/me/hubs` would break the day that
+ * path changed. What is promised is this surface.
+ *
+ * Everything here is a read. Writing goes through your module's own endpoint on
+ * the Rust side, where the capabilities the operator granted are checked — a
+ * write from here would travel under the token of whoever happened to open the
+ * page.
+ *
+ * Types are deliberately loose (`unknown`, `Record`) where the panel's model is
+ * its own: pinning them here would freeze internal shapes as a public contract.
+ * Cast what you need, and treat a missing field as possible.
+ */
+export interface NoroPlatform {
+    /** The person looking at the page. Their own data, so nothing is withheld. */
+    me: {
+        profile(): Promise<Record<string, unknown>>
+        /** The hubs they are a member of. */
+        hubs(): Promise<unknown[]>
+        punishments(): Promise<unknown[]>
+        sessions(): Promise<unknown[]>
+        /** Linked logins: discord, twitch, google. */
+        identities(): Promise<unknown[]>
+        tickets(): Promise<unknown>
+        cape(): Promise<unknown>
+    }
+
+    players: {
+        /** One player by exact Minecraft username. */
+        byName(name: string): Promise<Record<string, unknown> | null>
+    }
+
+    servers: {
+        list(): Promise<unknown[]>
+        /** The rules that apply on one server build. */
+        rules(serverId: string): Promise<unknown>
+    }
+
+    rules: {
+        list(): Promise<unknown>
+        scopes(): Promise<unknown>
+    }
+
+    legal: {
+        list(): Promise<unknown[]>
+        get(slug: string): Promise<unknown>
+    }
+
+    capes: {
+        list(): Promise<unknown[]>
+    }
+
+    /**
+     * A server's hub. The slug is always explicit: an instance has several
+     * hubs, and "the current one" in the panel means whatever the browser has
+     * open — not what your module meant.
+     */
+    hub: {
+        info(slug: string): Promise<Record<string, unknown>>
+        feed(slug: string, page?: number): Promise<NoroPage<unknown>>
+        members(slug: string, options?: { page?: number; q?: string }): Promise<NoroPage<unknown>>
+        towns(slug: string, page?: number): Promise<NoroPage<unknown>>
+        town(slug: string, town: string): Promise<unknown>
+        myTowns(slug: string): Promise<unknown[]>
+        court(slug: string, page?: number): Promise<NoroPage<unknown>>
+        fines(slug: string, page?: number): Promise<NoroPage<unknown>>
+        /** The viewer's bank cards on this hub. */
+        cards(slug: string): Promise<unknown[]>
+        communities(slug: string): Promise<unknown[]>
+        mapPlayers(slug: string): Promise<unknown[]>
+        mapMarkers(slug: string): Promise<unknown[]>
+    }
+
+    /**
+     * Anything not covered above, by method name.
+     *
+     * The escape hatch, for when the panel gained a method before this package
+     * did. Unknown names fail with the list of what exists.
+     */
+    call<T = unknown>(method: string, args?: Record<string, unknown>): Promise<T>
+}
+
+/** Formatting the panel already does, so a module looks the same as the rest. */
+export interface NoroFormat {
+    /**
+     * A hub amount, in its minor units.
+     *
+     * The currency settings come from `platform.hub.info(slug)` — precision and
+     * symbol are per hub, and formatting without them turns `500` into five
+     * times the price when the hub keeps two decimals. This is the same
+     * function the panel's own forms use, and it mirrors the master's
+     * `money::format_amount`: a mismatch here is one price looking different on
+     * the form and in the bank's refusal.
+     */
+    money(minor: number, currency: { precision?: number; symbol?: string; name?: string }): string
+
+    /**
+     * A duration as `7d 12h 30m`.
+     *
+     * Seconds in, because that is what the Rust side deals in; below a minute
+     * there is nothing to show.
+     */
+    duration(seconds: number): string
+
+    /** A timestamp as a date the viewer reads, in their locale. */
+    date(value: string | number | Date): string
+
+    /**
+     * A timestamp as `5 минут назад`, switching to an absolute date once it is
+     * far enough back that "eleven months ago" stops being useful.
+     */
+    ago(value: string | number | Date): string
+}
+
 /** What the panel gives a mini-app. */
 export interface NoroContext {
     /**
@@ -206,6 +330,84 @@ export interface NoroContext {
 
     /** Moving around the panel: `noro.navigate('/cabinet')`. */
     navigate(path: string): void
+
+    /**
+     * Whether the viewer holds a permission.
+     *
+     * The same matcher the panel uses for its own menus, wildcards included —
+     * `noro.admin.*` answers true for `noro.admin.modules.view`. Use it to
+     * decide what to *show*; the master decides what to allow, and your
+     * endpoint checks again on its side.
+     *
+     * ```ts
+     * if (noro.can('noro.module.shop.manage')) { … }
+     * ```
+     */
+    can(permission: string): boolean
+
+    /** True when the viewer holds at least one of these. */
+    canAny(permissions: string[]): boolean
+
+    /**
+     * Whether they hold it **on one server build** — global permissions plus
+     * the roles of that server. A role granted on one build deliberately does
+     * not count anywhere else.
+     */
+    canOn(permission: string, serverId: string): boolean
+
+    /**
+     * Asks the viewer to confirm, with the panel's own dialog.
+     *
+     * Resolves to `false` when they decline, so an unanswered question reads as
+     * "no" rather than as an exception to handle.
+     */
+    confirm(options: {
+        title: string
+        text?: string
+        /** Label of the confirming button. */
+        confirmLabel?: string
+        /** Paint the confirming button as destructive. */
+        danger?: boolean
+    }): Promise<boolean>
+
+    /** Reading platform data. See [[NoroPlatform]]. */
+    platform: NoroPlatform
+
+    /** Formatting the panel already does. */
+    format: NoroFormat
+
+    /**
+     * A paginated list from one of **your** endpoints.
+     *
+     * Your endpoint has to answer `{ items, total }` — the shape every list in
+     * this platform answers with. What you get back is refs you can bind
+     * straight into a template, plus the fetch, so a module does not reimplement
+     * paging and debounced search for the fourth time.
+     *
+     * ```ts
+     * const list = noro.paged<Order>('/orders', { perPage: 25 })
+     * await list.load()
+     * ```
+     */
+    paged<T = unknown>(
+        path: string,
+        options?: { perPage?: number; params?: () => Record<string, string | undefined> },
+    ): NoroPagedList<T>
+}
+
+/** A paginated list, ready to bind. */
+export interface NoroPagedList<T> {
+    items: import('vue').Ref<T[]>
+    total: import('vue').Ref<number>
+    page: import('vue').Ref<number>
+    /** What the person is typing. Debounced before it reaches the request. */
+    search: import('vue').Ref<string>
+    pending: import('vue').Ref<boolean>
+    error: import('vue').Ref<string | null>
+    pages: import('vue').ComputedRef<number>
+    load(): Promise<void>
+    /** Re-reads the current page — after your own mutation, for instance. */
+    refresh(): Promise<void>
 }
 
 /**

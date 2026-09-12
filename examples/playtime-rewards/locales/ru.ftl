@@ -5,3 +5,7 @@ mod-playtime-rewards-points = Начислено очков
 mod-playtime-rewards-role-after = Часов в игре до роли
 mod-playtime-rewards-role-after-hint = Ноль — роль не выдаётся.
 mod-playtime-rewards-role-name = Какую роль выдать
+mod-playtime-rewards-reset = Сбросить
+mod-playtime-rewards-reset-title = Сбросить очки?
+mod-playtime-rewards-reset-text = Начисленное вернуть будет нельзя.
+mod-playtime-rewards-perm-reset = Сбрасывать очки игрока

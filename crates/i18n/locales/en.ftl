@@ -3042,3 +3042,8 @@ admin-modules-dev-hint = The master will read the module from disk and reload it
 admin-modules-dev-path = Folder with manifest.toml
 admin-modules-dev-connect = Connect
 admin-modules-dev-linked = Module connected from folder
+
+# Общие подписи кнопок. Заведены для диалога подтверждения у мини-аппов, но
+# годятся всюду: до сих пор каждый раздел заводил своё «Отменить».
+common-cancel = Cancel
+common-confirm = Confirm

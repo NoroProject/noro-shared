@@ -58,10 +58,79 @@ bun add -d @noroproject/module-ui
 Those are the panel's own components, so the page matches the rest of it without a line
 of styling.
 
-`useNoro()` gives you four things: `api(path, options?)` calls your own endpoints and
-nobody else's — the panel builds the address; `t(key, fallback?)` looks up your locale
-keys; `user` is whoever opened the page, or `null`; `notify.ok()` / `notify.fail()` raise
-the panel's own notifications, and `navigate(path)` moves around it.
+## What `useNoro()` gives you
+
+```ts
+const noro = useNoro()
+```
+
+| | |
+|---|---|
+| `api(path, options?)` | calls **your** endpoints and nobody else's — the panel builds the address |
+| `t(key, fallback?)` | your locale keys |
+| `user` | whoever opened the page, or `null` |
+| `notify.ok()` / `notify.fail(e)` | the panel's own notifications |
+| `navigate(path)` | moving around the panel |
+| `can(node)` · `canAny([…])` · `canOn(node, serverId)` | what the viewer is allowed |
+| `confirm({ title, text?, danger? })` | asks, with the panel's dialog |
+| `format.duration` · `money` · `date` · `ago` | the panel's own formatting |
+| `paged(path, opts?)` | a paginated list from your endpoint |
+| `platform.*` | reading platform data |
+
+### Deciding what to show
+
+```ts
+const canReset = noro.can('noro.module.shop.manage')
+```
+
+The same matcher the panel uses for its own menus, wildcards included —
+`noro.admin.*` answers true for `noro.admin.modules.view`. This decides what to
+**show**; the master decides what to allow, and your endpoint's `auth` checks again on
+its side. A hidden button is a courtesy, not a boundary.
+
+### Asking before doing
+
+```ts
+if (!await noro.confirm({ title: 'Reset points?', text: 'This cannot be undone.', danger: true })) {
+    return
+}
+```
+
+The dialog is drawn by the panel, so it looks like every other dialog and cannot be
+covered by your own markup. Declining — or just closing it — resolves to `false`, so an
+unanswered question reads as "no" rather than as an exception you have to catch.
+
+### Paginated lists
+
+```ts
+const list = noro.paged<Order>('/orders', { perPage: 25 })
+await list.load()
+```
+
+Your endpoint answers `{ items, total }` — the shape every list in this platform answers
+with — and you get refs to bind straight into a template, with debounced search and page
+state already wired. `list.refresh()` re-reads the current page after your own mutation.
+
+### Reading platform data
+
+```ts
+const me = await noro.platform.me.profile()
+const servers = await noro.platform.servers.list()
+const feed = await noro.platform.hub.feed('survival', 1)
+```
+
+Functions, not addresses. The panel's endpoints are its own business: a module built
+against `/api/me/hubs` would break the day that path changed, so what is promised is this
+surface instead. There is `platform.call(method, args)` for anything the package does not
+name yet.
+
+Everything there is a **read**. Writing goes through your own endpoint on the Rust side,
+where the capabilities the operator granted are checked — a write from here would travel
+under the token of whoever happened to open the page.
+
+Both kinds of mini-app get the identical surface. A sandboxed page reaches it over the
+bridge rather than by fetching anything itself, which is why the addresses stay out of
+the sandbox and there is only one implementation to keep correct.
 
 ### The build
 

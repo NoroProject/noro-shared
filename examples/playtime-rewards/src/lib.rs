@@ -140,6 +140,24 @@ impl PlaytimeRewards {
         Ok(())
     }
 
+    /// Сбросить свои очки.
+    ///
+    /// Право проверяет мастер по узлу из манифеста: до модуля запрос без него
+    /// не доходит, и проверять ещё раз здесь нечего. Кнопку мини-апп прячет
+    /// сам — через `noro.can`, тем же матчером, что и панель.
+    #[route(POST, "/reset", auth = permission("noro.module.playtime-rewards.reset"))]
+    fn route_reset(req: HttpRequest) -> Result<Points> {
+        let user_id = req.require_user()?;
+        let me = store::user(user_id);
+        me.set("points", &0)?;
+        log::info(format!("очки сброшены у {user_id}"));
+        Ok(Points {
+            player: players::require(user_id)?.label(),
+            points: 0,
+            seconds_played: me.get("seconds_played")?.unwrap_or(0),
+        })
+    }
+
     /// Сколько очков у того, кто открыл мини-апп.
     ///
     /// Права проверил мастер: до модуля запрос без входа не доходит, поэтому

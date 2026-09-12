@@ -23,6 +23,12 @@ roles = ["read", "grant"]
 #
 # kind = "vue" — панель смонтирует компонент модуля у себя: полный Vue, её
 # атомы и её вид. Альтернатива — kind = "page", страница в песочнице.
+# Узел права. Обязан начинаться с noro.module.<id>. — мастер это проверяет,
+# и потому узлы модулей не могут столкнуться между собой.
+[[permissions]]
+node = "noro.module.playtime-rewards.reset"
+label = "mod-playtime-rewards-perm-reset"
+
 [[apps]]
 placement = "cabinet"
 kind = "vue"

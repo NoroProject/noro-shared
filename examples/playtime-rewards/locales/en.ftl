@@ -5,3 +5,7 @@ mod-playtime-rewards-points = Points earned
 mod-playtime-rewards-role-after = Hours played before the role
 mod-playtime-rewards-role-after-hint = Zero turns the role off.
 mod-playtime-rewards-role-name = Role to grant
+mod-playtime-rewards-reset = Reset
+mod-playtime-rewards-reset-title = Reset points?
+mod-playtime-rewards-reset-text = What has been earned cannot be brought back.
+mod-playtime-rewards-perm-reset = Reset a player's points
