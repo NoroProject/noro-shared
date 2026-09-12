@@ -130,6 +130,16 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
             };
             let priority = args.priority_tokens();
 
+            // `&mut E` означает отменяемое событие: обработчик правит его на
+            // месте, и правки должны уехать обратно мастеру. Различается это по
+            // самому типу, а не отдельным атрибутом: подпись уже всё говорит, а
+            // атрибут можно поставить не тот.
+            let mutable = matches!(&arg_ty, Type::Reference(r) if r.mutability.is_some());
+            let inner = match &arg_ty {
+                Type::Reference(r) => (*r.elem).clone(),
+                other => other.clone(),
+            };
+
             // The name comes from the type via `Event::NAME`: subscribing to
             // one event and accepting another's struct is impossible that way.
             // A written name is accepted only for another module's event, which
@@ -139,7 +149,7 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
             let event_name = match &args.name {
                 Some(lit) => quote!(#lit.to_string()),
                 None => {
-                    quote!(<#arg_ty as ::noro_sdk::abi::events::Event>::NAME.to_string())
+                    quote!(<#inner as ::noro_sdk::abi::events::Event>::NAME.to_string())
                 }
             };
             events.push(quote! {
@@ -150,15 +160,32 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 });
             });
 
-            exports.push(quote! {
-                #[::noro_sdk::extism_pdk::plugin_fn]
-                pub fn #name(
-                    ::noro_sdk::extism_pdk::Json(event): ::noro_sdk::extism_pdk::Json<#arg_ty>,
-                ) -> ::noro_sdk::extism_pdk::FnResult<()> {
-                    <#self_ty>::#name(event)?;
-                    Ok(())
+            // Отменяемое возвращает событие обратно, уведомительное — ничего:
+            // мастеру нечего делать с ответом на то, что уже случилось.
+            let export = if mutable {
+                quote! {
+                    #[::noro_sdk::extism_pdk::plugin_fn]
+                    pub fn #name(
+                        ::noro_sdk::extism_pdk::Json(mut event): ::noro_sdk::extism_pdk::Json<#inner>,
+                    ) -> ::noro_sdk::extism_pdk::FnResult<
+                        ::noro_sdk::extism_pdk::Json<#inner>,
+                    > {
+                        <#self_ty>::#name(&mut event)?;
+                        Ok(::noro_sdk::extism_pdk::Json(event))
+                    }
                 }
-            });
+            } else {
+                quote! {
+                    #[::noro_sdk::extism_pdk::plugin_fn]
+                    pub fn #name(
+                        ::noro_sdk::extism_pdk::Json(event): ::noro_sdk::extism_pdk::Json<#inner>,
+                    ) -> ::noro_sdk::extism_pdk::FnResult<()> {
+                        <#self_ty>::#name(event)?;
+                        Ok(())
+                    }
+                }
+            };
+            exports.push(export);
         } else if attr.path().is_ident("route") {
             let args = match attr.parse_args::<RouteArgs>() {
                 Ok(a) => a,

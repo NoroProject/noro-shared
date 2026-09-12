@@ -59,45 +59,52 @@ fn decide(e: BankPreTransfer) -> Result<()> { Ok(()) }
 `lowest` → `low` → `normal` (default) → `high` → `highest` → `monitor`. `monitor` is for
 observers only; a cancellation from it is ignored.
 
-## Saying no — not yet
+## Saying no
 
-:::caution[Pre events are declared but not delivered yet]
-The catalog already lists the `Pre` half of the boundary, and the payload structs carry
-their `cancel` field. The master, however, currently publishes **`Post` events only**.
-Subscribing to a `Pre` event compiles and installs; your handler simply never runs.
-
-Cancellation and mutation land in a later wave, together with priorities being honoured
-across modules. Until then, treat the `Pre` rows in the catalog as the shape of what is
-coming, not as something you can build on.
-:::
-
-When they do arrive, this is the shape they will have — a reason that is a **Fluent
-key** rather than finished text, because the player reads it and only the master knows
-their language:
+A `Pre` handler takes its event by `&mut` — and that is the whole declaration. The
+reference is what tells the master your answer is worth waiting for and sending back:
 
 ```rust
-// Not yet delivered — shown so the eventual shape is no surprise.
 #[event]
-fn gate(e: &mut PlayerPreJoin) -> Result<()> {
-    if e.player.discord_id.is_none() {
-        e.cancel("mod-gate-needs-discord");
+fn rename(e: &mut UserPreRename) -> Result<()> {
+    if reserved(&e.new_name) {
+        e.stop("mod-gate-name-reserved");
+        return Ok(());
     }
+    // Changes travel back. The master writes the name you leave here.
+    e.new_name = e.new_name.to_lowercase();
     Ok(())
 }
 ```
 
-Two properties of that design are worth knowing in advance, because they shape what you
-should write:
+`stop` takes a **Fluent key**, not finished text: the player reads it, and only the side
+that knows their language can put the sentence together.
 
-A `Pre` handler will sit **in the path of a live request** — the master waits for the
-answer, so a slow handler delays a player's login or their transfer.
+Handlers run in priority order, and each gets the event as the previous one left it — so
+one module's fee lands on an amount another module already changed, rather than on the
+original.
 
-It will run *before* the master's transaction opens, so state can change in between.
-Anything that must hold at commit time is re-checked by the master under a row lock;
-raising `amount` on a transfer will not conjure money.
+:::note[Which ones are wired]
+The catalog lists every `Pre` event, but the master publishes the ones whose insertion
+point exists: `user.pre_rename`, `bank.pre_transfer` and `punishment.pre_issue` today.
+Subscribing to another one compiles and installs; the handler simply never runs, because
+nothing calls it yet.
+:::
 
-And if a module is slow or fails, the default is **fail-open**: the action goes through.
-A broken module must not keep players out.
+### What a Pre handler must know
+
+It sits **in the path of a live request**. The master waits, and the player waits with
+it — so the budget is one second, a fifth of what a `Post` handler gets. Work that takes
+longer belongs in `Post`.
+
+It runs *before* the master's transaction opens, so state can change in between. Anything
+that must hold at commit time is re-checked under a row lock: raising `amount` on a
+transfer conjures no money, because the sender's balance is verified again inside the
+transaction.
+
+And if a module is slow, fails, or answers with something unparseable, the action **goes
+through**. One broken module must not close the door for everybody — that is a failure
+found at three in the morning. A refusal has to be a decision, not a side effect.
 
 ## Events of your own
 

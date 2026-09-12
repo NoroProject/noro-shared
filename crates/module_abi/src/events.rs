@@ -106,6 +106,15 @@ pub trait Event: Serialize + for<'de> Deserialize<'de> {
     /// On the trait, not only in a field: the bus selects subscribers by server
     /// before it knows the event's concrete type.
     fn ctx(&self) -> &crate::context::EventCtx;
+
+    /// Why a module stopped the action, if one did.
+    ///
+    /// On the trait because the bus asks every answer the same question without
+    /// knowing which event it is holding. `Post` events answer `None` and have
+    /// no way not to: there is nothing left to cancel once it has happened.
+    fn cancel_reason(&self) -> Option<&str> {
+        None
+    }
 }
 
 /// A module's decision on a cancellable event.
@@ -140,10 +149,40 @@ impl Cancel {
 /// author reads them in the documentation, and macro-generated fields are not
 /// visible there.
 macro_rules! impl_event {
-    ($t:ty, $konst:path, $kind:ident) => {
+    // Два правила вместо ветвления: `macro_rules` не умеет сравнивать `$kind` с
+    // `Pre`, а разделение заодно не даёт объявить `Post` с отменой — у него
+    // нет поля `cancel`, и реализация просто не собралась бы.
+    ($t:ty, $konst:path, Pre) => {
         impl $crate::events::Event for $t {
             const NAME: &'static str = $konst;
-            const KIND: $crate::events::EventKind = $crate::events::EventKind::$kind;
+            const KIND: $crate::events::EventKind = $crate::events::EventKind::Pre;
+
+            fn ctx(&self) -> &$crate::context::EventCtx {
+                &self.ctx
+            }
+
+            fn cancel_reason(&self) -> Option<&str> {
+                self.cancel.reason()
+            }
+        }
+
+        impl $t {
+            /// Stop the action. `reason_key` is a Fluent key — the text is put
+            /// together by whoever knows the reader's language.
+            pub fn stop(&mut self, reason_key: impl Into<String>) {
+                self.cancel.cancel(reason_key);
+            }
+        }
+
+        const _: () = assert!($crate::events::declares_payload(
+            <$t as $crate::events::Event>::NAME,
+            stringify!($t)
+        ));
+    };
+    ($t:ty, $konst:path, Post) => {
+        impl $crate::events::Event for $t {
+            const NAME: &'static str = $konst;
+            const KIND: $crate::events::EventKind = $crate::events::EventKind::Post;
 
             fn ctx(&self) -> &$crate::context::EventCtx {
                 &self.ctx
