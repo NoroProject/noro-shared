@@ -1,33 +1,33 @@
-//! Контекст события: где оно случилось и кто его вызвал.
+//! The event's context: where it happened and who caused it.
 //!
-//! Без контекста событие бесполезно на инстансе с несколькими сборками: модуль
-//! видит «игрок вошёл», но не видит куда, и вынужден догадываться по данным
-//! самого события. Поэтому [`EventCtx`] едет с каждым событием, а не только с
-//! теми, где сборка кажется важной.
+//! Without context an event is useless on an instance with several servers: the
+//! module sees "a player joined" but not what they joined, and has to guess
+//! from the event's own data. That is why [`EventCtx`] travels with every
+//! event, not only with the ones where the server seems to matter.
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-/// Откуда пришло действие, породившее событие.
+/// Where the action that produced the event came from.
 ///
-/// Различать источник приходится постоянно: модуль, выдающий награду за вход,
-/// не должен срабатывать на техническое обновление профиля из CLI, а модуль
-/// антифрода — наоборот, интересуется только веб-действиями.
+/// Telling the source apart comes up constantly: a module handing out a reward
+/// for logging in must not fire on a routine profile update from the CLI, while
+/// an anti-fraud module is interested in web actions and nothing else.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Origin {
-    /// Игровой сервер через агента.
+    /// A game server, through the agent.
     Game,
-    /// Сайт, личный кабинет или админка.
+    /// The site, the cabinet or the admin panel.
     Web,
-    /// Десктопный лаунчер.
+    /// The desktop launcher.
     Launcher,
-    /// `noro-admin` или админ-токен.
+    /// `noro-admin` or an admin token.
     Cli,
-    /// Другой модуль. Позволяет не реагировать на собственное эхо.
+    /// Another module. Lets you avoid reacting to your own echo.
     Module { id: String },
-    /// Сам мастер: планировщик, миграция, истечение срока наказания.
+    /// The master itself: the scheduler, a migration, a punishment expiring.
     System,
 }
 
@@ -44,10 +44,11 @@ impl std::fmt::Display for Origin {
     }
 }
 
-/// Кто инициировал действие.
+/// Who initiated the action.
 ///
-/// Отдельно от [`Origin`]: источник отвечает на «через что», актор — на «кто».
-/// Бан может прийти из веба рукой модератора и из CLI тем же модератором.
+/// Separate from [`Origin`]: the origin answers "through what", the actor
+/// answers "who". A ban can arrive from the web by a moderator's hand and from
+/// the CLI by that same moderator.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum ActorRef {
@@ -58,7 +59,7 @@ pub enum ActorRef {
 }
 
 impl ActorRef {
-    /// Идентификатор пользователя, если действие совершил человек.
+    /// The user's identifier, when a person performed the action.
     pub fn user_id(&self) -> Option<Uuid> {
         match self {
             ActorRef::User { id, .. } => Some(*id),
@@ -67,46 +68,46 @@ impl ActorRef {
     }
 }
 
-/// Обстоятельства события.
+/// The circumstances of an event.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EventCtx {
     pub origin: Origin,
     pub actor: ActorRef,
-    /// Сборка, к которой относится событие. `None` у глобальных: регистрация
-    /// пользователя ни к одной сборке не привязана.
+    /// The server the event belongs to. `None` on global ones: registering a
+    /// user is not tied to any server.
     #[serde(default)]
     pub server_id: Option<Uuid>,
-    /// Слаг сборки — чтобы не ходить за ним отдельным вызовом ради строки лога.
+    /// The server's slug — so you need no extra call just for a log line.
     #[serde(default)]
     pub server_slug: Option<String>,
-    /// Конкретный игровой сервер, если событие пришло из игры.
+    /// The specific game server, when the event came from the game.
     #[serde(default)]
     pub game_server_id: Option<Uuid>,
     pub at: DateTime<Utc>,
-    /// Глубина вложенности публикаций.
+    /// How deeply publications are nested.
     ///
-    /// Действие модуля порождает новые события, те будят другие модули, и без
-    /// счётчика это замыкается в кольцо. Мастер перестаёт публиковать, когда
-    /// глубина упирается в потолок.
+    /// A module's action produces new events, those wake other modules, and
+    /// without a counter this closes into a ring. The master stops publishing
+    /// once the depth hits the ceiling.
     #[serde(default)]
     pub depth: u8,
 }
 
 impl EventCtx {
-    /// Пришло ли событие из игры.
+    /// Whether the event came from the game.
     pub fn from_game(&self) -> bool {
         matches!(self.origin, Origin::Game)
     }
 
-    /// Породил ли это событие сам модуль с таким идентификатором.
+    /// Whether the module with this identifier produced the event itself.
     ///
-    /// Обязательная проверка в обработчиках, которые сами меняют те же данные:
-    /// иначе модуль реагирует на собственную запись и уходит в цикл.
+    /// A mandatory check in handlers that change the same data they watch:
+    /// otherwise the module reacts to its own write and spins.
     pub fn caused_by(&self, module_id: &str) -> bool {
         matches!(&self.origin, Origin::Module { id } if id == module_id)
     }
 
-    /// Подпись сборки для логов: слаг, иначе идентификатор, иначе «глобально».
+    /// A label for logs: the slug, else the identifier, else "global".
     pub fn server_name(&self) -> String {
         self.server_slug
             .clone()

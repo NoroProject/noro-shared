@@ -1,18 +1,19 @@
-//! Ошибки на границе.
+//! Errors on the boundary.
 
 use serde::{Deserialize, Serialize};
 
 pub type ModuleResult<T> = Result<T, ModuleError>;
 
-/// Почему вызов не удался.
+/// Why a call failed.
 ///
-/// Мастер возвращает это модулю, и модуль возвращает это мастеру: одна форма в
-/// обе стороны, чтобы автору не приходилось держать в голове два набора.
+/// The master returns this to a module, and a module returns this to the
+/// master: one shape in both directions, so the author never has to keep two
+/// sets in mind.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleError {
     pub kind: ErrorKind,
     pub message: String,
-    /// Код ошибки мастера (`1500`–`1599` и общие), если ошибка пришла оттуда.
+    /// The master's error code (`1500`–`1599` and the shared ones), when the error came from there.
     #[serde(default)]
     pub code: Option<i32>,
 }
@@ -20,17 +21,17 @@ pub struct ModuleError {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ErrorKind {
-    /// Модулю не выдана возможность, которую он просит.
+    /// The module was not granted a capability it asks for.
     CapabilityDenied,
-    /// Объект не найден.
+    /// The object was not found.
     NotFound,
-    /// Аргументы не прошли проверку.
+    /// The arguments failed validation.
     Invalid,
-    /// Состояние не позволяет: недостаточно средств, дубликат, конфликт.
+    /// The state does not allow it: insufficient funds, a duplicate, a conflict.
     Conflict,
-    /// Превышена квота модуля.
+    /// The module's quota is exceeded.
     Quota,
-    /// Сбой внутри мастера.
+    /// A failure inside the master.
     Internal,
 }
 
@@ -58,7 +59,7 @@ impl ModuleError {
     pub fn denied(capability: impl std::fmt::Display) -> Self {
         Self::new(
             ErrorKind::CapabilityDenied,
-            format!("возможность «{capability}» не выдана модулю"),
+            format!("the capability `{capability}` was not granted to the module"),
         )
     }
 

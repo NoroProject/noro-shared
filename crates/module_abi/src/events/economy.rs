@@ -1,4 +1,4 @@
-//! События про банк и подсайт.
+//! Events about the bank and the hub.
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -7,12 +7,12 @@ use crate::context::EventCtx;
 use crate::events::impl_event;
 use crate::player::Player;
 
-/// Деньги собираются перевести.
+/// Money is about to be transferred.
 ///
-/// Отменяемое и изменяемое: `amount` можно уменьшить, и на этом держатся
-/// комиссии и налоги. Увеличивать тоже можно, но мастер всё равно проверит
-/// баланс отправителя в своей транзакции — модуль не может выдать деньги из
-/// воздуха, переписав сумму.
+/// Cancellable and mutable: `amount` can be lowered, and fees and taxes rest
+/// on that. Raising it is possible too, but the master still checks the
+/// sender's balance inside its own transaction — a module cannot conjure money
+/// out of nothing by rewriting the sum.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BankPreTransfer {
     pub ctx: EventCtx,
@@ -32,7 +32,7 @@ impl BankPreTransfer {
     }
 }
 
-/// Перевод состоялся.
+/// The transfer went through.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BankTransferred {
     pub ctx: EventCtx,
@@ -45,7 +45,7 @@ pub struct BankTransferred {
     pub comment: Option<String>,
 }
 
-/// Открыт счёт.
+/// An account was opened.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BankAccountOpened {
     pub ctx: EventCtx,
@@ -55,10 +55,10 @@ pub struct BankAccountOpened {
     pub owner: Option<Player>,
 }
 
-/// Пост собираются опубликовать в ленте.
+/// A post is about to be published to the feed.
 ///
-/// Отменяемое и изменяемое: `body` можно переписать — так работает
-/// автоматическая чистка текста до того, как его кто-то увидел.
+/// Cancellable and mutable: `body` can be rewritten — that is how automatic
+/// text cleanup works before anyone has seen it.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HubPrePost {
     pub ctx: EventCtx,
@@ -83,7 +83,7 @@ pub struct HubPostCreated {
     pub author: Player,
 }
 
-/// Игрок вступил в сообщество подсайта.
+/// A player joined the hub's community.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HubMemberJoined {
     pub ctx: EventCtx,

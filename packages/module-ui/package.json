@@ -1,10 +1,15 @@
 {
-  "name": "@noro/module-ui",
-  "version": "1.0.0",
-  "description": "Типы и компоненты панели Noro для мини-аппов модулей",
+  "name": "@noroproject/module-ui",
+  "version": "1.0.1",
+  "description": "Noro panel components for module mini-apps — type declarations",
   "license": "AGPL-3.0-only",
   "type": "module",
   "types": "index.d.ts",
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -13,5 +18,21 @@
   },
   "peerDependencies": {
     "vue": "^3.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoroProject/noro-shared.git",
+    "directory": "packages/module-ui"
+  },
+  "homepage": "https://noroproject.github.io/noro-shared/",
+  "keywords": [
+    "noro",
+    "minecraft",
+    "launcher",
+    "plugin",
+    "module"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

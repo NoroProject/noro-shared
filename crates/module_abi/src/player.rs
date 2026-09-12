@@ -1,31 +1,33 @@
-//! Игрок и способы на него сослаться.
+//! The player, and the ways to refer to one.
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-/// Как назвать игрока в вызове SDK.
+/// How to name a player in an SDK call.
 ///
-/// У аккаунта четыре естественных ключа (внутренний id, mc_uuid, ник, плюс
-/// любая привязка входа), и в реальном модуле встречаются все: агент знает
-/// только `mc_uuid`, веб-форма — ник, интеграция с Discord — свой id. Один
-/// вход вместо четырёх функций `by_*` избавляет от выбора.
-/// Варианты — структуры, а не кортежи: у внутренне помеченного перечисления
-/// (`tag = "by"`) serde требует, чтобы содержимое было объектом. С
-/// `Id(Uuid)` сериализация падает на первом же вызове с «cannot serialize
-/// tagged newtype variant», причём только в рантайме.
+/// An account has four natural keys (the internal id, mc_uuid, the username,
+/// plus any linked login), and a real module meets all of them: the agent knows
+/// only `mc_uuid`, a web form knows the username, a Discord integration knows
+/// its own id. One entry point instead of four `by_*` functions removes the
+/// choice.
+///
+/// The variants are structs rather than tuples: on an internally tagged enum
+/// (`tag = "by"`) serde requires the content to be an object. With `Id(Uuid)`
+/// serialization fails on the very first call with "cannot serialize tagged
+/// newtype variant" — and only at runtime.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "by", rename_all = "snake_case")]
 pub enum PlayerRef {
-    /// Внутренний идентификатор мастера.
+    /// The master's internal identifier.
     Id { id: Uuid },
-    /// UUID аккаунта Minecraft.
+    /// The Minecraft account's UUID.
     McUuid { id: Uuid },
-    /// Ник Minecraft, регистр не важен.
+    /// The Minecraft username; case does not matter.
     Name { name: String },
-    /// Идентификатор в Discord.
+    /// The Discord identifier.
     Discord { id: String },
-    /// Любая привязка входа: `("twitch", "12345")`.
+    /// Any linked login: `("twitch", "12345")`.
     Identity { provider: String, id: String },
 }
 
@@ -54,12 +56,12 @@ impl PlayerRef {
     }
 }
 
-/// Всё, чем можно назвать игрока.
+/// Everything a player can be named by.
 ///
-/// Существует ради `players::get(uuid)` и `players::get("Dalynkaa")` в одном и
-/// том же месте. Голый `Uuid` трактуется как внутренний id мастера: `mc_uuid`
-/// приходится называть явно, потому что перепутать их молча — худший из
-/// возможных исходов.
+/// Exists so that `players::get(uuid)` and `players::get("Dalynkaa")` work in
+/// the same place. A bare `Uuid` is read as the master's internal id: `mc_uuid`
+/// has to be named explicitly, because confusing the two silently is the worst
+/// possible outcome.
 pub trait IntoPlayerRef {
     fn into_player_ref(self) -> PlayerRef;
 }
@@ -96,7 +98,7 @@ impl IntoPlayerRef for &Player {
     }
 }
 
-/// Привязка входа.
+/// A linked login.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Identity {
     pub provider: String,
@@ -106,33 +108,33 @@ pub struct Identity {
     pub linked_at: DateTime<Utc>,
 }
 
-/// Игрок в том виде, в каком его видит модуль.
+/// The player as a module sees them.
 ///
-/// Намеренно уже внутреннего профиля: ни токенов, ни хэшей, ни служебных
-/// флагов. Всё, что сверх этого, модуль запрашивает отдельным вызовом с
-/// проверкой возможностей.
+/// Deliberately narrower than the internal profile: no tokens, no hashes, no
+/// housekeeping flags. Anything beyond this a module requests with a separate
+/// call, where capabilities are checked.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Player {
     pub id: Uuid,
-    /// Ник Minecraft. Пусто, если аккаунт ещё не привязан к игре.
+    /// The Minecraft username. Empty when the account is not linked to the game yet.
     #[serde(default)]
     pub name: Option<String>,
     #[serde(default)]
     pub mc_uuid: Option<Uuid>,
     #[serde(default)]
     pub discord_id: Option<String>,
-    /// Роли по именам: сравнивать строки удобнее, чем таскать идентификаторы.
+    /// Roles by name: comparing strings is handier than carrying identifiers around.
     #[serde(default)]
     pub roles: Vec<String>,
     pub banned: bool,
     pub created_at: DateTime<Utc>,
-    /// Первый ли это вход игрока. Заполняется только в событиях входа.
+    /// Whether this is the player's first join. Filled in join events only.
     #[serde(default)]
     pub first_join: bool,
 }
 
 impl Player {
-    /// Ник, а если его нет — идентификатор. Для логов и сообщений.
+    /// The username, or the identifier when there is none. For logs and messages.
     pub fn label(&self) -> String {
         self.name.clone().unwrap_or_else(|| self.id.to_string())
     }

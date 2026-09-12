@@ -1,0 +1,7 @@
+dist/
+node_modules/
+.astro/
+
+# Страницы справочника строит noro-docs-gen из ABI: держать их в git значило бы
+# иметь второй источник правды, который однажды разойдётся с кодом.
+src/content/docs/reference/events.md

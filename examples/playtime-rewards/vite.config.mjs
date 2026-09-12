@@ -29,11 +29,11 @@ export default defineConfig({
         rollupOptions: {
             // Обе зависимости живут в панели, а не в бандле: Vue должен быть
             // тем же экземпляром, а компоненты — её собственными.
-            external: ['vue', '@noro/module-ui'],
+            external: ['vue', '@noroproject/module-ui'],
             output: {
                 globals: {
                     vue: '__noroVue',
-                    '@noro/module-ui': '__noroUi',
+                    '@noroproject/module-ui': '__noroUi',
                 },
             },
         },

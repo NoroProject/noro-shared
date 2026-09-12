@@ -3,10 +3,10 @@
  * Награды за время — страница в личном кабинете.
  *
  * Обычный компонент Vue: `<script setup>`, реактивность, типы. Компоненты
- * приходят из `@noro/module-ui` — это те же атомы, которыми нарисована сама
+ * приходят из `@noroproject/module-ui` — это те же атомы, которыми нарисована сама
  * панель, поэтому вид совпадает без единой строки стилей.
  */
-import { AtomBadge, EmptyState, NoroCard, useNoro } from '@noro/module-ui'
+import { AtomBadge, EmptyState, NoroCard, useNoro } from '@noroproject/module-ui'
 import { onMounted, ref } from 'vue'
 
 interface Points {

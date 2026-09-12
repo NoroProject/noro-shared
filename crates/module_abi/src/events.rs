@@ -1,9 +1,9 @@
-//! Реестр событий и механика отмены.
+//! The event registry and the cancellation mechanics.
 //!
-//! Приём тот же, что у `nodes!` в правах: события заводятся одним макросом,
-//! который порождает и константу, и запись в каталоге. Параллельного списка,
-//! который разъезжается с кодом, не существует — админка показывает подписки
-//! модуля, беря названия отсюда.
+//! The technique is the same as `nodes!` in permissions: events are introduced
+//! by a single macro that produces both the constant and the catalog entry.
+//! There is no parallel list to drift from the code — the admin panel shows a
+//! module's subscriptions taking the names from here.
 
 use serde::{Deserialize, Serialize};
 
@@ -19,27 +19,36 @@ pub use infra::*;
 pub use moderation::*;
 pub use player::*;
 
-/// Когда модуль видит событие.
+/// When a module sees an event.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum EventKind {
-    /// До действия. Модуль может отменить его и поправить поля.
+    /// Before the action. The module can cancel it and adjust the fields.
     ///
-    /// Мастер ждёт ответа, поэтому обработчик стоит на пути живого запроса:
-    /// затянешь — затормозится вход игрока или его перевод.
+    /// The master waits for the answer, so the handler sits in the path of a
+    /// live request: drag it out and you delay a player's join or their
+    /// transfer.
     Pre,
-    /// После того, как всё случилось и записалось. Отменить нечего.
+    /// After everything has happened and been written. There is nothing to cancel.
     Post,
 }
 
-/// Запись каталога.
+/// A catalog entry.
 pub struct EventMeta {
     pub name: &'static str,
     pub kind: EventKind,
-    /// Группа для админки: `player`, `access`, `infra`, `moderation`, `economy`.
+    /// The group for the admin panel: `player`, `access`, `infra`, `moderation`, `economy`.
     pub group: &'static str,
-    /// Ключ Fluent с человеческим названием.
+    /// The Fluent key holding the human-readable name.
     pub title: &'static str,
+    /// The struct a handler for this event accepts.
+    ///
+    /// Named here rather than derived from `name`, because the two do not line
+    /// up: `user.role_granted` is carried by `RoleGranted`, and
+    /// `gameserver.online` by `GameServerOnline`. Deriving it produced nine
+    /// wrong answers out of fifty-one. `impl_event!` turns a wrong name here
+    /// into a compile error.
+    pub payload: &'static str,
 }
 
 impl EventMeta {
@@ -48,25 +57,61 @@ impl EventMeta {
     }
 }
 
-/// Связь структуры события с его именем в каталоге.
+/// Byte-wise string comparison, usable in a `const`.
 ///
-/// Нужен, чтобы `#[event]` не требовал повторять имя строкой: тип обработчика
-/// уже всё говорит, а строка в двух местах однажды разойдётся.
+/// `==` on `&str` is not a const operation, and the check below has to run at
+/// compile time to be worth anything.
+const fn str_eq(a: &str, b: &str) -> bool {
+    let (a, b) = (a.as_bytes(), b.as_bytes());
+    if a.len() != b.len() {
+        return false;
+    }
+    let mut i = 0;
+    while i < a.len() {
+        if a[i] != b[i] {
+            return false;
+        }
+        i += 1;
+    }
+    true
+}
+
+/// Whether the catalog says this event is carried by this struct.
+///
+/// Used by `impl_event!` in a `const` assertion, so a catalog entry naming the
+/// wrong struct stops the build instead of producing a dead link in the
+/// generated documentation.
+pub const fn declares_payload(name: &str, payload: &str) -> bool {
+    let mut i = 0;
+    while i < ALL_EVENTS.len() {
+        if str_eq(ALL_EVENTS[i].name, name) {
+            return str_eq(ALL_EVENTS[i].payload, payload);
+        }
+        i += 1;
+    }
+    false
+}
+
+/// The link between an event's struct and its name in the catalog.
+///
+/// It exists so `#[event]` never asks you to repeat the name as a string: the
+/// handler's type already says everything, and a string in two places
+/// eventually diverges.
 pub trait Event: Serialize + for<'de> Deserialize<'de> {
     const NAME: &'static str;
     const KIND: EventKind;
 
-    /// Обстоятельства события.
+    /// The circumstances of the event.
     ///
-    /// В трейте, а не только в поле: шина отбирает подписчиков по сборке ещё
-    /// до того, как узнает конкретный тип события.
+    /// On the trait, not only in a field: the bus selects subscribers by server
+    /// before it knows the event's concrete type.
     fn ctx(&self) -> &crate::context::EventCtx;
 }
 
-/// Решение модуля по отменяемому событию.
+/// A module's decision on a cancellable event.
 ///
-/// Причина — ключ Fluent, а не готовый текст: сообщение увидит игрок, а язык
-/// известен только на стороне мастера.
+/// The reason is a Fluent key rather than finished text: a player will see the
+/// message, and the language is known only on the master's side.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Cancel {
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -74,8 +119,8 @@ pub struct Cancel {
 }
 
 impl Cancel {
-    /// Запретить действие. Повторный вызов перетирает причину: побеждает
-    /// последний обработчик, а порядок задают приоритеты подписок.
+    /// Forbid the action. Calling it again overwrites the reason: the last
+    /// handler wins, and the subscription priorities set the order.
     pub fn cancel(&mut self, reason_key: impl Into<String>) {
         self.reason = Some(reason_key.into());
     }
@@ -89,10 +134,11 @@ impl Cancel {
     }
 }
 
-/// Привязывает структуру события к записи каталога.
+/// Ties an event's struct to its catalog entry.
 ///
-/// Только `impl`, сами структуры пишутся руками: их читает автор модуля в
-/// документации, а сгенерированные макросом поля там не видны.
+/// The `impl` only — the structs themselves are written by hand: a module
+/// author reads them in the documentation, and macro-generated fields are not
+/// visible there.
 macro_rules! impl_event {
     ($t:ty, $konst:path, $kind:ident) => {
         impl $crate::events::Event for $t {
@@ -103,89 +149,98 @@ macro_rules! impl_event {
                 &self.ctx
             }
         }
+
+        // The catalog has to name this very struct. Without this the mismatch
+        // is invisible: the code keeps working and only the documentation ends
+        // up pointing at a type that does not exist.
+        const _: () = assert!($crate::events::declares_payload(
+            <$t as $crate::events::Event>::NAME,
+            stringify!($t)
+        ));
     };
 }
 
 pub(crate) use impl_event;
 
 macro_rules! events {
-    ($($konst:ident = $name:literal, $kind:ident, $group:literal, $title:literal;)*) => {
+    ($($konst:ident = $name:literal, $kind:ident, $group:literal, $title:literal, $payload:literal;)*) => {
         $(pub const $konst: &str = $name;)*
 
-        /// Все события — для подсказок в админке и проверки манифеста.
+        /// Every event — for hints in the admin panel and manifest validation.
         pub const ALL_EVENTS: &[&EventMeta] = &[$(&EventMeta {
             name: $name,
             kind: EventKind::$kind,
             group: $group,
             title: $title,
+            payload: $payload,
         }),*];
     };
 }
 
 events! {
-    // --- Игроки и вход --------------------------------------------------------
-    EV_PLAYER_PRE_JOIN       = "player.pre_join",        Pre,  "player", "ev-player-pre-join";
-    EV_PLAYER_JOINED         = "player.joined",          Post, "player", "ev-player-joined";
-    EV_PLAYER_LEFT           = "player.left",            Post, "player", "ev-player-left";
-    EV_USER_REGISTERED       = "user.registered",        Post, "player", "ev-user-registered";
-    EV_USER_PRE_LOGIN        = "user.pre_login",         Pre,  "player", "ev-user-pre-login";
-    EV_USER_LOGGED_IN        = "user.logged_in",         Post, "player", "ev-user-logged-in";
-    EV_USER_BANNED           = "user.banned",            Post, "player", "ev-user-banned";
-    EV_USER_UNBANNED         = "user.unbanned",          Post, "player", "ev-user-unbanned";
-    EV_USER_PRE_RENAME       = "user.pre_rename",        Pre,  "player", "ev-user-pre-rename";
-    EV_USER_RENAMED          = "user.renamed",           Post, "player", "ev-user-renamed";
-    EV_USER_SKIN_CHANGED     = "user.skin_changed",      Post, "player", "ev-user-skin-changed";
-    EV_IDENTITY_LINKED       = "user.identity_linked",   Post, "player", "ev-identity-linked";
-    EV_IDENTITY_UNLINKED     = "user.identity_unlinked", Post, "player", "ev-identity-unlinked";
+    // --- Players and signing in -----------------------------------------------
+    EV_PLAYER_PRE_JOIN        = "player.pre_join",          Pre,  "player",     "ev-player-pre-join",        "PlayerPreJoin";
+    EV_PLAYER_JOINED          = "player.joined",            Post, "player",     "ev-player-joined",          "PlayerJoined";
+    EV_PLAYER_LEFT            = "player.left",              Post, "player",     "ev-player-left",            "PlayerLeft";
+    EV_USER_REGISTERED        = "user.registered",          Post, "player",     "ev-user-registered",        "UserRegistered";
+    EV_USER_PRE_LOGIN         = "user.pre_login",           Pre,  "player",     "ev-user-pre-login",         "UserPreLogin";
+    EV_USER_LOGGED_IN         = "user.logged_in",           Post, "player",     "ev-user-logged-in",         "UserLoggedIn";
+    EV_USER_BANNED            = "user.banned",              Post, "player",     "ev-user-banned",            "UserBanned";
+    EV_USER_UNBANNED          = "user.unbanned",            Post, "player",     "ev-user-unbanned",          "UserUnbanned";
+    EV_USER_PRE_RENAME        = "user.pre_rename",          Pre,  "player",     "ev-user-pre-rename",        "UserPreRename";
+    EV_USER_RENAMED           = "user.renamed",             Post, "player",     "ev-user-renamed",           "UserRenamed";
+    EV_USER_SKIN_CHANGED      = "user.skin_changed",        Post, "player",     "ev-user-skin-changed",      "UserSkinChanged";
+    EV_IDENTITY_LINKED        = "user.identity_linked",     Post, "player",     "ev-identity-linked",        "IdentityLinked";
+    EV_IDENTITY_UNLINKED      = "user.identity_unlinked",   Post, "player",     "ev-identity-unlinked",      "IdentityUnlinked";
 
-    // --- Роли, права, доступы -------------------------------------------------
-    EV_ROLE_CREATED          = "role.created",           Post, "access", "ev-role-created";
-    EV_ROLE_UPDATED          = "role.updated",           Post, "access", "ev-role-updated";
-    EV_ROLE_DELETED          = "role.deleted",           Post, "access", "ev-role-deleted";
-    EV_ROLE_PRE_GRANT        = "user.pre_role_granted",  Pre,  "access", "ev-role-pre-grant";
-    EV_ROLE_GRANTED          = "user.role_granted",      Post, "access", "ev-role-granted";
-    EV_ROLE_REVOKED          = "user.role_revoked",      Post, "access", "ev-role-revoked";
-    EV_PERM_GRANTED          = "user.permission_granted", Post, "access", "ev-perm-granted";
-    EV_PERM_REVOKED          = "user.permission_revoked", Post, "access", "ev-perm-revoked";
+    // --- Roles, permissions, access -------------------------------------------
+    EV_ROLE_CREATED           = "role.created",             Post, "access",     "ev-role-created",           "RoleCreated";
+    EV_ROLE_UPDATED           = "role.updated",             Post, "access",     "ev-role-updated",           "RoleUpdated";
+    EV_ROLE_DELETED           = "role.deleted",             Post, "access",     "ev-role-deleted",           "RoleDeleted";
+    EV_ROLE_PRE_GRANT         = "user.pre_role_granted",    Pre,  "access",     "ev-role-pre-grant",         "RolePreGrant";
+    EV_ROLE_GRANTED           = "user.role_granted",        Post, "access",     "ev-role-granted",           "RoleGranted";
+    EV_ROLE_REVOKED           = "user.role_revoked",        Post, "access",     "ev-role-revoked",           "RoleRevoked";
+    EV_PERM_GRANTED           = "user.permission_granted",  Post, "access",     "ev-perm-granted",           "PermissionGranted";
+    EV_PERM_REVOKED           = "user.permission_revoked",  Post, "access",     "ev-perm-revoked",           "PermissionRevoked";
 
-    // --- Сборки, билды, игровые серверы ---------------------------------------
-    EV_SERVER_CREATED        = "server.created",         Post, "infra", "ev-server-created";
-    EV_SERVER_UPDATED        = "server.updated",         Post, "infra", "ev-server-updated";
-    EV_SERVER_DELETED        = "server.deleted",         Post, "infra", "ev-server-deleted";
-    EV_BUILD_CREATED         = "build.created",          Post, "infra", "ev-build-created";
-    EV_BUILD_PRE_PUBLISH     = "build.pre_publish",      Pre,  "infra", "ev-build-pre-publish";
-    EV_BUILD_PUBLISHED       = "build.published",        Post, "infra", "ev-build-published";
-    EV_BUILD_DELETED         = "build.deleted",          Post, "infra", "ev-build-deleted";
-    EV_GAMESERVER_ONLINE     = "gameserver.online",      Post, "infra", "ev-gameserver-online";
-    EV_GAMESERVER_OFFLINE    = "gameserver.offline",     Post, "infra", "ev-gameserver-offline";
-    EV_GAMESERVER_MAINTENANCE = "gameserver.maintenance", Post, "infra", "ev-gameserver-maintenance";
-    EV_INSTANCE_SETTING      = "instance.setting_changed", Post, "infra", "ev-instance-setting";
-    EV_MODULE_ENABLED        = "module.enabled",         Post, "infra", "ev-module-enabled";
-    EV_MODULE_DISABLED       = "module.disabled",        Post, "infra", "ev-module-disabled";
+    // --- Servers, builds, game servers ----------------------------------------
+    EV_SERVER_CREATED         = "server.created",           Post, "infra",      "ev-server-created",         "ServerCreated";
+    EV_SERVER_UPDATED         = "server.updated",           Post, "infra",      "ev-server-updated",         "ServerUpdated";
+    EV_SERVER_DELETED         = "server.deleted",           Post, "infra",      "ev-server-deleted",         "ServerDeleted";
+    EV_BUILD_CREATED          = "build.created",            Post, "infra",      "ev-build-created",          "BuildCreated";
+    EV_BUILD_PRE_PUBLISH      = "build.pre_publish",        Pre,  "infra",      "ev-build-pre-publish",      "BuildPrePublish";
+    EV_BUILD_PUBLISHED        = "build.published",          Post, "infra",      "ev-build-published",        "BuildPublished";
+    EV_BUILD_DELETED          = "build.deleted",            Post, "infra",      "ev-build-deleted",          "BuildDeleted";
+    EV_GAMESERVER_ONLINE      = "gameserver.online",        Post, "infra",      "ev-gameserver-online",      "GameServerOnline";
+    EV_GAMESERVER_OFFLINE     = "gameserver.offline",       Post, "infra",      "ev-gameserver-offline",     "GameServerOffline";
+    EV_GAMESERVER_MAINTENANCE = "gameserver.maintenance",   Post, "infra",      "ev-gameserver-maintenance", "GameServerMaintenance";
+    EV_INSTANCE_SETTING       = "instance.setting_changed", Post, "infra",      "ev-instance-setting",       "InstanceSettingChanged";
+    EV_MODULE_ENABLED         = "module.enabled",           Post, "infra",      "ev-module-enabled",         "ModuleEnabled";
+    EV_MODULE_DISABLED        = "module.disabled",          Post, "infra",      "ev-module-disabled",        "ModuleDisabled";
 
-    // --- Модерация ------------------------------------------------------------
-    EV_PUNISH_PRE_ISSUE      = "punishment.pre_issue",   Pre,  "moderation", "ev-punish-pre-issue";
-    EV_PUNISH_ISSUED         = "punishment.issued",      Post, "moderation", "ev-punish-issued";
-    EV_PUNISH_REVOKED        = "punishment.revoked",     Post, "moderation", "ev-punish-revoked";
-    EV_PUNISH_EXPIRED        = "punishment.expired",     Post, "moderation", "ev-punish-expired";
-    EV_REPORT_CREATED        = "report.created",         Post, "moderation", "ev-report-created";
-    EV_CASE_CREATED          = "case.created",           Post, "moderation", "ev-case-created";
-    EV_CASE_RESOLVED         = "case.resolved",          Post, "moderation", "ev-case-resolved";
+    // --- Moderation -----------------------------------------------------------
+    EV_PUNISH_PRE_ISSUE       = "punishment.pre_issue",     Pre,  "moderation", "ev-punish-pre-issue",       "PunishmentPreIssue";
+    EV_PUNISH_ISSUED          = "punishment.issued",        Post, "moderation", "ev-punish-issued",          "PunishmentIssued";
+    EV_PUNISH_REVOKED         = "punishment.revoked",       Post, "moderation", "ev-punish-revoked",         "PunishmentRevoked";
+    EV_PUNISH_EXPIRED         = "punishment.expired",       Post, "moderation", "ev-punish-expired",         "PunishmentExpired";
+    EV_REPORT_CREATED         = "report.created",           Post, "moderation", "ev-report-created",         "ReportCreated";
+    EV_CASE_CREATED           = "case.created",             Post, "moderation", "ev-case-created",           "CaseCreated";
+    EV_CASE_RESOLVED          = "case.resolved",            Post, "moderation", "ev-case-resolved",          "CaseResolved";
 
-    // --- Экономика и подсайт --------------------------------------------------
-    EV_BANK_PRE_TRANSFER     = "bank.pre_transfer",      Pre,  "economy", "ev-bank-pre-transfer";
-    EV_BANK_TRANSFERRED      = "bank.transferred",       Post, "economy", "ev-bank-transferred";
-    EV_BANK_ACCOUNT_OPENED   = "bank.account_opened",    Post, "economy", "ev-bank-account-opened";
-    EV_HUB_PRE_POST          = "hub.pre_post",           Pre,  "economy", "ev-hub-pre-post";
-    EV_HUB_POST_CREATED      = "hub.post_created",       Post, "economy", "ev-hub-post-created";
-    EV_HUB_MEMBER_JOINED     = "hub.member_joined",      Post, "economy", "ev-hub-member-joined";
-    EV_TOWN_FOUNDED          = "town.founded",           Post, "economy", "ev-town-founded";
-    EV_MARKET_LOT_LISTED     = "market.lot_listed",      Post, "economy", "ev-market-lot-listed";
-    EV_MARKET_LOT_SOLD       = "market.lot_sold",        Post, "economy", "ev-market-lot-sold";
-    EV_FINE_ISSUED           = "fine.issued",            Post, "economy", "ev-fine-issued";
+    // --- Economy and the hub --------------------------------------------------
+    EV_BANK_PRE_TRANSFER      = "bank.pre_transfer",        Pre,  "economy",    "ev-bank-pre-transfer",      "BankPreTransfer";
+    EV_BANK_TRANSFERRED       = "bank.transferred",         Post, "economy",    "ev-bank-transferred",       "BankTransferred";
+    EV_BANK_ACCOUNT_OPENED    = "bank.account_opened",      Post, "economy",    "ev-bank-account-opened",    "BankAccountOpened";
+    EV_HUB_PRE_POST           = "hub.pre_post",             Pre,  "economy",    "ev-hub-pre-post",           "HubPrePost";
+    EV_HUB_POST_CREATED       = "hub.post_created",         Post, "economy",    "ev-hub-post-created",       "HubPostCreated";
+    EV_HUB_MEMBER_JOINED      = "hub.member_joined",        Post, "economy",    "ev-hub-member-joined",      "HubMemberJoined";
+    EV_TOWN_FOUNDED           = "town.founded",             Post, "economy",    "ev-town-founded",           "TownFounded";
+    EV_MARKET_LOT_LISTED      = "market.lot_listed",        Post, "economy",    "ev-market-lot-listed",      "MarketLotListed";
+    EV_MARKET_LOT_SOLD        = "market.lot_sold",          Post, "economy",    "ev-market-lot-sold",        "MarketLotSold";
+    EV_FINE_ISSUED            = "fine.issued",              Post, "economy",    "ev-fine-issued",            "FineIssued";
 }
 
-/// Найти событие в каталоге. Мастер проверяет этим подписки из манифеста.
+/// Find an event in the catalog. The master validates declared subscriptions with this.
 pub fn find(name: &str) -> Option<&'static EventMeta> {
     ALL_EVENTS.iter().copied().find(|e| e.name == name)
 }

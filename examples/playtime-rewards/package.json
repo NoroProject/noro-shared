@@ -6,7 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@noro/module-ui": "../../packages/module-ui"
+    "@noroproject/module-ui": "^1.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

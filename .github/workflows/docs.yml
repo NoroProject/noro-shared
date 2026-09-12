@@ -1,0 +1,58 @@
+name: Docs
+
+on:
+  push:
+    branches: [master]
+    # Документация пересобирается и когда меняется ABI: каталог событий и ссылки
+    # в справочник строятся из кода, а не лежат в репозитории.
+    paths:
+      - 'docs/**'
+      - 'crates/module_abi/**'
+      - 'crates/sdk/**'
+      - 'crates/sdk_macros/**'
+      - 'crates/docs_gen/**'
+      - 'scripts/docs.sh'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Раскатка одна на всех: параллельные публикации в Pages конфликтуют.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - uses: oven-sh/setup-bun@v2
+
+      # Скрипт делает всё в правильном порядке: rustdoc, генератор каталога со
+      # сверкой ссылок, затем Astro. Дублировать шаги здесь значило бы иметь два
+      # описания сборки, которые разойдутся.
+      - name: Build site
+        run: ./scripts/docs.sh
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

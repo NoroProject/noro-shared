@@ -1,13 +1,13 @@
 /*
- * Пустышка нужна только сборщику.
+ * This stub exists for the bundler alone.
  *
- * В рантайме этот пакет не существует: он помечен external, и его импорты
- * превращаются в обращения к `window.__noroUi`, куда панель складывает свои
- * компоненты. Настоящее содержимое пакета — index.d.ts с типами.
+ * At runtime the package is not there: it is marked external, and its imports
+ * become lookups in `window.__noroUi`, where the panel puts its components. The
+ * package's real content is index.d.ts, with the types.
  *
- * Если файл всё же попал в бандл, значит external не настроен, и лучше узнать
- * об этом сразу, а не по пустому экрану.
+ * If this file does end up in a bundle, external is not configured — better to
+ * find that out at once than through a blank screen.
  */
 throw new Error(
-  '@noro/module-ui должен быть external в сборке мини-аппа: проверьте vite.config',
+  '@noroproject/module-ui must be external in a mini-app build: check vite.config',
 )

@@ -1,0 +1,71 @@
+---
+title: Noro Modules
+description: Write a module for a Noro instance — events, data, endpoints and mini-apps — without ever seeing the master sources.
+template: splash
+hero:
+    tagline: Extend a Noro instance with a single file. Events, storage, your own endpoints and your own pages in the panel — in Rust, against a typed SDK.
+    actions:
+        - text: Write your first module
+          link: ./start/first-module/
+          icon: right-arrow
+        - text: Event catalog
+          link: ./reference/events/
+          icon: list-format
+          variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## What this is
+
+A module is one `.noromod` file the instance owner drops into the admin panel. It runs
+sandboxed **inside the master process** and reaches the platform through host functions —
+so a call is a function call, not an HTTP request, and the master's sources stay private.
+
+<CardGrid>
+    <Card title="Handlers, not configuration" icon="seti:rust">
+        Events, endpoints and tasks are declared in code with attributes. The event name
+        comes from your handler's argument type, so subscribing to one event while
+        accepting another's struct does not compile.
+    </Card>
+    <Card title="Data that belongs to you" icon="seti:db">
+        A scoped key-value store per instance, server and player, removed when your
+        module is. Your own Postgres schema is created and migrated too — though querying
+        it is still ahead of us.
+    </Card>
+    <Card title="Pages in the panel" icon="seti:vue">
+        Ship a Vue component built against the panel's own components. It looks like the
+        rest of the panel without a line of styling.
+    </Card>
+    <Card title="Asked, then granted" icon="approve-check">
+        The manifest *asks* for capabilities; the operator *grants* them and may grant
+        less. A call to something ungranted returns an error — it does not crash.
+    </Card>
+</CardGrid>
+
+## The shape of it
+
+```rust
+use noro_sdk::prelude::*;
+
+pub struct Greeter;
+
+#[noro::module]
+impl Greeter {
+    #[event]
+    fn on_join(e: PlayerJoined) -> Result<()> {
+        if e.first_join {
+            log::info(format!("{} is new here", e.player.label()));
+        }
+        store::user(e.player.id).incr("joins", 1)?;
+        Ok(())
+    }
+
+    #[route(GET, "/me")]
+    fn me(req: HttpRequest) -> Result<i64> {
+        Ok(store::user(req.require_user()?).get("joins")?.unwrap_or(0))
+    }
+}
+```
+
+That is the whole module. Nothing above is repeated anywhere else.

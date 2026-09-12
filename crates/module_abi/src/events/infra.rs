@@ -1,4 +1,4 @@
-//! События про сборки, билды, игровые серверы и сам инстанс.
+//! Events about servers, builds, game servers and the instance itself.
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -33,10 +33,10 @@ pub struct BuildCreated {
     pub build: Build,
 }
 
-/// Сборку собираются опубликовать.
+/// A build is about to be published.
 ///
-/// Отменяемое: место для проверок перед раскаткой — например, запретить
-/// публикацию, пока не прошла проверка целостности файлов.
+/// Cancellable: the place for checks before a rollout — for instance,
+/// forbidding publication until the file integrity check has passed.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BuildPrePublish {
     pub ctx: EventCtx,
@@ -64,21 +64,21 @@ pub struct BuildDeleted {
     pub server_id: Uuid,
 }
 
-/// Агент игрового сервера подключился.
+/// A game server's agent connected.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GameServerOnline {
     pub ctx: EventCtx,
     pub game_server: GameServer,
 }
 
-/// Агент отвалился или сервер выключили.
+/// The agent dropped, or the server was shut down.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GameServerOffline {
     pub ctx: EventCtx,
     pub game_server: GameServer,
 }
 
-/// Режим обслуживания включён или снят.
+/// Maintenance mode was turned on or off.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GameServerMaintenance {
     pub ctx: EventCtx,
@@ -86,10 +86,10 @@ pub struct GameServerMaintenance {
     pub enabled: bool,
 }
 
-/// Настройка инстанса изменилась.
+/// An instance setting changed.
 ///
-/// Значение приходит как есть, без разбора: набор настроек растёт, и
-/// типизировать его в публичном ABI значило бы заморозить внутренний список.
+/// The value arrives as is, unparsed: the set of settings grows, and typing it
+/// in the public ABI would mean freezing an internal list.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InstanceSettingChanged {
     pub ctx: EventCtx,
@@ -98,7 +98,7 @@ pub struct InstanceSettingChanged {
     pub value: Option<Value>,
 }
 
-/// Другой модуль включили.
+/// Another module was enabled.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleEnabled {
     pub ctx: EventCtx,
@@ -106,12 +106,12 @@ pub struct ModuleEnabled {
     pub version: String,
 }
 
-/// Другой модуль выключили — вручную или автоматически после сбоев.
+/// Another module was disabled — by hand, or automatically after failures.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleDisabled {
     pub ctx: EventCtx,
     pub module_id: String,
-    /// Выключен автоматикой, а не человеком.
+    /// Disabled by the automation rather than by a person.
     pub automatic: bool,
 }
 

@@ -1,16 +1,16 @@
-//! Макросы для модулей Noro.
+//! Macros for Noro modules.
 //!
-//! `#[noro::module]` вешается на `impl`-блок и делает две вещи: превращает
-//! помеченные методы в экспорты wasm и собирает из них декларацию, которую
-//! мастер забирает вызовом `noro_register`.
+//! `#[noro::module]` goes on an `impl` block and does two things: it turns the
+//! annotated methods into wasm exports, and it assembles them into the
+//! declaration the master collects by calling `noro_register`.
 //!
-//! # Почему макрос на `impl`, а не реестр на каждом обработчике
+//! # Why a macro on the `impl` instead of a registry per handler
 //!
-//! Обычный приём для «саморегистрации» — `inventory`/`linkme`: каждый атрибут
-//! кладёт запись в секцию, а рантайм её обходит. Под
-//! `wasm32-unknown-unknown` это работает ненадёжно: линкер выбрасывает секции,
-//! на которые никто не ссылается. Макрос на `impl` видит все методы разом и
-//! собирает список сам, не полагаясь на поведение линкера.
+//! The usual trick for self-registration is `inventory`/`linkme`: every
+//! attribute drops a record into a section, and the runtime walks it. On
+//! `wasm32-unknown-unknown` that is unreliable: the linker discards sections
+//! nothing refers to. A macro on the `impl` sees every method at once and
+//! builds the list itself, relying on no linker behaviour.
 
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
@@ -21,30 +21,31 @@ mod args;
 
 use args::{EventArgs, RouteArgs, TaskArgs};
 
-/// Разметка модуля: экспорты и декларация для мастера.
+/// The module's markup: exports plus the declaration for the master.
 ///
-/// # Что можно повесить на методы
+/// # What you can put on methods
 ///
-/// Автодополнения внутри атрибутов не бывает — среда не знает грамматику
-/// чужого макроса, пока он не раскрыт. Так же ведут себя `#[serde(…)]`,
-/// `#[clap(…)]` и остальные. Поэтому весь допустимый набор перечислен здесь:
-/// наведение на `#[noro::module]` показывает эту справку, а опечатка внутри
-/// атрибута даёт ошибку со списком принимаемых значений.
+/// There is no autocomplete inside attributes — the editor does not know
+/// another macro's grammar until it is expanded. `#[serde(…)]`, `#[clap(…)]`
+/// and the rest behave the same way. So the entire accepted set is listed
+/// here: hovering `#[noro::module]` shows this reference, and a typo inside an
+/// attribute produces an error listing the accepted values.
 ///
-/// | Атрибут | Сигнатура метода | Что делает |
+/// | Attribute | Method signature | What it does |
 /// |---|---|---|
-/// | `#[event]` | `fn(E) -> Result<()>` | подписка; имя события берётся из типа `E` |
-/// | `#[event(priority = high)]` | то же | `lowest` · `low` · `normal` · `high` · `highest` · `monitor` |
-/// | `#[route(GET, "/путь")]` | `fn(HttpRequest) -> Result<T>` | ручка под `/api/modules/<id>/путь` |
-/// | `#[route(POST, "/путь", auth = public)]` | то же | `public` · `user` · `permission("узел")` · `admin("узел")` |
-/// | `#[task("1h")]` | `fn() -> Result<()>` | по расписанию: `30s` · `5m` · `1h` · `2d` |
-/// | `#[register]` | `fn(&mut Registration)` | дополняет декларацию: поля настроек |
-/// | `#[init]` | `fn() -> Result<()>` | разовая подготовка при включении |
+/// | `#[event]` | `fn(E) -> Result<()>` | a subscription; the event name comes from the type `E` |
+/// | `#[event(priority = high)]` | same | `lowest` · `low` · `normal` · `high` · `highest` · `monitor` |
+/// | `#[route(GET, "/path")]` | `fn(HttpRequest) -> Result<T>` | an endpoint under `/api/modules/<id>/path` |
+/// | `#[route(POST, "/path", auth = public)]` | same | `public` · `user` · `permission("node")` · `admin("node")` |
+/// | `#[task("1h")]` | `fn() -> Result<()>` | on a schedule: `30s` · `5m` · `1h` · `2d` |
+/// | `#[register]` | `fn(&mut Registration)` | extends the declaration: settings fields |
+/// | `#[init]` | `fn() -> Result<()>` | one-off preparation when enabled |
 ///
-/// Умолчания: приоритет — `normal`, доступ к ручке — `user`. Публичная ручка
-/// объявляется намеренно, а не получается из забытого аргумента.
+/// Defaults: priority is `normal`, endpoint access is `user`. A public
+/// endpoint is declared deliberately, never the result of a forgotten
+/// argument.
 ///
-/// # Пример
+/// # Example
 ///
 /// ```ignore
 /// #[noro::module]
@@ -70,16 +71,16 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut events = Vec::new();
     let mut routes = Vec::new();
     let mut tasks = Vec::new();
-    // Ручное дополнение декларации — вызывается внутри `noro_register`.
+    // Manual additions to the declaration — called inside `noro_register`.
     let mut register_hook = None;
-    // Инициализация при включении — отдельный экспорт.
+    // Initialization on enable — a separate export.
     let mut init_hook = None;
 
     for item in &mut block.items {
         let ImplItem::Fn(method) = item else { continue };
         let name = method.sig.ident.clone();
 
-        // Наши атрибуты снимаются: дальше компилятор их не знает.
+        // Our attributes are stripped: past this point the compiler does not know them.
         let mut kind = None;
         method.attrs.retain(|attr| {
             let path = attr.path();
@@ -97,14 +98,14 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
         });
         let Some(attr) = kind else { continue };
 
-        // Точка входа: автор дописывает в декларацию то, что не ложится на
-        // атрибуты, — прежде всего поля настроек.
+        // The entry point: the author adds to the declaration whatever does
+        // not fit an attribute — settings fields above all.
         if attr.path().is_ident("register") {
             register_hook = Some(name.clone());
             continue;
         }
-        // Инициализация при включении. В отличие от `noro_register`, здесь у
-        // модуля уже есть выданные возможности, и он может ходить в хранилище.
+        // Initialization on enable. Unlike `noro_register`, by this point the
+        // module has its granted capabilities and can reach the store.
         if attr.path().is_ident("init") {
             init_hook = Some(name.clone());
             continue;
@@ -119,12 +120,13 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
             };
             let arg_ty = match first_arg_type(method) {
                 Some(t) => t,
-                None => return err(&name, "обработчику события нужен аргумент — само событие"),
+                None => return err(&name, "an event handler needs an argument — the event itself"),
             };
             let priority = args.priority_tokens();
 
-            // Имя события берётся из типа через `Event::NAME`: подписаться на
-            // одно, а принять структуру другого теперь невозможно.
+            // The event name comes from the type via `Event::NAME`:
+            // subscribing to one and accepting another's struct is now
+            // impossible.
             events.push(quote! {
                 reg.events.push(::noro_sdk::abi::registration::EventReg {
                     name: <#arg_ty as ::noro_sdk::abi::events::Event>::NAME.to_string(),
@@ -159,8 +161,8 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 });
             });
 
-            // Ответ уходит как `serde_json::Value`: тип возврата обработчика
-            // знать незачем, достаточно того, что он сериализуется.
+            // The answer leaves as a `serde_json::Value`: there is no need to
+            // know the handler's return type, only that it serializes.
             exports.push(quote! {
                 #[::noro_sdk::extism_pdk::plugin_fn]
                 pub fn #name(
@@ -201,7 +203,7 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
     };
     let init_export = match &init_hook {
         Some(name) => quote! {
-            /// Инициализация модуля. Мастер зовёт её после включения.
+            /// Module initialization. The master calls it after enabling.
             #[::noro_sdk::extism_pdk::plugin_fn]
             pub fn noro_init(_: ()) -> ::noro_sdk::extism_pdk::FnResult<()> {
                 <#self_ty>::#name()?;
@@ -218,10 +220,11 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
         #init_export
 
-        /// Что модуль умеет. Мастер зовёт это при установке и при включении.
+        /// What the module can do. The master calls this at install time and
+        /// on enable.
         ///
-        /// Возможностей на этот момент модулю не выдано: декларацию он собирает
-        /// сам из себя, ничего не спрашивая у хоста.
+        /// The module has no capabilities granted at that point: it assembles
+        /// the declaration out of itself, asking the host for nothing.
         #[::noro_sdk::extism_pdk::plugin_fn]
         pub fn #register(
             _: (),
@@ -232,8 +235,8 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
             #(#events)*
             #(#routes)*
             #(#tasks)*
-            // Ручное дополнение идёт последним: оно может опереться на то,
-            // что уже собрано из атрибутов.
+            // The manual addition goes last: it can build on what the
+            // attributes already collected.
             #register_call
             Ok(::noro_sdk::extism_pdk::Json(reg))
         }
@@ -241,7 +244,7 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
     .into()
 }
 
-/// `#[event]` без скобок — обычный приоритет.
+/// `#[event]` without parentheses means the normal priority.
 fn parse_event(attr: &syn::Attribute) -> syn::Result<EventArgs> {
     match &attr.meta {
         syn::Meta::Path(_) => Ok(EventArgs::default()),
@@ -249,7 +252,7 @@ fn parse_event(attr: &syn::Attribute) -> syn::Result<EventArgs> {
     }
 }
 
-/// Тип первого аргумента метода — он же тип события.
+/// The type of the method's first argument, which is the event type.
 fn first_arg_type(method: &syn::ImplItemFn) -> Option<Type> {
     method.sig.inputs.iter().find_map(|arg| match arg {
         FnArg::Typed(t) => match &*t.pat {
@@ -268,7 +271,7 @@ fn err(at: &syn::Ident, message: &str) -> TokenStream {
         .into()
 }
 
-/// Разбор строки — для `#[task("1h")]` в краткой форме.
+/// String parsing — for the short form `#[task("1h")]`.
 impl Parse for TaskArgs {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         if input.peek(LitStr) {
@@ -278,7 +281,7 @@ impl Parse for TaskArgs {
         }
         let key: syn::Ident = input.parse()?;
         if key != "every" {
-            return Err(syn::Error::new(key.span(), "ожидается every = \"1h\""));
+            return Err(syn::Error::new(key.span(), "expected every = \"1h\""));
         }
         input.parse::<Token![=]>()?;
         Ok(TaskArgs {

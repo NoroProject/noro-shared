@@ -1,4 +1,4 @@
-//! События про роли, права и доступы.
+//! Events about roles, permissions and access.
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -27,10 +27,10 @@ pub struct RoleDeleted {
     pub name: String,
 }
 
-/// Игроку собираются выдать роль.
+/// A role is about to be granted to a player.
 ///
-/// Отменяемое: так держат правило «эту роль выдаёт только модуль», не полагаясь
-/// на то, что никто не нажмёт кнопку в админке.
+/// Cancellable: this is how the rule "only the module grants this role" is
+/// held, without relying on nobody pressing the button in the admin panel.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RolePreGrant {
     pub ctx: EventCtx,
@@ -60,13 +60,13 @@ pub struct RoleRevoked {
     pub role: Role,
 }
 
-/// Игроку выдали личное право.
+/// A personal permission was granted to a player.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PermissionGranted {
     pub ctx: EventCtx,
     pub player: Player,
     pub permission: String,
-    /// Сборка, в контексте которой выдано. `None` — везде.
+    /// The server it was granted in the context of. `None` means everywhere.
     #[serde(default)]
     pub server_id: Option<Uuid>,
 }

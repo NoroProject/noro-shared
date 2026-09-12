@@ -7,6 +7,7 @@ members = [
     "crates/module_abi",
     "crates/sdk",
     "crates/sdk_macros",
+    "crates/docs_gen",
 ]
 
 [workspace.package]

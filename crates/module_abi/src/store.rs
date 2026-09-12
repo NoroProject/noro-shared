@@ -1,24 +1,25 @@
-//! Запросы к KV-хранилищу модуля.
+//! Requests to a module's KV store.
 //!
-//! Типы общие для SDK и мастера: разойтись им нельзя, иначе модуль пишет по
-//! одному ключу, а мастер читает по другому.
+//! The types are shared by the SDK and the master: they must not diverge, or
+//! the module writes under one key while the master reads another.
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use uuid::Uuid;
 
-/// К чему привязана запись.
+/// What a record is attached to.
 ///
-/// Область — часть ключа, а не фильтр: `points` игрока и `points` сборки живут
-/// раздельно, и модулю не приходится склеивать идентификатор в строку самому.
+/// The scope is part of the key rather than a filter: a player's `points` and a
+/// server's `points` live apart, and the module never has to splice the
+/// identifier into the key itself.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "scope", rename_all = "snake_case")]
 pub enum StoreScope {
-    /// Одна запись на весь инстанс.
+    /// One record for the whole instance.
     Instance,
-    /// Своя на каждую сборку.
+    /// Separate for each server.
     Server { id: Uuid },
-    /// Своя на каждого игрока.
+    /// Separate for each player.
     User { id: Uuid },
 }
 
@@ -59,7 +60,7 @@ pub struct StoreIncr {
 pub struct StoreList {
     #[serde(flatten)]
     pub scope: StoreScope,
-    /// Начало ключа. Пусто — все ключи области.
+    /// The start of the key. Empty means every key in the scope.
     #[serde(default)]
     pub prefix: String,
     #[serde(default = "default_limit")]
@@ -72,5 +73,5 @@ fn default_limit() -> i64 {
     100
 }
 
-/// Потолок страницы. Модуль может попросить больше — получит столько.
+/// The page ceiling. A module may ask for more — it gets this much.
 pub const MAX_LIST_LIMIT: i64 = 500;

@@ -1,28 +1,29 @@
-//! Граница между мастером и модулем.
+//! The boundary between the master and a module.
 //!
-//! Крейт публичный и подключается автором модуля напрямую, поэтому здесь лежит
-//! только то, что обязано пережить обновление мастера: сущности, события,
-//! манифест. Ни одной зависимости от tokio, axum и sqlx — иначе модуль нельзя
-//! было бы собрать под `wasm32-unknown-unknown`.
+//! The crate is public and added by the module author directly, so it holds
+//! only what has to survive a master upgrade: entities, events, the manifest.
+//! Not one dependency on tokio, axum or sqlx — otherwise a module could not be
+//! built for `wasm32-unknown-unknown`.
 //!
-//! # Почему типы дублируют внутренние модели мастера
+//! # Why these types duplicate the master's internal models
 //!
-//! Соблазн реэкспортировать `schema::UserProfile` велик, но тогда внутренняя
-//! модель мастера становится публичным контрактом: переименование поля ломает
-//! чужие модули, а убрать поле нельзя уже никогда. Здесь намеренно отдельный,
-//! более узкий набор — мастер проецирует свои строки в него на выходе.
+//! Re-exporting `schema::UserProfile` is tempting, but then the master's
+//! internal model becomes a public contract: renaming a field breaks other
+//! people's modules, and removing a field is never possible again. What lives
+//! here is deliberately a separate, narrower set — the master projects its own
+//! rows into it on the way out.
 //!
-//! Цена известна: новое поле в `schema` не появляется тут само. Поэтому
-//! правило — добавляя поле в профиль пользователя, решить в том же коммите,
-//! едет ли оно в [`Player`].
+//! The price is known: a new field in `schema` does not appear here by itself.
+//! Hence the rule — when adding a field to the user profile, decide in the same
+//! commit whether it travels into [`Player`].
 //!
-//! # Совместимость
+//! # Compatibility
 //!
-//! Версия крейта — это версия ABI. Модуль объявляет требуемую в манифесте
-//! (`api = "1.0"`), мастер при установке сверяет и отказывает, если не сходится
-//! по мажору. Все структуры, приезжающие из мастера, помечены
-//! `#[serde(default)]` на новых полях: модуль, собранный против более старого
-//! ABI, обязан продолжать работать.
+//! The crate's version **is** the ABI version. A module declares the version it
+//! requires in its manifest (`api = "1.0"`); the master compares them at
+//! install time and refuses when the majors do not match. Every struct arriving
+//! from the master carries `#[serde(default)]` on new fields: a module built
+//! against an older ABI has to keep working.
 
 pub mod context;
 pub mod entity;
@@ -44,9 +45,9 @@ pub use manifest::Manifest;
 pub use player::{IntoPlayerRef, Player, PlayerRef};
 pub use registration::{EventReg, Registration, RouteReg, TaskReg};
 
-/// Версия ABI, которую понимает этот крейт.
+/// The ABI version this crate understands.
 ///
-/// Мажор меняется только при ломающей правке границы: мастер откажется ставить
-/// модуль, собранный против другого мажора, и скажет об этом прямо, вместо
-/// того чтобы упасть на первом же вызове с несовпавшей структурой.
+/// The major changes only on a breaking change to the boundary: the master will
+/// refuse to install a module built against a different major and will say so
+/// plainly, instead of failing on the first call with a mismatched struct.
 pub const ABI_VERSION: &str = "1.0";

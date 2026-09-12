@@ -1,4 +1,4 @@
-//! События про игроков и вход.
+//! Events about players and signing in.
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -7,60 +7,61 @@ use crate::context::EventCtx;
 use crate::events::impl_event;
 use crate::player::Player;
 
-/// Игрок пытается зайти на игровой сервер.
+/// A player is trying to join a game server.
 ///
-/// Отменяемое: `cancel` не пустит игрока и покажет ему причину. Обработчик
-/// стоит на пути живого подключения — если модуль затянет, игрок будет ждать.
+/// Cancellable: `cancel` keeps the player out and shows them the reason. The
+/// handler sits in the path of a live connection — if the module drags it out,
+/// the player waits.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlayerPreJoin {
     pub ctx: EventCtx,
     pub player: Player,
-    /// Куда заходит.
+    /// What they are joining.
     pub game_server_id: Uuid,
     #[serde(default, flatten)]
     pub cancel: crate::events::Cancel,
 }
 
 impl PlayerPreJoin {
-    /// Не пустить игрока. `reason_key` — ключ Fluent, его увидит игрок.
+    /// Keep the player out. `reason_key` is a Fluent key; the player sees it.
     pub fn cancel(&mut self, reason_key: impl Into<String>) {
         self.cancel.cancel(reason_key);
     }
 }
 
-/// Игрок вошёл в игру.
+/// A player joined the game.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlayerJoined {
     pub ctx: EventCtx,
     pub player: Player,
     pub game_server_id: Uuid,
-    /// Первый ли это вход игрока на этот инстанс за всё время.
+    /// Whether this is the player's first ever join to this instance.
     pub first_join: bool,
 }
 
-/// Игрок вышел.
+/// A player left.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlayerLeft {
     pub ctx: EventCtx,
     pub player: Player,
     pub game_server_id: Uuid,
-    /// Сколько длилась сессия. Ноль, если сервер перезапустился и потерял счёт.
+    /// How long the session lasted. Zero when the server restarted and lost count.
     pub session_secs: i64,
 }
 
-/// Аккаунт создан.
+/// An account was created.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserRegistered {
     pub ctx: EventCtx,
     pub player: Player,
-    /// Через что зарегистрировался: `discord`, `twitch`, `local`.
+    /// What they registered through: `discord`, `twitch`, `local`.
     pub provider: String,
 }
 
-/// Игрок входит в кабинет, админку или лаунчер.
+/// A player is signing in to the cabinet, the admin panel or the launcher.
 ///
-/// Отменяемое: модуль может закрыть вход, не трогая бан. Так делается
-/// техобслуживание «только для персонала» без снятия доступа у остальных.
+/// Cancellable: a module can close sign-in without touching any ban. That is
+/// how staff-only maintenance is done without revoking anyone's access.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserPreLogin {
     pub ctx: EventCtx,
@@ -76,7 +77,7 @@ impl UserPreLogin {
     }
 }
 
-/// Вход состоялся.
+/// The sign-in went through.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserLoggedIn {
     pub ctx: EventCtx,
@@ -84,7 +85,7 @@ pub struct UserLoggedIn {
     pub provider: String,
 }
 
-/// Игроку выдали бан флагом аккаунта (не наказанием).
+/// A player was banned by the account flag (not by a punishment).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserBanned {
     pub ctx: EventCtx,
@@ -93,17 +94,17 @@ pub struct UserBanned {
     pub reason: Option<String>,
 }
 
-/// Бан аккаунта снят.
+/// The account ban was lifted.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserUnbanned {
     pub ctx: EventCtx,
     pub player: Player,
 }
 
-/// Игрок меняет ник.
+/// A player is changing their username.
 ///
-/// Отменяемое и изменяемое: модуль может запретить занятое имя или привести
-/// его к своему регистру, переписав `new_name`.
+/// Cancellable and mutable: a module can forbid a taken name or force it to
+/// its own casing by rewriting `new_name`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserPreRename {
     pub ctx: EventCtx,
@@ -121,7 +122,7 @@ impl UserPreRename {
     }
 }
 
-/// Ник сменился.
+/// The username changed.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserRenamed {
     pub ctx: EventCtx,
@@ -131,16 +132,16 @@ pub struct UserRenamed {
     pub new_name: String,
 }
 
-/// Скин или плащ сменились.
+/// The skin or the cape changed.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserSkinChanged {
     pub ctx: EventCtx,
     pub player: Player,
-    /// `skin` или `cape`.
+    /// `skin` or `cape`.
     pub what: String,
 }
 
-/// Привязан способ входа.
+/// A login method was linked.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IdentityLinked {
     pub ctx: EventCtx,
@@ -149,7 +150,7 @@ pub struct IdentityLinked {
     pub external_id: String,
 }
 
-/// Способ входа отвязан.
+/// A login method was unlinked.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IdentityUnlinked {
     pub ctx: EventCtx,

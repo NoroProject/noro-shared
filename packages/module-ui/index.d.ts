@@ -1,32 +1,34 @@
 /**
- * Компоненты панели Noro для мини-аппов модулей.
+ * The Noro panel's components, for module mini-apps.
  *
- * Пакет состоит из одних объявлений: в рантайме его нет, а импорты при сборке
- * превращаются в обращения к `window.__noroUi`, куда панель кладёт свои
- * компоненты. Отсюда два следствия — автор получает автодополнение и типы, а
- * бандл модуля не тащит ни Vue, ни вёрстку панели и весит килобайты.
+ * The package is declarations and nothing else: at runtime it is not there, and
+ * the build turns its imports into lookups in `window.__noroUi`, where the panel
+ * puts its own components. Two things follow — you get autocomplete and types,
+ * and your module's bundle carries neither Vue nor the panel's markup, so it
+ * weighs kilobytes.
  *
  * ```ts
- * import { NoroCard, AtomButton, useNoro } from '@noro/module-ui'
+ * import { NoroCard, AtomButton, useNoro } from '@noroproject/module-ui'
  *
  * const noro = useNoro()
  * const me = await noro.api('/me')
  * ```
  *
- * Всё перечисленное здесь — публичный контракт панели. Он может пополняться, но
- * то, что уже есть, не переименовывается: собранные модули этого не переживут.
+ * Everything listed here is the panel's public contract. It can grow, but what
+ * is already in it does not get renamed: modules already built would not
+ * survive that.
  */
 import type { DefineComponent } from 'vue'
 
-/** Оттенок, общий для бейджей и кнопок. */
+/** A tone, shared by badges and buttons. */
 export type Tone = 'neutral' | 'blue' | 'cream' | 'amber' | 'danger' | 'success' | 'outline'
 
 export type Size = 'sm' | 'md' | 'lg'
 
-/** Некликабельная метка: состояние, число, версия. */
+/** A label you cannot click: a state, a count, a version. */
 export interface AtomBadgeProps {
     tone?: Tone
-    /** Моноширинный шрифт — для идентификаторов и версий. */
+    /** Monospace — for identifiers and versions. */
     mono?: boolean
 }
 
@@ -44,12 +46,12 @@ export interface AtomButtonProps {
         | 'outline-blue'
         | 'ghost'
     size?: Size
-    /** Имя иконки `i-lucide-*`. */
+    /** An `i-lucide-*` icon name. */
     icon?: string
     iconRight?: string
     loading?: boolean
     disabled?: boolean
-    /** Растянуть на всю ширину. */
+    /** Stretch to the full width. */
     block?: boolean
 }
 
@@ -65,12 +67,12 @@ export interface AtomCheckboxProps {
 
 export declare const AtomCheckbox: DefineComponent<AtomCheckboxProps>
 
-/** Переключатель в ряду: фильтр, набор значений. */
+/** A toggle in a row: a filter, a set of values. */
 export interface AtomChipProps {
     active?: boolean
     disabled?: boolean
     size?: 'sm' | 'md'
-    /** Заглавными буквами. */
+    /** Upper case. */
     caps?: boolean
 }
 
@@ -85,7 +87,7 @@ export interface AtomInputProps {
     error?: string
     disabled?: boolean
     readonly?: boolean
-    /** Многострочное поле вместо однострочного. */
+    /** A multi-line field instead of a single-line one. */
     textarea?: boolean
     rows?: number
 }
@@ -113,7 +115,7 @@ export interface AtomNumberInputProps {
 
 export declare const AtomNumberInput: DefineComponent<AtomNumberInputProps>
 
-/** Ряд взаимоисключающих значений — вместо выпадающего списка на два пункта. */
+/** A row of mutually exclusive values — instead of a two-item dropdown. */
 export interface AtomSegmentedProps {
     modelValue?: string | number
     options: { label: string; value: string | number; count?: number; icon?: string }[]
@@ -142,7 +144,7 @@ export interface AtomToggleProps {
 
 export declare const AtomToggle: DefineComponent<AtomToggleProps>
 
-/** Заглушка для пустого списка. `bare` — без своей рамки, внутри карточки. */
+/** The placeholder for an empty list. `bare` drops its own frame, for use inside a card. */
 export interface EmptyStateProps {
     icon?: string
     title: string
@@ -152,19 +154,19 @@ export interface EmptyStateProps {
 
 export declare const EmptyState: DefineComponent<EmptyStateProps>
 
-/** Карточка-раздел. Иконка обязательна, справа — слот `actions`. */
+/** A section card. The icon is required; the `actions` slot sits on the right. */
 export interface NoroCardProps {
     title: string
-    /** Имя иконки `i-lucide-*`. */
+    /** An `i-lucide-*` icon name. */
     icon: string
     subtitle?: string
-    /** Без внутренних отступов — для таблиц во всю ширину. */
+    /** No inner padding — for full-width tables. */
     flush?: boolean
 }
 
 export declare const NoroCard: DefineComponent<NoroCardProps>
 
-/** Кто открыл мини-апп. */
+/** Who opened the mini-app. */
 export interface NoroUser {
     id: string
     username?: string | null
@@ -172,13 +174,13 @@ export interface NoroUser {
     [key: string]: unknown
 }
 
-/** То, что панель даёт мини-аппу. */
+/** What the panel gives a mini-app. */
 export interface NoroContext {
     /**
-     * Вызов ручки своего модуля.
+     * Calls one of your own module's endpoints.
      *
-     * Путь — тот, что объявлен в `#[route]`. Чужие модули недоступны: адрес
-     * собирает панель.
+     * The path is the one declared in `#[route]`. Other modules are out of
+     * reach: the panel builds the address.
      *
      * ```ts
      * const me = await noro.api<Points>('/me')
@@ -188,24 +190,25 @@ export interface NoroContext {
     api<T = unknown>(path: string, options?: { method?: string; body?: unknown }): Promise<T>
 
     /**
-     * Перевод по ключу каталога.
+     * A translation, by catalog key.
      *
-     * Ключи модуля начинаются с `mod-<id>-` и живут в `locales/*.ftl` пакета.
-     * Второй аргумент — что показать, пока строки нет.
+     * Your keys start with `mod-<id>-` and live in the package's
+     * `locales/*.ftl`. The second argument is what to show while the string is
+     * missing.
      */
     t(key: string, fallback?: string): string
 
-    /** Кто открыл страницу. `null` у неавторизованного. */
+    /** Who opened the page. `null` when nobody is signed in. */
     user: NoroUser | null
 
-    /** Уведомления панели. */
+    /** The panel's notifications. */
     notify: { ok(text?: string): void; fail(error: unknown): void }
 
-    /** Переход по панели: `noro.navigate('/cabinet')`. */
+    /** Moving around the panel: `noro.navigate('/cabinet')`. */
     navigate(path: string): void
 }
 
 /**
- * Контекст мини-аппа. Зовётся в `setup`, как обычный composable Vue.
+ * The mini-app's context. Called in `setup`, like any Vue composable.
  */
 export declare function useNoro(): NoroContext

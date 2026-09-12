@@ -1,0 +1,10 @@
+[package]
+name = "noro-docs-gen"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish = false
+
+[dependencies]
+noro-module-abi = { workspace = true }

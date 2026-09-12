@@ -1,21 +1,23 @@
-//! Манифест модуля — `manifest.toml` внутри пакета.
+//! The module manifest — `manifest.toml` inside the package.
 //!
-//! Файл длиннее ста пятидесяти строк намеренно: это одна декларация, и разносить
-//! её половины по разным файлам значило бы искать поля манифеста в двух местах.
+//! The file runs past a hundred and fifty lines deliberately: this is one
+//! declaration, and splitting its halves across files would mean hunting for
+//! manifest fields in two places.
 //!
-//! Манифест разбирают двое: мастер при установке и `cargo-noro` при сборке
-//! пакета. Поэтому типы живут здесь, а не в приватном коде мастера — иначе
-//! автор модуля не смог бы проверить свой манифест, не поставив его.
+//! Two parties parse the manifest: the master when installing and `cargo-noro`
+//! when building the package. That is why the types live here rather than in
+//! the master's private code — otherwise a module author could not check their
+//! own manifest without installing it.
 //!
-//! Здесь только то, что нужно знать **до** того, как код модуля исполнится:
-//! кто он, какой ABI ему нужен, что он просит и какие узлы прав заводит. Что
-//! он делает — события, ручки, задачи — объявляется кодом и приезжает
-//! [`crate::Registration`]: имя обработчика там не дублируется строкой, а имя
-//! события выводится из типа.
+//! Only what has to be known **before** the module's code runs is here: who it
+//! is, which ABI it needs, what it asks for, and which permission nodes it
+//! introduces. What it *does* — events, endpoints, tasks — is declared in code
+//! and arrives as [`crate::Registration`]: no handler name duplicated as a
+//! string there, and the event name derived from the type.
 
 use serde::{Deserialize, Serialize};
 
-/// Разобранный `manifest.toml`.
+/// A parsed `manifest.toml`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Manifest {
     pub module: ModuleMeta,
@@ -29,12 +31,13 @@ pub struct Manifest {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleMeta {
-    /// Только `[a-z0-9-]`: идентификатор едет в имя схемы Postgres, в префикс
-    /// ключей локали и в URL, и экранировать его в трёх местах никто не станет.
+    /// `[a-z0-9-]` only: the identifier travels into a Postgres schema name,
+    /// into the locale key prefix and into URLs, and nobody is going to escape
+    /// it in three places.
     pub id: String,
     pub name: String,
     pub version: String,
-    /// Требуемая версия ABI, например `"1.0"`. Мастер сверяет мажор.
+    /// The required ABI version, e.g. `"1.0"`. The master compares the major.
     pub api: String,
     #[serde(default)]
     pub scope: Scope,
@@ -46,22 +49,23 @@ pub struct ModuleMeta {
     pub homepage: Option<String>,
 }
 
-/// Где работает модуль.
+/// Where the module operates.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Scope {
-    /// На весь инстанс сразу. Видит и глобальные события вроде регистрации.
+    /// Across the whole instance. Sees global events such as registration too.
     #[default]
     Instance,
-    /// Включается на выбранных сборках. Событий без привязки к сборке не
-    /// получает вовсе: адресовать их было бы некуда.
+    /// Enabled on selected servers. Receives no events without a server
+    /// attached at all: there would be nowhere to address them.
     Server,
 }
 
-/// Что модулю разрешено трогать.
+/// What a module is allowed to touch.
 ///
-/// Пустой набор — запрет. Оператор видит этот список при установке целиком,
-/// поэтому названия полей должны читаться человеком, а не быть битовой маской.
+/// An empty set is a denial. The operator sees this entire list at install
+/// time, so the field names have to read as human language rather than be a
+/// bitmask.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Capabilities {
     /// `read`, `ban`, `rename`.
@@ -76,7 +80,7 @@ pub struct Capabilities {
     /// `read`, `grant`.
     #[serde(default)]
     pub permissions: Vec<String>,
-    /// `grant` — выдача доступа к сборкам и билдам.
+    /// `grant` — handing out access to servers and builds.
     #[serde(default)]
     pub access: Vec<String>,
     /// `read`.
@@ -97,19 +101,19 @@ pub struct Capabilities {
     /// `tell`, `announce`, `kick`.
     #[serde(default)]
     pub agent: Vec<String>,
-    /// Своё KV-хранилище.
+    /// Its own KV store.
     #[serde(default)]
     pub store: bool,
-    /// Своя схема Postgres.
+    /// Its own Postgres schema.
     #[serde(default)]
     pub db: bool,
-    /// Хосты, куда модулю позволено ходить. Пусто — наружу нельзя.
+    /// The hosts a module may reach. Empty means no outbound access.
     #[serde(default)]
     pub http: Vec<String>,
 }
 
 impl Capabilities {
-    /// Разрешено ли действие в домене. Домен без действий закрыт целиком.
+    /// Whether an action in a domain is allowed. A domain with no actions is closed entirely.
     pub fn allows(&self, domain: &str, action: &str) -> bool {
         let list = match domain {
             "players" => &self.players,
@@ -130,7 +134,7 @@ impl Capabilities {
         list.iter().any(|a| a == action)
     }
 
-    /// Позволено ли ходить на этот хост.
+    /// Whether this host may be reached.
     pub fn allows_host(&self, host: &str) -> bool {
         self.http.iter().any(|h| {
             h == host
@@ -140,10 +144,11 @@ impl Capabilities {
     }
 }
 
-/// Порядок обработчиков одного события.
+/// The order of handlers for one event.
 ///
-/// Повторяет привычную из Bukkit лестницу: тот, кто решает, идёт позже тех, кто
-/// смотрит. `Monitor` — для наблюдателей, его решение об отмене игнорируется.
+/// It repeats the ladder familiar from Bukkit: whoever decides runs after
+/// whoever watches. `Monitor` is for observers — its decision to cancel is
+/// ignored.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Priority {
@@ -156,84 +161,85 @@ pub enum Priority {
     Monitor,
 }
 
-/// Кого пускать в ручку.
+/// Who is let into an endpoint.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Auth {
-    /// Любой, даже неавторизованный. Для приёма вебхуков извне.
+    /// Anyone, even unauthenticated. For receiving webhooks from outside.
     Public,
-    /// Любой вошедший игрок.
+    /// Any signed-in player.
     #[default]
     User,
-    /// Игрок с правом.
+    /// A player holding a permission.
     Permission(String),
-    /// Только админ-токен или персонал с правом.
+    /// An admin token only, or staff holding a permission.
     Admin(String),
 }
 
-/// Мини-апп и место, куда он встраивается.
+/// A mini-app and where it is embedded.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppDecl {
     pub placement: Placement,
-    /// Чем это открывается: страницей в песочнице или компонентом панели.
+    /// What opens it: a sandboxed page, or a panel component.
     #[serde(default)]
     pub kind: AppKind,
-    /// Файл внутри `web/` пакета.
+    /// A file inside the package's `web/`.
     pub entry: String,
-    /// Ключ Fluent с названием пункта.
+    /// The Fluent key holding the entry's name.
     pub title: String,
-    /// Имя иконки `i-lucide-*`.
+    /// An `i-lucide-*` icon name.
     #[serde(default)]
     pub icon: Option<String>,
-    /// Право, без которого пункт не показывается.
+    /// The permission without which the entry is not shown.
     #[serde(default)]
     pub permission: Option<String>,
-    /// Слот, если `placement = "widget"`.
+    /// The slot, when `placement = "widget"`.
     #[serde(default)]
     pub slot: Option<String>,
 }
 
-/// Как мини-апп попадает на экран.
+/// How a mini-app reaches the screen.
 ///
-/// Выбор не про удобство, а про изоляцию. `Page` — отдельная страница в
-/// песочнице: своя область, ничего чужого не видит, общается через мост.
-/// `Vue` — компонент, который панель монтирует у себя: полный Vue, её атомы и
-/// её же вид, но и её окружение целиком, включая возможность сломать страницу.
+/// The choice is about isolation, not convenience. `Page` is a separate page in
+/// a sandbox: its own origin, sight of nothing that is not its own, talking
+/// over the bridge. `Vue` is a component the panel mounts inside itself: full
+/// Vue, the panel's atoms and the panel's own look — but also its entire
+/// environment, including the ability to break the page.
 ///
-/// Второе годится потому, что модули ставит сам владелец инстанса. Для чужого
-/// кода остаётся первое.
+/// The second is acceptable because the instance owner installs the modules
+/// themselves. For somebody else's code, the first remains.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AppKind {
-    /// Страница в iframe. Значение по умолчанию: изоляция не должна теряться
-    /// из-за забытого поля.
+    /// A page in an iframe. The default: isolation must not be lost to a
+    /// forgotten field.
     #[default]
     Page,
-    /// Компонент Vue, собранный модулем и смонтированный панелью.
+    /// A Vue component, built by the module and mounted by the panel.
     Vue,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Placement {
-    /// Раздел в админке.
+    /// A section in the admin panel.
     Admin,
-    /// Раздел в подсайте сборки.
+    /// A section in the server's hub.
     Hub,
-    /// Страница в личном кабинете.
+    /// A page in the cabinet.
     Cabinet,
-    /// Виджет в чужой странице, место задаёт `slot`.
+    /// A widget inside somebody else's page; `slot` sets the place.
     Widget,
 }
 
-/// Поле формы настроек. Повторяет модель полей настроек подсайта, чтобы
-/// админка рисовала их тем же кодом.
+/// A settings form field. It repeats the hub settings field model so the admin
+/// panel can draw them with the same code.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SettingDecl {
     pub key: String,
     #[serde(rename = "type")]
     pub kind: SettingKind,
-    /// Ключ Fluent с подписью поля.
+    /// The Fluent key holding the field's label.
     pub label: String,
     #[serde(default)]
     pub hint: Option<String>,
@@ -248,26 +254,26 @@ pub struct SettingDecl {
 }
 
 impl SettingDecl {
-    /// Значение, которое подставляется, пока оператор ничего не выбрал.
+    /// The value substituted until the operator has chosen anything.
     pub fn default(&mut self, value: impl Into<serde_json::Value>) -> &mut Self {
         self.default = Some(value.into());
         self
     }
 
-    /// Границы для числа. Их проверяет админка, а не модуль.
+    /// Bounds for a number. The admin panel checks them, not the module.
     pub fn range(&mut self, min: i64, max: i64) -> &mut Self {
         self.min = Some(min);
         self.max = Some(max);
         self
     }
 
-    /// Пояснение под полем. Ключ Fluent, как и подпись.
+    /// The note under the field. A Fluent key, like the label.
     pub fn hint(&mut self, key: impl Into<String>) -> &mut Self {
         self.hint = Some(key.into());
         self
     }
 
-    /// Варианты для `select`.
+    /// The options for a `select`.
     pub fn options(&mut self, values: impl IntoIterator<Item = impl Into<String>>) -> &mut Self {
         self.options = values.into_iter().map(Into::into).collect();
         self
@@ -281,15 +287,15 @@ pub enum SettingKind {
     Text,
     Toggle,
     Select,
-    /// Список строк через запятую.
+    /// A comma-separated list of strings.
     List,
 }
 
-/// Узел прав, который заводит модуль.
+/// A permission node a module introduces.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PermissionDecl {
-    /// Обязан начинаться с `noro.module.<id>.`.
+    /// Has to start with `noro.module.<id>.`.
     pub node: String,
-    /// Ключ Fluent с пояснением.
+    /// The Fluent key holding the explanation.
     pub label: String,
 }

@@ -5,7 +5,7 @@ fn manifest(id: &str) -> Manifest {
     Manifest {
         module: ModuleMeta {
             id: id.to_string(),
-            name: "Тест".to_string(),
+            name: "Test".to_string(),
             version: "1.0.0".to_string(),
             api: "1.0".to_string(),
             scope: Scope::Instance,
@@ -24,19 +24,19 @@ fn a_plain_manifest_passes() {
     assert!(violations(&manifest("shop")).is_empty());
 }
 
-/// Идентификатор едет в имя схемы Postgres и в URL. Пропустить сюда точку или
-/// заглавную букву — значит сломаться позже и в чужом месте.
+/// The identifier travels into a Postgres schema name and into URLs. Letting a
+/// dot or a capital letter through here means breaking later, somewhere else.
 #[test]
 fn the_id_is_restricted_to_schema_safe_characters() {
     for bad in ["Shop", "my.shop", "my shop", "-shop", "shop-"] {
         assert!(
             !violations(&manifest(bad)).is_empty(),
-            "идентификатор «{bad}» обязан быть отвергнут"
+            "the identifier `{bad}` must be rejected"
         );
     }
 }
 
-/// Чужая ветка прав дала бы модулю подсказку на право, которого он не заводил.
+/// Somebody else's permission branch would hint a module at a permission it never introduced.
 #[test]
 fn permission_nodes_stay_in_the_modules_own_branch() {
     let mut m = manifest("shop");
@@ -50,7 +50,7 @@ fn permission_nodes_stay_in_the_modules_own_branch() {
     assert!(violations(&m).is_empty());
 }
 
-/// Виджет без слота некуда поставить.
+/// A widget with no slot has nowhere to go.
 #[test]
 fn a_widget_needs_a_slot() {
     let mut m = manifest("shop");
@@ -66,7 +66,7 @@ fn a_widget_needs_a_slot() {
     assert_eq!(violations(&m).len(), 1);
 }
 
-/// Выход за пределы `web/` — единственный способ вытащить из пакета чужой файл.
+/// Escaping `web/` is the only way to pull a foreign file out of the package.
 #[test]
 fn mini_app_entries_cannot_escape_the_package() {
     let mut m = manifest("shop");
@@ -88,9 +88,9 @@ fn intervals_are_parsed() {
     assert_eq!(parse_every("5m"), Some(300));
     assert_eq!(parse_every("1h"), Some(3600));
     assert_eq!(parse_every("2d"), Some(172_800));
-    // Ноль означал бы задачу, которая будит модуль непрерывно.
+    // Zero would mean a task that wakes the module without pause.
     assert_eq!(parse_every("0s"), None);
-    assert_eq!(parse_every("часик"), None);
+    assert_eq!(parse_every("an hour or so"), None);
     assert_eq!(parse_every("5"), None);
 }
 
@@ -102,8 +102,8 @@ fn only_the_major_of_the_abi_has_to_match() {
     assert!(!api_compatible("", "1.0"));
 }
 
-/// Пустой набор возможностей закрыт целиком: забытая строка в манифесте не
-/// должна незаметно открывать домен.
+/// An empty capability set is closed entirely: a forgotten line in the
+/// manifest must not quietly open a domain.
 #[test]
 fn capabilities_default_to_closed() {
     let caps = Capabilities::default();
@@ -122,8 +122,9 @@ fn capabilities_default_to_closed() {
     assert!(caps.allows("store", ""));
     assert!(caps.allows_host("discord.com"));
     assert!(caps.allows_host("api.example.org"));
-    // Сам суффикс без поддомена — не совпадение: иначе `*.example.org`
-    // открывал бы и `example.org`, который автор не называл.
+    // The suffix alone, with no subdomain, is not a match: otherwise
+    // `*.example.org` would also open `example.org`, which the author never
+    // named.
     assert!(!caps.allows_host("example.org"));
     assert!(!caps.allows_host("evil-discord.com"));
 }

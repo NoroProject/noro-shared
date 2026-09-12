@@ -1,4 +1,4 @@
-//! События про наказания, репорты и дела.
+//! Events about punishments, reports and cases.
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -8,11 +8,12 @@ use crate::entity::Punishment;
 use crate::events::impl_event;
 use crate::player::Player;
 
-/// Наказание собираются выдать.
+/// A punishment is about to be issued.
 ///
-/// Отменяемое и изменяемое: `duration_secs` и `reason` можно переписать. Так
-/// делается автоматическая лестница сроков — за третий мут подряд час вместо
-/// десяти минут, без правки правил в админке.
+/// Cancellable and mutable: `duration_secs` and `reason` can be rewritten.
+/// That is how an automatic ladder of durations is built — an hour instead of
+/// ten minutes for a third mute in a row, without editing the rules in the
+/// admin panel.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PunishmentPreIssue {
     pub ctx: EventCtx,
@@ -20,10 +21,10 @@ pub struct PunishmentPreIssue {
     /// `ban`, `mute`, `warn`, `kick`.
     pub kind: String,
     pub reason: String,
-    /// Срок в секундах. `None` — навсегда.
+    /// The duration in seconds. `None` means forever.
     #[serde(default)]
     pub duration_secs: Option<i64>,
-    /// Сборка, на которой действует. `None` — на всех.
+    /// The server it applies to. `None` means all of them.
     #[serde(default)]
     pub server_id: Option<Uuid>,
     #[serde(default, flatten)]
@@ -50,7 +51,7 @@ pub struct PunishmentRevoked {
     pub punishment: Punishment,
 }
 
-/// Срок наказания вышел, мастер снял его сам.
+/// The punishment ran out and the master lifted it by itself.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PunishmentExpired {
     pub ctx: EventCtx,
@@ -58,7 +59,7 @@ pub struct PunishmentExpired {
     pub punishment: Punishment,
 }
 
-/// Игрок пожаловался на игрока.
+/// A player reported a player.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReportCreated {
     pub ctx: EventCtx,
@@ -68,7 +69,7 @@ pub struct ReportCreated {
     pub reason: String,
 }
 
-/// Заведено дело.
+/// A case was opened.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CaseCreated {
     pub ctx: EventCtx,
@@ -76,13 +77,13 @@ pub struct CaseCreated {
     pub target: Player,
 }
 
-/// Дело закрыто.
+/// A case was closed.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CaseResolved {
     pub ctx: EventCtx,
     pub case_id: Uuid,
     pub target: Player,
-    /// `resolved` или `rejected`.
+    /// `resolved` or `rejected`.
     pub status: String,
 }
 

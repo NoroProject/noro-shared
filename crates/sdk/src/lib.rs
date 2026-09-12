@@ -1,11 +1,11 @@
-//! SDK для написания модулей Noro.
+//! SDK for writing Noro modules.
 //!
-//! Модуль собирается в `wasm32-unknown-unknown` и ставится в мастер одним
-//! файлом. Внутри мастера он исполняется в песочнице, но вызовы отсюда — не
-//! сетевые: каждая функция этого SDK попадает в тот же код, который обслуживает
-//! панель администратора.
+//! A module is compiled for `wasm32-unknown-unknown` and installed into the
+//! master as a single file. Inside the master it runs sandboxed, but the calls
+//! from here are not network calls: every function in this SDK lands in the
+//! same code that serves the admin panel.
 //!
-//! # Как выглядит модуль
+//! # What a module looks like
 //!
 //! ```ignore
 //! use noro_sdk::prelude::*;
@@ -14,16 +14,16 @@
 //!
 //! #[noro::module]
 //! impl Greeter {
-//!     /// Здоровается с теми, кто зашёл впервые.
+//!     /// Greets anyone arriving for the first time.
 //!     #[event]
 //!     fn on_join(e: PlayerJoined) -> Result<()> {
 //!         if e.first_join {
-//!             log::info(format!("{} впервые на {}", e.player.label(), e.ctx.server_name()));
+//!             log::info(format!("{} is new to {}", e.player.label(), e.ctx.server_name()));
 //!         }
 //!         Ok(())
 //!     }
 //!
-//!     /// Своя ручка: `GET /api/modules/<id>/me`.
+//!     /// Your own endpoint: `GET /api/modules/<id>/me`.
 //!     #[route(GET, "/me")]
 //!     fn me(req: HttpRequest) -> Result<u64> {
 //!         Ok(store::user(req.require_user()?).get("points")?.unwrap_or(0))
@@ -31,45 +31,45 @@
 //! }
 //! ```
 //!
-//! Ничего из этого не дублируется в манифесте. Имя события мастер выводит из
-//! типа аргумента, поэтому подписаться на одно событие, а принять структуру
-//! другого нельзя — не соберётся. В манифесте остаётся только то, что нужно
-//! знать **до** запуска кода: идентификатор, версия, требуемый ABI и
-//! запрашиваемые возможности.
+//! None of this is repeated in the manifest. The master derives the event name
+//! from the argument type, so subscribing to one event while accepting another
+//! event's struct is not possible — it will not compile. The manifest is left
+//! with only what has to be known **before** any code runs: the identifier,
+//! the version, the required ABI and the capabilities being asked for.
 //!
-//! # Отказы
+//! # Failures
 //!
-//! Каждый вызов может вернуть [`ModuleError`]. Самая частая причина —
-//! возможность, которую оператор не выдал модулю при установке: тогда придёт
-//! `CapabilityDenied` с названием того, чего не хватает.
+//! Every call can return a [`ModuleError`](abi::error::ModuleError). The most common reason is a
+//! capability the operator did not grant the module at install time: that
+//! arrives as `CapabilityDenied`, naming what is missing.
 //!
-//! # Сторонние библиотеки
+//! # Third-party libraries
 //!
-//! Подключаются обычным `cargo add` и вкомпилируются прямо в `.wasm`. Ни
-//! shading, ни relocation, ни объявления зависимостей в манифесте, как в
-//! плагинах Paper, не нужно: у каждого модуля свой `.wasm` со своей копией,
-//! поэтому два модуля с разными версиями одной библиотеки не конфликтуют в
-//! принципе. Пакет получается самодостаточным и не зависит от того, доступен
-//! ли чей-то репозиторий в момент установки.
+//! They are added with a plain `cargo add` and compiled straight into the
+//! `.wasm`. Nothing like Paper's shading, relocation or dependency declarations
+//! in the manifest is needed: every module has its own `.wasm` with its own
+//! copy, so two modules carrying different versions of the same library cannot
+//! conflict in the first place. The package ends up self-contained and does not
+//! depend on somebody's repository being reachable at install time.
 //!
-//! Ограничение одно: библиотека должна собираться под
-//! `wasm32-unknown-unknown`. Чистые вычисления идут как есть — `regex`,
-//! `rust_decimal`, `serde`, `sha2`, `base64`. А вот всё, что лезет в
-//! окружение, там не работает и работать не может:
+//! There is one restriction: the library has to build for
+//! `wasm32-unknown-unknown`. Pure computation works as is — `regex`,
+//! `rust_decimal`, `serde`, `sha2`, `base64`. Anything reaching into the
+//! environment does not work there, and cannot:
 //!
-//! | Что нужно библиотеке | Почему не выйдет | Чем заменить |
+//! | What the library needs | Why it will not work | What to use instead |
 //! |---|---|---|
-//! | Сеть (`reqwest`, `tokio`) | у песочницы нет сокетов | host-функция HTTP по allowlist из манифеста |
-//! | Системные часы (`chrono` с `clock`) | часов у wasm нет, вернётся эпоха | [`now()`] |
-//! | Случайность (`uuid/v4`, `rand`) | нет источника энтропии | идентификаторы приходят от мастера |
-//! | Файлы, потоки, процессы | песочница их не даёт | [`store`] и своя схема Postgres |
+//! | Network (`reqwest`, `tokio`) | the sandbox has no sockets | the HTTP host function, with hosts allow-listed in the manifest |
+//! | System clock (`chrono` with `clock`) | wasm has no clock; you get the epoch | [`now()`] |
+//! | Randomness (`uuid/v4`, `rand`) | there is no entropy source | identifiers come from the master |
+//! | Files, threads, processes | the sandbox does not provide them | [`store`] and your own Postgres schema |
 //!
-//! Зависимости с такими фичами обычно достаточно подключить с
-//! `default-features = false` — именно так сделано с `uuid` и `chrono` в самом
-//! SDK.
+//! Dependencies with those features usually just need to be added with
+//! `default-features = false` — that is exactly what this SDK does with `uuid`
+//! and `chrono`.
 //!
-//! Второе, о чём стоит помнить, — размер: всё подключённое едет внутри `.wasm`
-//! и занимает память инстанса.
+//! The second thing worth keeping in mind is size: everything you add travels
+//! inside the `.wasm` and occupies the instance's memory.
 
 pub mod host;
 pub mod log;
@@ -78,22 +78,22 @@ pub mod store;
 
 pub use noro_module_abi as abi;
 
-/// Слой песочницы. Реэкспортирован, потому что `#[plugin_fn]` раскрывается в
-/// пути вида `extism_pdk::…` — без этого имени в области видимости макрос не
-/// собирается, и каждому модулю пришлось бы подключать extism-pdk отдельной
-/// зависимостью, зная про него.
+/// The sandbox layer. Re-exported because `#[plugin_fn]` expands into paths of
+/// the form `extism_pdk::…` — without that name in scope the macro does not
+/// compile, and every module would have to add extism-pdk as a separate
+/// dependency and know about it.
 pub use extism_pdk;
 
-/// Тот же serde_json, что и у макросов: они раскрываются в `noro_sdk::serde_json::…`.
+/// The same serde_json the macros use: they expand into `noro_sdk::serde_json::…`.
 pub use serde_json;
 
-/// Разметка обработчиков: `#[noro::module]`, `#[event]`, `#[route]`, `#[task]`.
+/// Handler attributes: `#[noro::module]`, `#[event]`, `#[route]`, `#[task]`.
 pub use noro_sdk_macros as noro;
 
-/// Чем кончился вызов. Ошибка одна на весь SDK — [`abi::error::ModuleError`].
+/// How a call ended. There is one error for the whole SDK — [`abi::error::ModuleError`].
 pub type Result<T> = core::result::Result<T, abi::error::ModuleError>;
 
-/// Всё, что нужно обычному модулю, одним `use`.
+/// Everything an ordinary module needs, in one `use`.
 pub mod prelude {
     pub use crate::abi::error::{ErrorKind, ModuleError};
     pub use crate::abi::events::*;
@@ -106,18 +106,19 @@ pub mod prelude {
     };
     pub use crate::{log, noro, now, players, store, Result};
 
-    // Сам крейт, а не только его имена: макрос `plugin_fn` раскрывается в
-    // `extism_pdk::…`, и без этого импорта модуль не собрался бы.
+    // The crate itself, not just its names: the `plugin_fn` macro expands into
+    // `extism_pdk::…`, and without this import the module would not build.
     pub use crate::extism_pdk;
     pub use extism_pdk::{plugin_fn, FnResult, Json};
     pub use serde::{Deserialize, Serialize};
     pub use uuid::Uuid;
 }
 
-/// Текущее время мастера.
+/// The master's current time.
 ///
-/// Часы берутся у хоста: у wasm своих нет, а `SystemTime::now()` в этой цели
-/// либо не собирается, либо возвращает эпоху.
+/// The clock comes from the host: wasm has none of its own, and
+/// `SystemTime::now()` on this target either fails to build or returns the
+/// epoch.
 pub fn now() -> chrono::DateTime<chrono::Utc> {
     chrono::DateTime::from_timestamp(host::now_secs(), 0).unwrap_or_default()
 }

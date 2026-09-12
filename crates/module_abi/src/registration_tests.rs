@@ -23,8 +23,9 @@ fn an_empty_registration_is_valid() {
     assert!(Registration::default().violations().is_empty());
 }
 
-/// Декларацию приносит чужой код: даже при полном доверии автору опечатка
-/// остаётся опечаткой, и мёртвый обработчик лучше поймать при установке.
+/// The declaration is brought in by somebody else's code: even with complete
+/// trust in the author a typo stays a typo, and a dead handler is better caught
+/// at install time.
 #[test]
 fn an_unknown_event_is_rejected() {
     let r = Registration {
@@ -46,12 +47,12 @@ fn routes_are_checked_for_shape() {
         routes: vec![route("FETCH", "top")],
         ..Default::default()
     };
-    // Два нарушения: метод и путь без слэша.
+    // Two violations: the method, and a path without a slash.
     assert_eq!(r.violations().len(), 2);
 }
 
-/// Две одинаковые ручки — это вопрос «какая сработает», на который нет
-/// хорошего ответа.
+/// Two identical endpoints raise the question of which one fires, and there is
+/// no good answer to it.
 #[test]
 fn a_duplicate_route_is_rejected() {
     let r = Registration {
@@ -60,7 +61,7 @@ fn a_duplicate_route_is_rejected() {
     };
     assert_eq!(r.violations().len(), 1);
 
-    // Тот же путь другим методом — разные ручки, это нормально.
+    // The same path with a different method is a different endpoint; that is fine.
     let r = Registration {
         routes: vec![route("GET", "/me"), route("POST", "/me")],
         ..Default::default()
@@ -73,15 +74,15 @@ fn task_intervals_are_checked() {
     let r = Registration {
         tasks: vec![TaskReg {
             handler: "h".to_string(),
-            every: "часик".to_string(),
+            every: "an hour or so".to_string(),
         }],
         ..Default::default()
     };
     assert_eq!(r.violations().len(), 1);
 }
 
-/// Порядок обработчиков — тот же, что привычен по Bukkit: решающие идут после
-/// наблюдающих.
+/// The handler order is the one familiar from Bukkit: the deciders run after
+/// the watchers.
 #[test]
 fn subscriptions_come_back_in_priority_order() {
     let mut high = event(events::EV_PLAYER_JOINED);

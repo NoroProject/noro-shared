@@ -1,47 +1,49 @@
-//! Запрос к ручке модуля.
+//! A request to a module's endpoint.
 //!
-//! Мастер разбирает HTTP сам и передаёт модулю уже готовое: разбирать заголовки
-//! и куки в песочнице незачем, а решения по доступу принимаются до вызова.
+//! The master parses the HTTP itself and hands the module the finished result:
+//! there is no reason to parse headers and cookies inside the sandbox, and
+//! access decisions are made before the call.
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use uuid::Uuid;
 
-/// То, что модуль получает при вызове своей ручки.
+/// What a module receives when its endpoint is called.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HttpRequest {
-    /// `GET`, `POST`, … — как объявлено в манифесте.
+    /// `GET`, `POST`, … — as declared in the code.
     pub method: String,
-    /// Путь внутри модуля, начиная со слэша.
+    /// The path inside the module, starting with a slash.
     pub path: String,
-    /// Параметры строки запроса одним объектом.
+    /// The query-string parameters as a single object.
     #[serde(default)]
     pub query: Value,
-    /// Тело, если оно было.
+    /// The body, if there was one.
     #[serde(default)]
     pub body: Option<Value>,
-    /// Кто зовёт. Пусто у публичной ручки без входа.
+    /// Who is calling. Empty on a public endpoint with no sign-in.
     ///
-    /// Проверять права заново не нужно: мастер уже сверил их с тем, что
-    /// объявлено в манифесте, и до модуля чужой запрос не доходит.
+    /// There is no need to re-check permissions: the master has already
+    /// compared them against what was declared, and a request that fails never
+    /// reaches the module.
     #[serde(default)]
     pub user: Option<Uuid>,
 }
 
 impl HttpRequest {
-    /// Тело, разобранное в нужный тип.
+    /// The body, parsed into the requested type.
     pub fn json<T: for<'de> Deserialize<'de>>(&self) -> Option<T> {
         serde_json::from_value(self.body.clone()?).ok()
     }
 
-    /// Строковый параметр запроса.
+    /// A string query parameter.
     pub fn param(&self, name: &str) -> Option<&str> {
         self.query.get(name)?.as_str()
     }
 
-    /// Кто зовёт, если ручка требует входа.
+    /// Who is calling, when the endpoint requires a sign-in.
     pub fn require_user(&self) -> Result<Uuid, crate::error::ModuleError> {
         self.user
-            .ok_or_else(|| crate::error::ModuleError::invalid("ручка вызвана без входа"))
+            .ok_or_else(|| crate::error::ModuleError::invalid("the endpoint was called without a sign-in"))
     }
 }

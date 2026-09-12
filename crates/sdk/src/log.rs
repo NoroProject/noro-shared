@@ -1,24 +1,25 @@
-//! Запись в лог мастера.
+//! Writing to the master's log.
 //!
-//! Строки уходят в общий `tracing` с пометкой, какой модуль их написал, — то
-//! есть видны там же, где остальные логи инстанса, и попадают в Sentry.
+//! Lines go into the shared `tracing` tagged with which module wrote them — so
+//! they show up where the rest of the instance's logs are, and they reach
+//! Sentry.
 
-/// Обычное сообщение.
+/// An ordinary message.
 pub fn info(message: impl AsRef<str>) {
     crate::host::log_line("info", message.as_ref());
 }
 
-/// Что-то пошло не так, но модуль продолжает работать.
+/// Something went wrong, but the module keeps working.
 pub fn warn(message: impl AsRef<str>) {
     crate::host::log_line("warn", message.as_ref());
 }
 
-/// Сбой.
+/// A failure.
 pub fn error(message: impl AsRef<str>) {
     crate::host::log_line("error", message.as_ref());
 }
 
-/// Подробности для отладки. В обычной конфигурации мастера не показываются.
+/// Debugging detail. Not shown in the master's usual configuration.
 pub fn debug(message: impl AsRef<str>) {
     crate::host::log_line("debug", message.as_ref());
 }

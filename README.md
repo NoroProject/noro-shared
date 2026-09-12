@@ -68,11 +68,16 @@ The operator grants those capabilities at install time and may grant less than y
 
 ### Mini-apps
 
-A module can bring its own UI. Declare it in `[[apps]]` and write an ordinary Vue component:
+A module can bring its own UI. Declare it in `[[apps]]`, install the component types, and write an ordinary Vue component:
+
+```bash
+bun add -d @noroproject/module-ui
+```
+
 
 ```vue
 <script setup lang="ts">
-import { AtomBadge, NoroCard, useNoro } from '@noro/module-ui'
+import { AtomBadge, NoroCard, useNoro } from '@noroproject/module-ui'
 
 const noro = useNoro()
 const seen = await noro.api<boolean>('/me')
@@ -85,7 +90,7 @@ const seen = await noro.api<boolean>('/me')
 </template>
 ```
 
-Those are the panel's own components, so the page looks like the rest of it without a line of styling. Both `vue` and `@noro/module-ui` are external in the build, which keeps the bundle at a couple of kilobytes and — more importantly — gives the module the panel's **exact** Vue instance.
+Those are the panel's own components, so the page looks like the rest of it without a line of styling. Both `vue` and `@noroproject/module-ui` are external in the build, which keeps the bundle at a couple of kilobytes and — more importantly — gives the module the panel's **exact** Vue instance.
 
 `kind = "page"` is the other option: a plain HTML page in a sandboxed iframe, talking over a `postMessage` bridge. Use it when isolation matters more than convenience.
 

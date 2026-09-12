@@ -1,4 +1,4 @@
-//! Разбор аргументов разметки обработчиков.
+//! Parsing the arguments of the handler attributes.
 
 use proc_macro2::TokenStream;
 use quote::quote;
@@ -12,7 +12,7 @@ pub struct EventArgs {
 }
 
 impl EventArgs {
-    /// Приоритет в виде значения перечисления. По умолчанию — обычный.
+    /// The priority as an enum value. Normal by default.
     pub fn priority_tokens(&self) -> TokenStream {
         match &self.priority {
             None => quote!(::noro_sdk::abi::manifest::Priority::Normal),
@@ -26,7 +26,7 @@ impl EventArgs {
                     "monitor" => quote!(Monitor),
                     other => {
                         let message = format!(
-                            "неизвестный приоритет «{other}»: lowest, low, normal, high, highest, monitor"
+                            "unknown priority `{other}`: lowest, low, normal, high, highest, monitor"
                         );
                         return syn::Error::new(p.span(), message).to_compile_error();
                     }
@@ -46,7 +46,7 @@ impl Parse for EventArgs {
         if key != "priority" {
             return Err(syn::Error::new(
                 key.span(),
-                "у события бывает только priority = …",
+                "an event only takes priority = …",
             ));
         }
         input.parse::<Token![=]>()?;
@@ -56,7 +56,7 @@ impl Parse for EventArgs {
     }
 }
 
-/// `#[route(GET, "/me")]` · `#[route(POST, "/buy", auth = permission("узел"))]`
+/// `#[route(GET, "/me")]` · `#[route(POST, "/buy", auth = permission("node"))]`
 pub struct RouteArgs {
     pub method: LitStr,
     pub path: LitStr,
@@ -71,8 +71,9 @@ pub enum AuthArg {
 }
 
 impl RouteArgs {
-    /// Кого пускать. По умолчанию — любого вошедшего: публичная ручка должна
-    /// объявляться намеренно, а не получаться из забытого аргумента.
+    /// Who is let in. Any signed-in user by default: a public endpoint has to
+    /// be declared deliberately, not end up public through a forgotten
+    /// argument.
     pub fn auth_tokens(&self) -> TokenStream {
         match &self.auth {
             None | Some(AuthArg::User) => quote!(::noro_sdk::abi::manifest::Auth::User),
@@ -89,8 +90,9 @@ impl RouteArgs {
 
 impl Parse for RouteArgs {
     fn parse(input: ParseStream) -> syn::Result<Self> {
-        // Метод пишется как есть — `GET`, а не `"GET"`: так строка запроса
-        // читается глазами, а опечатку поймает проверка при установке.
+        // The method is written bare — `GET`, not `"GET"`: that way the
+        // request line reads at a glance, and a typo is caught by the check at
+        // install time.
         let method: Ident = input.parse()?;
         input.parse::<Token![,]>()?;
         let path: LitStr = input.parse()?;
@@ -102,7 +104,7 @@ impl Parse for RouteArgs {
             if key != "auth" {
                 return Err(syn::Error::new(
                     key.span(),
-                    "у ручки бывает только auth = …",
+                    "an endpoint only takes auth = …",
                 ));
             }
             input.parse::<Token![=]>()?;
@@ -136,7 +138,7 @@ impl Parse for AuthArg {
             other => Err(syn::Error::new(
                 kind.span(),
                 format!(
-                    "неизвестный доступ «{other}»: public, user, permission(\"узел\"), admin(\"узел\")"
+                    "unknown access `{other}`: public, user, permission(\"node\"), admin(\"node\")"
                 ),
             )),
         }

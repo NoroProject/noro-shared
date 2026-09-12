@@ -1,28 +1,28 @@
-//! Сущности мастера в проекции для модуля.
+//! The master's entities, projected for a module.
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-/// Сборка. В интерфейсе она же «сервер», но в данных это `servers`.
+/// A server build. Called a "server" in the interface; in the data it is `servers`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Server {
     pub id: Uuid,
     pub name: String,
-    /// Слаг подсайта. Пусто, если подсайт не заведён.
+    /// The hub slug. Empty when no hub has been set up.
     #[serde(default)]
     pub slug: Option<String>,
     #[serde(default)]
     pub description: Option<String>,
 }
 
-/// Игровой сервер: процесс, к которому подключается агент.
+/// A game server: the process the agent connects to.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GameServer {
     pub id: Uuid,
     pub server_id: Uuid,
     pub name: String,
-    /// `proxy` или `server`.
+    /// `proxy` or `server`.
     pub kind: String,
     pub online: bool,
     #[serde(default)]
@@ -33,7 +33,7 @@ pub struct GameServer {
     pub version: Option<String>,
 }
 
-/// Сборка клиента: то, что лаунчер скачивает игроку.
+/// A client build: what the launcher downloads for a player.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Build {
     pub id: Uuid,
@@ -48,26 +48,26 @@ pub struct Build {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Role {
     pub id: Uuid,
-    /// Машинное имя: `vip`, `moderator`.
+    /// The machine name: `vip`, `moderator`.
     pub name: String,
     pub display_name: String,
     #[serde(default)]
     pub color: Option<String>,
     pub is_default: bool,
-    /// Сборка, которой принадлежит роль. `None` — роль действует везде.
+    /// The server the role belongs to. `None` means the role applies everywhere.
     #[serde(default)]
     pub server_id: Option<Uuid>,
 }
 
-/// Счёт в банке подсайта.
+/// An account in the hub's bank.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Account {
     pub id: Uuid,
     pub server_id: Uuid,
-    /// Владелец. `None` у служебных счетов: казна, налоговый, штрафной.
+    /// The owner. `None` on system accounts: the treasury, the tax account, the fines account.
     #[serde(default)]
     pub owner_id: Option<Uuid>,
-    /// Машинный код служебного счёта, если он служебный.
+    /// The system account's machine code, when it is a system account.
     #[serde(default)]
     pub code: Option<String>,
     pub balance: i64,
@@ -75,7 +75,7 @@ pub struct Account {
     pub frozen: bool,
 }
 
-/// Наказание.
+/// A punishment.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Punishment {
     pub id: Uuid,
@@ -84,22 +84,23 @@ pub struct Punishment {
     pub kind: String,
     pub reason: String,
     pub issued_at: DateTime<Utc>,
-    /// Когда истекает. `None` — навсегда.
+    /// When it expires. `None` means never.
     #[serde(default)]
     pub expires_at: Option<DateTime<Utc>>,
     #[serde(default)]
     pub revoked: bool,
-    /// Сборка, на которой действует. `None` — на всех.
+    /// The server it applies to. `None` means all of them.
     #[serde(default)]
     pub server_id: Option<Uuid>,
 }
 
 impl Punishment {
-    /// Действует ли наказание в указанный момент.
+    /// Whether the punishment is in force at the given moment.
     ///
-    /// Время передаётся, а не берётся из системных часов: у wasm их нет, и
-    /// `Utc::now()` в модуле вернул бы начало эпохи. Текущее время даёт
-    /// `noro_sdk::now()` — оно приходит от мастера.
+    /// The time is passed in rather than read from the system clock: wasm has
+    /// none, and `Utc::now()` inside a module would return the start of the
+    /// epoch. The current time comes from `noro_sdk::now()`, which gets it from
+    /// the master.
     pub fn active_at(&self, now: DateTime<Utc>) -> bool {
         !self.revoked && self.expires_at.is_none_or(|e| e > now)
     }
