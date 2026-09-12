@@ -22,7 +22,9 @@ pub enum Ui {
 /// Файлы шаблона: путь в проекте → содержимое.
 const CORE: &[(&str, &str)] = &[
     ("manifest.toml", include_str!("../template/manifest.toml")),
-    ("Cargo.toml", include_str!("../template/Cargo.toml")),
+    // Имя не `Cargo.toml`: настоящий манифест внутри исходников пакета cargo
+    // принимает за вложенный проект и отказывается собирать весь воркспейс.
+    ("Cargo.toml", include_str!("../template/cargo.toml.in")),
     ("src/lib.rs", include_str!("../template/src/lib.rs")),
     ("locales/en.ftl", include_str!("../template/locales/en.ftl")),
     ("locales/ru.ftl", include_str!("../template/locales/ru.ftl")),
