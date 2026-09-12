@@ -74,7 +74,10 @@
 pub mod access;
 pub mod bank;
 pub mod chat;
+pub mod db;
 pub mod host;
+pub mod http;
+pub mod identities;
 pub mod log;
 pub mod permissions;
 pub mod players;
@@ -104,8 +107,10 @@ pub type Result<T> = core::result::Result<T, abi::error::ModuleError>;
 pub mod prelude {
     pub use crate::abi::error::{ErrorKind, ModuleError};
     pub use crate::abi::events::*;
+    pub use crate::abi::http_out::{HttpCall, HttpReply};
     pub use crate::abi::manifest::{Priority, SettingKind};
     pub use crate::abi::ops::{IntoRoleRef, PunishKind, RoleRef};
+    pub use crate::abi::sql::Query;
     pub use crate::abi::HttpRequest;
     pub use crate::abi::Registration;
     pub use crate::abi::{

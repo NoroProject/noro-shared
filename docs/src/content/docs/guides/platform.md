@@ -179,3 +179,83 @@ left" handler does.
 The text is finished text, not a locale key. Your catalog is built for the panel and is
 not installed in the master's own `i18n`, so a key here would reach the player as the key
 itself.
+
+## Linked logins
+
+```rust
+for id in identities::of(player)? {
+    if id.provider == "discord" { … }
+}
+let p = identities::find("twitch", "12345")?;
+identities::link(player, "twitch", "12345", Some("streamer"))?;
+identities::unlink(player, "twitch")?;
+```
+
+`link` returns `false` when that platform identifier already belongs to somebody:
+identifiers are unique across the instance, and moving one between accounts is not
+something a module does quietly.
+
+The platform a player **registered** through cannot be unlinked at all — their Minecraft
+UUID is derived from it, and with it their inventory, their progress and their
+permissions everywhere. Asking for that is an error, not a `false`.
+
+## Appearance
+
+```rust
+players::rename(player, "NewName")?;                    // refused if taken
+players::set_skin(player, Some(url), true)?;            // true — the slim model
+players::set_skin(player, None, false)?;                // back to the default
+
+for cape in players::capes()? { … }
+players::set_cape(player, Some(cape.id))?;
+players::set_cape(player, None)?;                       // take it off
+
+players::save_preset(player, "Winter", url, None)?;     // None — the geometry they wear
+for p in players::presets(player)? { … }
+players::delete_preset(player, p.id)?;
+```
+
+A cape is named by id and the file comes from the instance's set — accepting a URL would
+put a cape on a player that the instance does not have.
+
+`slim` travels with the skin rather than being set separately: a slim texture on classic
+arms reads as broken, and both halves are one decision.
+
+Every one of these pushes the updated profile to the player's open launchers and tells
+the agents to re-read their textures. Without that the skin changes and nobody sees it
+until they rejoin.
+
+## Reaching outside
+
+```rust
+let reply = http::send(HttpCall::post(url, body).header("content-type", "application/json"))?;
+if !reply.ok() {
+    log::warn(format!("webhook answered {}", reply.status));
+}
+let data: Info = http::get_json("https://api.example.org/info")?;
+```
+
+The host must be in your manifest's `http` list, and the scheme must be `https`.
+
+A non-2xx status is an answer, not an error: whether a 404 matters is your call.
+
+### What is checked before the request leaves
+
+The name is matched against your allow-list. Then it is resolved, and the request is
+refused if **any** of the addresses it resolves to is inside the machine or the private
+network — loopback, `10/8`, `192.168/16`, `169.254/16` where cloud metadata lives, CGNAT,
+IPv6 unique-local and link-local, and IPv4 loopback wrapped as `::ffff:127.0.0.1`.
+
+Then the connection goes to the address that was checked, not to whatever the name
+resolves to a moment later. An allow-list alone would be worth very little: a permitted
+name pointed at `127.0.0.1` turns a module into a way to reach the master's own services,
+and the record can change between the check and the connection.
+
+Redirects are not followed — the next hop is a host nobody checked. Follow it yourself if
+you want it.
+
+### What it costs
+
+The call blocks your handler. A `Post` handler has five seconds in total and the request
+itself is capped at four, so a slow endpoint is a handler that times out. An answer over
+a megabyte is refused rather than loaded: it would come into the sandbox's memory.

@@ -36,7 +36,7 @@ properties are what make module authoring possible in the first place.
 
 | Through | What for |
 |---|---|
-| `players` | finding a player by id, username, Minecraft uuid, Discord or any linked login; banning one |
+| `players` | finding a player by id, username, Minecraft uuid, Discord or any linked login; banning, renaming, skins and capes |
 | `roles` | reading roles, and granting or revoking them |
 | `permissions` | asking what a player effectively has, and granting personal permissions |
 | `access` | letting a player into a server or one of its client builds |
@@ -44,6 +44,9 @@ properties are what make module authoring possible in the first place.
 | `punish` | bans, mutes and warnings, issued the way staff issue them |
 | `bank` | accounts, balances and transfers on a hub |
 | `chat` | private messages, announcements and kicks, in game |
+| `identities` | linked logins: Discord, Twitch, anything else |
+| `db` | your own tables, in your own Postgres schema |
+| `http` | requests to hosts you listed in the manifest |
 | `store` | your own key-value data, scoped to the instance, a server or a player |
 | `log` | lines into the master's `tracing`, tagged with your module |
 | `#[event]` | ~50 events across players, access, infrastructure, moderation and economy |
@@ -61,7 +64,7 @@ Anything that reaches into the environment does not:
 
 | What a library needs | What to use instead |
 |---|---|
-| Network (`reqwest`, `tokio`) | the HTTP host function, with hosts allow-listed in the manifest |
+| Network (`reqwest`, `tokio`) | [`http::send`](../../guides/platform/#reaching-outside), with hosts allow-listed in the manifest |
 | System clock (`chrono` with `clock`) | `noro_sdk::now()` |
 | Randomness (`uuid/v4`, `rand`) | identifiers come from the master |
 | Files, threads, processes | `store` and your own Postgres schema |

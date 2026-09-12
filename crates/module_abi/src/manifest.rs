@@ -68,7 +68,7 @@ pub enum Scope {
 /// bitmask.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Capabilities {
-    /// `read`, `ban`, `rename`.
+    /// `read`, `ban`, `rename`, `skin`.
     #[serde(default)]
     pub players: Vec<String>,
     /// `read`, `link`.
@@ -89,13 +89,15 @@ pub struct Capabilities {
     /// `read`, `maintenance`.
     #[serde(default)]
     pub gameservers: Vec<String>,
-    /// `read`, `publish`.
+    /// `read`, `publish`. `publish` covers taking a build *out* of publication;
+    /// putting one in rebuilds and signs the manifest, which takes minutes and
+    /// stays with the operator.
     #[serde(default)]
     pub builds: Vec<String>,
     /// `read`, `transfer`.
     #[serde(default)]
     pub bank: Vec<String>,
-    /// `issue`, `revoke`.
+    /// `read`, `issue`, `revoke`.
     #[serde(default)]
     pub punish: Vec<String>,
     /// `tell`, `announce`, `kick`.

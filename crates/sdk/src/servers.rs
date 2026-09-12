@@ -6,7 +6,7 @@
 
 use noro_module_abi::entity::{Build, GameServer, Server};
 use noro_module_abi::error::ModuleError;
-use noro_module_abi::ops::Maintenance;
+use noro_module_abi::ops::{Maintenance, PublishRequest};
 use uuid::Uuid;
 
 /// Every server build.
@@ -65,5 +65,27 @@ pub fn set_maintenance(game_server_id: Uuid, enabled: bool) -> Result<(), Module
     crate::host::gameserver_maintenance_call(Maintenance {
         game_server_id,
         enabled,
+    })
+}
+
+/// Takes a build out of publication, so the launcher stops handing it out.
+///
+/// For pulling a build that turned out broken — the case where waiting for
+/// somebody to wake up and press the button is the expensive part. Players who
+/// already downloaded it keep it.
+///
+/// # Why there is no `publish`
+///
+/// Publishing is not this flag. It bootstraps the build's artifacts, fetches
+/// whatever assets and Java are missing and signs the manifest — minutes of
+/// work on a first run. A module's call has seconds, so the call would time out
+/// halfway through and leave a half-built publication behind. That one stays
+/// with the operator.
+///
+/// Requires `builds = ["read", "publish"]`.
+pub fn unpublish(build_id: Uuid) -> Result<(), ModuleError> {
+    crate::host::build_publish_call(PublishRequest {
+        build_id,
+        published: false,
     })
 }

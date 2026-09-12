@@ -220,6 +220,111 @@ pub struct Transfer {
     pub idempotency_key: Option<String>,
 }
 
+/// A linked login: how a player signs in besides the game itself.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Identity {
+    /// `discord`, `twitch`, `google` — the machine name of the platform.
+    pub provider: String,
+    /// Their identifier on that platform.
+    pub provider_user_id: String,
+    #[serde(default)]
+    pub username: Option<String>,
+    /// The platform the player registered through. Their Minecraft UUID is
+    /// derived from it, so this one cannot be unlinked.
+    #[serde(default)]
+    pub primary: bool,
+}
+
+/// Linking a login to a player.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LinkRequest {
+    pub player: PlayerRef,
+    pub provider: String,
+    pub provider_user_id: String,
+    /// The name on that platform, for staff to recognise.
+    #[serde(default)]
+    pub username: Option<String>,
+}
+
+/// Which platform to look at, on which player.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProviderQuery {
+    pub player: PlayerRef,
+    pub provider: String,
+}
+
+/// Renaming a player.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RenameRequest {
+    pub player: PlayerRef,
+    /// The new Minecraft username.
+    pub username: String,
+}
+
+/// Setting a skin.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SkinRequest {
+    pub player: PlayerRef,
+    /// The file. `None` clears the skin back to the default.
+    #[serde(default)]
+    pub url: Option<String>,
+    /// The slim model — Alex arms. Part of the same decision as the file: a
+    /// slim texture on classic arms reads as broken.
+    #[serde(default)]
+    pub slim: bool,
+}
+
+/// Setting a cape.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CapeRequest {
+    pub player: PlayerRef,
+    /// A cape from the instance's set. `None` takes the cape off.
+    #[serde(default)]
+    pub cape_id: Option<Uuid>,
+}
+
+/// A saved skin, under a name the player gave it.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SkinPreset {
+    pub id: Uuid,
+    pub name: String,
+    pub skin_url: String,
+    pub slim: bool,
+}
+
+/// Saving a skin under a name.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SavePreset {
+    pub player: PlayerRef,
+    pub name: String,
+    pub skin_url: String,
+    /// `None` — take the geometry the player is wearing now.
+    #[serde(default)]
+    pub slim: Option<bool>,
+}
+
+/// Which preset of which player.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PresetRef {
+    pub player: PlayerRef,
+    pub preset_id: Uuid,
+}
+
+/// Publishing or unpublishing a client build.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PublishRequest {
+    pub build_id: Uuid,
+    pub published: bool,
+}
+
+/// A cape available on the instance.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Cape {
+    pub id: Uuid,
+    pub name: String,
+    pub url: String,
+}
+
 #[cfg(test)]
 #[path = "ops_tests.rs"]
 mod tests;

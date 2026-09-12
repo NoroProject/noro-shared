@@ -25,6 +25,17 @@ extern "ExtismHost" {
     fn chat_announce(input: String) -> String;
     fn chat_kick(input: String) -> String;
     fn player_ban(input: String) -> String;
+    fn player_rename(input: String) -> String;
+    fn player_skin(input: String) -> String;
+    fn player_cape(input: String) -> String;
+    fn capes_list(input: String) -> String;
+    fn presets_list(input: String) -> String;
+    fn preset_save(input: String) -> String;
+    fn preset_delete(input: String) -> String;
+    fn identities_of(input: String) -> String;
+    fn identity_link(input: String) -> String;
+    fn identity_unlink(input: String) -> String;
+    fn build_publish(input: String) -> String;
     fn roles_list(input: String) -> String;
     fn role_get(input: String) -> String;
     fn roles_of(input: String) -> String;
@@ -46,6 +57,9 @@ extern "ExtismHost" {
     fn gameservers_list(input: String) -> String;
     fn gameserver_get(input: String) -> String;
     fn gameserver_maintenance(input: String) -> String;
+    fn http_send(input: String) -> String;
+    fn db_query(input: String) -> String;
+    fn db_execute(input: String) -> String;
     fn store_get(input: String) -> String;
     fn store_set(input: String) -> String;
     fn store_delete(input: String) -> String;
@@ -128,6 +142,69 @@ pub(crate) fn chat_kick_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Resul
     call!(chat_kick, arg)
 }
 
+pub(crate) fn player_rename_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(player_rename, arg)
+}
+
+pub(crate) fn player_skin_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(player_skin, arg)
+}
+
+pub(crate) fn player_cape_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(player_cape, arg)
+}
+
+pub(crate) fn capes_list_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(capes_list, arg)
+}
+
+pub(crate) fn presets_list_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(presets_list, arg)
+}
+
+pub(crate) fn preset_save_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(preset_save, arg)
+}
+
+pub(crate) fn preset_delete_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(preset_delete, arg)
+}
+
+pub(crate) fn identities_of_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(identities_of, arg)
+}
+
+pub(crate) fn identity_link_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(identity_link, arg)
+}
+
+pub(crate) fn identity_unlink_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(identity_unlink, arg)
+}
+
+pub(crate) fn build_publish_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(build_publish, arg)
+}
 pub(crate) fn player_ban_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(player_ban, arg)
 }
@@ -243,6 +320,18 @@ pub(crate) fn gameserver_maintenance_call<A: Serialize, R: DeserializeOwned>(
 ) -> Result<R, ModuleError> {
     call!(gameserver_maintenance, arg)
 }
+pub(crate) fn http_send_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(http_send, arg)
+}
+
+pub(crate) fn db_query_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(db_query, arg)
+}
+
+pub(crate) fn db_execute_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(db_execute, arg)
+}
+
 pub(crate) fn store_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(store_get, arg)
 }

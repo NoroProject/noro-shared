@@ -67,18 +67,52 @@ CREATE TABLE orders (
 );
 ```
 
-:::caution[The tables exist; you cannot query them yet]
-Migrations run and the schema is real, but the host function for running your own SQL is
-not in place. So today you can create tables and not read them.
+Then query them:
 
-Use the key-value store for anything you need now. Reach for a migration only when you
-are laying groundwork for tables you will query later.
-:::
+```rust
+db::execute(Query::new("INSERT INTO orders (player_id, total) VALUES ($1, $2)")
+    .bind(player.to_string())
+    .bind(500))?;
 
-When it does arrive, queries will run with the search path pinned to your schema and
-under a restricted Postgres role, so `SELECT * FROM users` from a module will be refused.
-Reading platform data goes through the typed SDK, where capabilities are checked — not
-through SQL.
+for row in db::query(Query::new("SELECT * FROM orders WHERE paid_at > $1").bind(since))? {
+    let total = row["total"].as_i64().unwrap_or(0);
+}
+
+let count: Option<i64> = db::scalar(Query::new("SELECT count(*) FROM orders"))?;
+```
+
+Rows come back as objects keyed by column name, not as positional arrays: a query that
+grows a column should not silently shift every index in the code reading it.
+
+### Values are bound, never spliced
+
+`$1`, `$2`, … and `.bind(…)`. Assembling a statement with `format!` works right up to the
+first username with an apostrophe in it, and that is the good case.
+
+JSON types map to Postgres as you would expect — a string to `text`, an integer to
+`bigint`, a float to `double precision`, a bool to `boolean`, null to NULL — and an
+object or an array to `jsonb`.
+
+### What you cannot reach
+
+Queries run with the search path pinned to your schema and under a restricted Postgres
+role with no rights anywhere else. `SELECT * FROM users` is refused **by the database**,
+not by a check somebody has to remember to write:
+
+```text
+ERROR: permission denied for table users
+```
+
+Platform data comes from the typed domains, where capabilities are checked and the
+projection is deliberate. If the role could not be created — some managed Postgres will
+not allow it — the master says so at startup and the search path is the only boundary
+left; it does not pretend otherwise.
+
+### Limits
+
+A query returning more than ten thousand rows is refused rather than returned: the rows
+travel into the sandbox's memory, and `SELECT *` over a million-row table would take the
+module down with it. Add a `LIMIT`.
 
 ## Migrations are checksummed
 

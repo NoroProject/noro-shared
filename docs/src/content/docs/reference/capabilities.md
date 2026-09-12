@@ -24,9 +24,12 @@ which are.
 
 | Capability | Actions | What you can call |
 |---|---|---|
-| `players` | `read` | `players::get`, `players::require` |
+| `players` | `read` | `players::get`, `players::require`, `players::capes` |
 | | `ban` | `players::ban`, `players::unban` |
-| `store` | `true` | the whole key-value store |
+| | `rename` | `players::rename` |
+| | `skin` | `players::set_skin`, `set_cape`, `presets`, `save_preset`, `delete_preset` |
+| `identities` | `read` | `identities::of`, `identities::find` |
+| | `link` | `identities::link`, `identities::unlink` |
 | `roles` | `read` | `roles::list`, `roles::get`, `roles::of` |
 | | `grant` | `roles::grant`, `roles::revoke` |
 | `permissions` | `read` | `permissions::has`, `permissions::effective` (and the `_on` variants) |
@@ -34,6 +37,7 @@ which are.
 | `access` | `grant` | `access::allow_join`, `access::allow_build`, and their `revoke_*` |
 | `servers` | `read` | `servers::list`, `get`, `by_slug` |
 | `builds` | `read` | `servers::builds`, `servers::published_build` |
+| | `publish` | `servers::unpublish` — publishing itself stays with the operator |
 | `gameservers` | `read` | `servers::game_servers`, `servers::game_server` |
 | | `maintenance` | `servers::set_maintenance` |
 | `punish` | `read` | `punish::active`, `punish::history` |
@@ -44,14 +48,43 @@ which are.
 | `agent` | `tell` | `chat::tell` |
 | | `announce` | `chat::announce`, `chat::announce_on` |
 | | `kick` | `chat::kick` |
-| `players` | `rename` | not yet |
-| `identities` | `read`, `link` | not yet |
-| `builds` | `publish` | not yet |
-| `db` | `true` | schema and migrations yes, queries not yet |
-| `http` | a host allow-list | not yet |
+| `store` | `true` | the whole key-value store |
+| `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
+| `http` | a host allow-list | `http::send`, `http::get_json` |
 
-Asking for one of the `not yet` actions is harmless — the manifest accepts it and the
-operator sees it — but there is no call to make with it.
+## What is not there yet
+
+These are the ones worth having next, in roughly the order they are worth it. Asking for
+one in the manifest is harmless — the field parses and the operator sees it — but there
+is no call to make with it.
+
+| Capability | Actions | What it would give you |
+|---|---|---|
+| `hub` | `read`, `post` | the server's feed: posts, comments, members |
+| `towns` | `read`, `manage` | towns, their treasuries and their members |
+| `market` | `read`, `list`, `sell` | lots, orders and deliveries |
+| `court` | `read`, `file` | claims, hearings, rulings |
+| `petitions` | `read`, `create` | petitions and their votes |
+| `fines` | `read`, `issue` | fines, and what became of them |
+| `tickets` | `read`, `reply` | player conversations, in the panel and in game |
+| `cases` | `read`, `claim`, `resolve` | moderation cases and their timelines |
+| `news` | `read`, `publish` | the instance's news |
+| `files` | `read`, `write` | the shared file store, deduplicated by hash |
+| `roster` | `read` | who is in game right now, and where |
+| `telemetry` | `read` | a game server's load, TPS and memory |
+| `restarts` | `read`, `manage` | restart schedules |
+| `instance` | `read`, `write` | instance settings |
+| `optional_mods` | `grant` | access to individual optional mods of a build |
+| `sessions` | `read`, `revoke` | a player's sessions, and closing them |
+| `roles` | `manage` | creating, editing and deleting roles, not just granting |
+| `builds` | `files` | reading and writing the files inside a build |
+| `events` | `emit` | publishing your own events for other modules to handle |
+
+Two of these are bigger than a host function. `events = ["emit"]` needs the reentrancy
+guard that `EventCtx.depth` is there for. And everything under `hub`, `towns`, `market`,
+`court` and `petitions` is most useful to a module with `scope = "server"`, which also
+wants widgets and a section in the hub — that is a wave of its own rather than a row in
+this table.
 
 ## Writes are audited as if you were staff
 

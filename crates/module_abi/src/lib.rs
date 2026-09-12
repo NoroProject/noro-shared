@@ -30,10 +30,12 @@ pub mod entity;
 pub mod error;
 pub mod events;
 pub mod http;
+pub mod http_out;
 pub mod manifest;
 pub mod ops;
 pub mod player;
 pub mod registration;
+pub mod sql;
 pub mod store;
 pub mod validate;
 
@@ -42,14 +44,17 @@ pub use entity::{Account, Build, GameServer, Punishment, Role, Server};
 pub use error::{ModuleError, ModuleResult};
 pub use events::{Cancel, Event, EventKind, EventMeta, ALL_EVENTS};
 pub use http::HttpRequest;
+pub use http_out::{HttpCall, HttpReply};
 pub use manifest::Manifest;
 pub use ops::{
-    AccountQuery, Announcement, BanRequest, BuildAccess, IntoRoleRef, Maintenance, PermissionOn,
-    PermissionQuery, PlayerMessage, PunishKind, PunishRequest, RoleGrant, RoleRef, ServerAccess,
-    Transfer,
+    AccountQuery, Announcement, BanRequest, BuildAccess, Cape, CapeRequest, Identity, IntoRoleRef,
+    LinkRequest, Maintenance, PermissionOn, PermissionQuery, PlayerMessage, PresetRef,
+    ProviderQuery, PublishRequest, PunishKind, PunishRequest, RenameRequest, RoleGrant, RoleRef,
+    SavePreset, ServerAccess, SkinPreset, SkinRequest, Transfer,
 };
 pub use player::{IntoPlayerRef, Player, PlayerRef};
 pub use registration::{EventReg, Registration, RouteReg, TaskReg};
+pub use sql::{Query, Rows};
 
 /// The ABI version this crate understands.
 ///
