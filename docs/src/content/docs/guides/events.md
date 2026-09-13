@@ -100,6 +100,10 @@ tells the agent whether anybody is subscribed and the agent stays silent until s
 is. Your budget there is **700 ms** measured from the game server, not one second — the
 player has already pressed Enter and is watching for their line. Past it the message goes
 through unchanged.
+
+Rewriting `text` works on Paper. On Fabric and Forge the game's own hook answers with a
+yes or no and nothing else, so a refusal lands and an edit does not — write the filter so
+that refusing is the fallback, not a surprise.
 :::
 
 ### What a Pre handler must know
