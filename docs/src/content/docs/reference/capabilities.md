@@ -82,6 +82,8 @@ after the table.
 | `fines` | `read` | `hub::fines`, `hub::fines_of` |
 | | `issue` | `hub::fine` |
 | `events` | `emit` | `events::emit`, `events::emit_on` |
+| `launcher` | `read` | `launcher::is_online`, `launcher::connected` |
+| | `notify` | `launcher::send`, `launcher::broadcast` |
 | `store` | `true` | the whole key-value store |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |

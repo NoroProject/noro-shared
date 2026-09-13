@@ -256,6 +256,7 @@ events! {
     EV_INSTANCE_SETTING       = "instance.setting_changed", Post, "infra",      "ev-instance-setting",       "InstanceSettingChanged";
     EV_MODULE_ENABLED         = "module.enabled",           Post, "infra",      "ev-module-enabled",         "ModuleEnabled";
     EV_MODULE_DISABLED        = "module.disabled",          Post, "infra",      "ev-module-disabled",        "ModuleDisabled";
+    EV_LAUNCHER_MESSAGE       = "launcher.message",         Post, "infra",      "ev-launcher-message",       "LauncherMessage";
 
     // --- Moderation -----------------------------------------------------------
     EV_PUNISH_PRE_ISSUE       = "punishment.pre_issue",     Pre,  "moderation", "ev-punish-pre-issue",       "PunishmentPreIssue";

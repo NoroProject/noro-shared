@@ -74,6 +74,9 @@ extern "ExtismHost" {
     fn hub_fines(input: String) -> String;
     fn hub_fines_of(input: String) -> String;
     fn hub_fine(input: String) -> String;
+    fn launcher_send(input: String) -> String;
+    fn launcher_online(input: String) -> String;
+    fn launcher_count(input: String) -> String;
     fn hub_file_petition(input: String) -> String;
     fn build_files(input: String) -> String;
     fn build_file_read(input: String) -> String;
@@ -458,12 +461,29 @@ pub(crate) fn hub_fines_of_call<A: Serialize, R: DeserializeOwned>(
 pub(crate) fn hub_fine_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(hub_fine, arg)
 }
+pub(crate) fn launcher_send_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(launcher_send, arg)
+}
+pub(crate) fn launcher_online_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(launcher_online, arg)
+}
+pub(crate) fn launcher_count_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(launcher_count, arg)
+}
 pub(crate) fn hub_file_petition_call<A: Serialize, R: DeserializeOwned>(
     arg: A,
 ) -> Result<R, ModuleError> {
     call!(hub_file_petition, arg)
 }
-pub(crate) fn build_files_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+pub(crate) fn build_files_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
     call!(build_files, arg)
 }
 pub(crate) fn build_file_read_call<A: Serialize, R: DeserializeOwned>(

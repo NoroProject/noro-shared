@@ -84,6 +84,7 @@ pub mod http;
 pub mod hub;
 pub mod identities;
 pub mod instance;
+pub mod launcher;
 pub mod log;
 pub mod news;
 pub mod permissions;
@@ -133,13 +134,18 @@ pub mod prelude {
     };
     pub use crate::{
         access, bank, builds, cases, chat, db, events, files, http, hub, identities, instance,
-        log, news, noro, now, permissions, players, punish, restarts, roles, roster, servers,
-        sessions, store, telemetry, tickets, Result,
+        launcher, log, news, noro, now, permissions, players, punish, restarts, roles, roster,
+        servers, sessions, store, telemetry, tickets, Result,
     };
 
     // The crate itself, not just its names: the `plugin_fn` macro expands into
     // `extism_pdk::…`, and without this import the module would not build.
     pub use crate::extism_pdk;
+    // Same idea: almost every module builds a JSON value somewhere — a frame to
+    // a launcher, a hub document, an answer from an endpoint — and adding the
+    // dependency by hand just to reach `json!` is a step with no decision in it.
+    pub use crate::serde_json;
+    pub use crate::serde_json::json;
     pub use extism_pdk::{plugin_fn, FnResult, Json};
     pub use serde::{Deserialize, Serialize};
     pub use uuid::Uuid;

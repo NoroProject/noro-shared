@@ -771,6 +771,19 @@ pub struct PetitionDraft {
     pub target_account: String,
 }
 
+/// A frame for a fork of the launcher.
+///
+/// The shape of `payload` belongs to the pair — the fork and its module. The
+/// protocol does not describe it, deliberately: a described shape would make
+/// every third-party change a release of the wire contract.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LauncherFrame {
+    /// Whose launcher. Omitted for a frame to everyone connected.
+    #[serde(default)]
+    pub player: Option<PlayerRef>,
+    pub payload: serde_json::Value,
+}
+
 /// Naming one file inside a build.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BuildFileRef {

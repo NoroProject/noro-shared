@@ -80,13 +80,7 @@ const VUE: &[(&str, &str)] = &[
 const VUE_EXAMPLE: (&str, &str) = ("ui/App.vue", include_str!("../template/ui/App.vue"));
 const VUE_BARE: (&str, &str) = ("ui/App.vue", include_str!("../template/ui/App.bare.vue"));
 
-pub fn run(
-    id: &str,
-    name: Option<&str>,
-    ui: Ui,
-    body: Body,
-    path: Option<PathBuf>,
-) -> Result<()> {
+pub fn run(id: &str, name: Option<&str>, ui: Ui, body: Body, path: Option<PathBuf>) -> Result<()> {
     check_id(id)?;
     let name = name.map(str::to_string).unwrap_or_else(|| title(id));
     let root = path.unwrap_or_else(|| PathBuf::from(id));

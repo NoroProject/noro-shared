@@ -178,6 +178,8 @@ capabilities! {
     files => ["read", "write"];
     /// `emit` — publishing the module's own event for other modules.
     events => ["emit"];
+    /// `read`, `notify` — seeing who has a launcher open, and sending it a frame.
+    launcher => ["read", "notify"];
 }
 
 impl Capabilities {
