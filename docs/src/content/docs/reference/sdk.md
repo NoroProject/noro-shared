@@ -28,6 +28,17 @@ Access to servers and builds.
 | `allow_mod(who: impl IntoPlayerRef, server_id: Uuid, mod_name: &str) -> Result<(), ModuleError>` | Lets a player use one optional mod of a server. | `optional_mods = ["grant"]` |
 | `revoke_mod(who: impl IntoPlayerRef, server_id: Uuid, mod_name: &str) -> Result<(), ModuleError>` | Takes that away again. | `optional_mods = ["grant"]` |
 
+## `agent`
+
+Things done to a player in the running game.
+
+| Call | What it does | Needs |
+|---|---|---|
+| `tell(who: impl IntoPlayerRef, message: &str) -> Result<bool, ModuleError>` | Sends a private message to a player. | `agent = ["tell"]` |
+| `announce(message: &str) -> Result<(), ModuleError>` | Announces something to everyone in game. | `agent = ["announce"]` |
+| `announce_on(server_id: Uuid, message: &str) -> Result<(), ModuleError>` | The same, to one server build only. | `agent = ["announce"]` |
+| `kick(who: impl IntoPlayerRef, reason: &str) -> Result<bool, ModuleError>` | Throws a player out of the game with a reason they will see. | `agent = ["kick"]` |
+
 ## `bank`
 
 The hub's bank.
@@ -68,17 +79,6 @@ Moderation cases.
 | `open_on(who: impl IntoPlayerRef) -> Result<Option<Case>, ModuleError>` | The open case on a player, if there is one. | `cases = ["read"]` |
 | `claim(id: Uuid, moderator: impl IntoPlayerRef) -> Result<bool, ModuleError>` | Assigns a case to a moderator. `false` — somebody already has it. | `cases = ["read", "claim"]` |
 | `resolve(id: Uuid, verdict: &str, resolution: &str, rule_code: Option<&str>) -> Result<bool, ModuleError>` | Closes a case. `verdict = "confirmed"` means the report held up. | `cases = ["read", "resolve"]` |
-
-## `chat`
-
-Talking to players in game.
-
-| Call | What it does | Needs |
-|---|---|---|
-| `tell(who: impl IntoPlayerRef, message: &str) -> Result<bool, ModuleError>` | Sends a private message to a player. | `agent = ["tell"]` |
-| `announce(message: &str) -> Result<(), ModuleError>` | Announces something to everyone in game. | `agent = ["announce"]` |
-| `announce_on(server_id: Uuid, message: &str) -> Result<(), ModuleError>` | The same, to one server build only. | `agent = ["announce"]` |
-| `kick(who: impl IntoPlayerRef, reason: &str) -> Result<bool, ModuleError>` | Throws a player out of the game with a reason they will see. | `agent = ["kick"]` |
 
 ## `db`
 

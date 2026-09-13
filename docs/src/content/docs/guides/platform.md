@@ -198,11 +198,11 @@ operation in two histories is one history too many.
 ## Talking to players
 
 ```rust
-if !chat::tell(player, "Your rank is now VIP.")? {
+if !agent::tell(player, "Your rank is now VIP.")? {
     // not in game — tell them in the cabinet instead
 }
-chat::announce_on(server_id, "Maintenance in 10 minutes.")?;
-chat::kick(player, "Take a break.")?;
+agent::announce_on(server_id, "Maintenance in 10 minutes.")?;
+agent::kick(player, "Take a break.")?;
 ```
 
 `tell` and `kick` return `false` when the player is not in game. That is an ordinary

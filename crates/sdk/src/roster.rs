@@ -6,7 +6,7 @@
 //!
 //! ```ignore
 //! for p in roster::online()? {
-//!     chat::tell(p.player.id, "Restart in 10 minutes.")?;
+//!     agent::tell(p.player.id, "Restart in 10 minutes.")?;
 //! }
 //! ```
 

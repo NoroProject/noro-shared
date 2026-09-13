@@ -198,11 +198,11 @@ bank::transfer(server_id, from.id, to.id, 100, "награда за игру")?;
 ## Разговор с игроками
 
 ```rust
-if !chat::tell(player, "Теперь у вас VIP.")? {
+if !agent::tell(player, "Теперь у вас VIP.")? {
     // не в игре — скажем в кабинете
 }
-chat::announce_on(server_id, "Техработы через 10 минут.")?;
-chat::kick(player, "Отдохните.")?;
+agent::announce_on(server_id, "Техработы через 10 минут.")?;
+agent::kick(player, "Отдохните.")?;
 ```
 
 `tell` и `kick` возвращают `false`, когда игрока нет в игре. Это обычный исход, а не

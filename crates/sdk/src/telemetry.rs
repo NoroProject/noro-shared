@@ -7,7 +7,7 @@
 //! ```ignore
 //! if let Some(t) = telemetry::of(gs.id)? {
 //!     if t.mspt.unwrap_or(0.0) > 45.0 {
-//!         chat::announce("The server is lagging, a restart is coming.")?;
+//!         agent::announce("The server is lagging, a restart is coming.")?;
 //!     }
 //! }
 //! ```

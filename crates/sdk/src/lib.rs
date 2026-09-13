@@ -72,10 +72,10 @@
 //! inside the `.wasm` and occupies the instance's memory.
 
 pub mod access;
+pub mod agent;
 pub mod bank;
 pub mod builds;
 pub mod cases;
-pub mod chat;
 pub mod db;
 pub mod events;
 pub mod files;
@@ -134,7 +134,7 @@ pub mod prelude {
         PlayerRef, Punishment, Role, Server,
     };
     pub use crate::{
-        access, bank, builds, cases, chat, db, events, files, fluent, http, hub, identities,
+        access, agent, bank, builds, cases, db, events, files, fluent, http, hub, identities,
         instance, launcher, log, news, noro, now, permissions, players, punish, restarts, roles,
         roster, servers, sessions, store, telemetry, tickets, Result,
     };

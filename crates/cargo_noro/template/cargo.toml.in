@@ -12,7 +12,7 @@ license = "MIT"
 crate-type = ["cdylib"]
 
 [dependencies]
-noro-sdk = "0.1"
+noro-sdk = "0.2"
 serde = { version = "1", features = ["derive"] }
 
 [profile.release]

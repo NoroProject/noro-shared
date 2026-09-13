@@ -46,9 +46,9 @@ after the table.
 | | `revoke` | `punish::revoke` |
 | `bank` | `read` | `bank::account`, `accounts`, `balance`, `treasury` |
 | | `transfer` | `bank::transfer`, `bank::transfer_once` |
-| `agent` | `tell` | `chat::tell` |
-| | `announce` | `chat::announce`, `chat::announce_on` |
-| | `kick` | `chat::kick` |
+| `agent` | `tell` | `agent::tell` |
+| | `announce` | `agent::announce`, `agent::announce_on` |
+| | `kick` | `agent::kick` |
 | `optional_mods` | `grant` | `access::allow_mod`, `revoke_mod` |
 | `news` | `read` | `news::list`, `news::get` |
 | | `publish` | `news::publish`, `publish_pinned` |

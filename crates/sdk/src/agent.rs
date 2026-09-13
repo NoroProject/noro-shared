@@ -1,14 +1,29 @@
-//! Talking to players in game.
+//! Things done to a player in the running game.
+//!
+//! A message, an announcement, a kick — one frame each to the agent on the game
+//! server, landing immediately. Named after the capability that gates them,
+//! `agent`, because that is what they have in common: they need somebody to be
+//! in game, and nothing of them survives the player leaving.
+//!
+//! ```ignore
+//! if !agent::tell(player, "Thanks! Your rank is now VIP.")? {
+//!     // not in game right now — say it in the cabinet instead
+//! }
+//! ```
 //!
 //! The text is finished text, not a key. Your locale catalog is built for the
 //! panel and is not installed in the master's own `i18n`, so a key here would
 //! reach the player as the key itself — `mod-shop-paid` instead of a sentence.
 //!
-//! ```ignore
-//! if !chat::tell(player, "Thanks! Your rank is now VIP.")? {
-//!     // not in game right now — say it in the cabinet instead
-//! }
-//! ```
+//! # Why a kick is here and not in `punish`
+//!
+//! Because a kick is not a punishment, and putting it there would promise
+//! things that do not exist. A punishment has a row, a duration, an appeal and
+//! a `revoke`; a kick has a disconnect and a line in the audit log. The player
+//! can reconnect a second later, and there is nothing to lift.
+//!
+//! If you want a kick that is on the record and can be argued with, that is
+//! [`crate::punish::ban`] with a short duration.
 
 use noro_module_abi::error::ModuleError;
 use noro_module_abi::ops::{Announcement, PlayerMessage};

@@ -93,9 +93,9 @@ pub trait PlayerActions {
     /// What they have, in the smallest unit. See [`crate::bank::balance`].
     fn balance(&self, server_id: Uuid) -> Result<i64, ModuleError>;
 
-    /// A private message. `false` — they are not in game. See [`crate::chat::tell`].
+    /// A private message. `false` — they are not in game. See [`crate::agent::tell`].
     fn tell(&self, message: &str) -> Result<bool, ModuleError>;
-    /// Throws them off the server. See [`crate::chat::kick`].
+    /// Throws them off the server. See [`crate::agent::kick`].
     fn kick(&self, reason: &str) -> Result<bool, ModuleError>;
     /// Whether they are in game right now. See [`crate::roster::is_online`].
     fn is_online(&self) -> Result<bool, ModuleError>;
@@ -191,10 +191,10 @@ impl PlayerActions for Player {
     }
 
     fn tell(&self, message: &str) -> Result<bool, ModuleError> {
-        crate::chat::tell(self.id, message)
+        crate::agent::tell(self.id, message)
     }
     fn kick(&self, reason: &str) -> Result<bool, ModuleError> {
-        crate::chat::kick(self.id, reason)
+        crate::agent::kick(self.id, reason)
     }
     fn is_online(&self) -> Result<bool, ModuleError> {
         crate::roster::is_online(self.id)
@@ -227,7 +227,7 @@ pub trait ServerActions {
     fn game_servers(&self) -> Result<Vec<GameServer>, ModuleError>;
     /// Its treasury account. See [`crate::bank::treasury`].
     fn treasury(&self) -> Result<Account, ModuleError>;
-    /// An announcement to everybody on it. See [`crate::chat::announce_on`].
+    /// An announcement to everybody on it. See [`crate::agent::announce_on`].
     fn announce(&self, message: &str) -> Result<(), ModuleError>;
     /// Its hub feed, paginated. See [`crate::hub::feed`].
     fn feed(&self, page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError>;
@@ -249,7 +249,7 @@ impl ServerActions for Server {
         crate::bank::treasury(self.id)
     }
     fn announce(&self, message: &str) -> Result<(), ModuleError> {
-        crate::chat::announce_on(self.id, message)
+        crate::agent::announce_on(self.id, message)
     }
     fn feed(&self, page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError> {
         crate::hub::feed(self.id, page)

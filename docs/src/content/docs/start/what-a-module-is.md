@@ -43,7 +43,7 @@ properties are what make module authoring possible in the first place.
 | `servers` | servers, their builds, their game servers, and maintenance mode |
 | `punish` | bans, mutes and warnings, issued the way staff issue them |
 | `bank` | accounts, balances and transfers on a hub |
-| `chat` | private messages, announcements and kicks, in game |
+| `agent` | private messages, announcements and kicks, in game |
 | `identities` | linked logins: Discord, Twitch, anything else |
 | `db` | your own tables, in your own Postgres schema |
 | `http` | requests to hosts you listed in the manifest |

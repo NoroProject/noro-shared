@@ -98,7 +98,10 @@ pub struct Account {
 pub struct Punishment {
     pub id: Uuid,
     pub user_id: Uuid,
-    /// `ban`, `mute`, `warn`, `kick`.
+    /// `ban`, `server_ban`, `mute`, `warn` — the same set as [`crate::ops::PunishKind`].
+    ///
+    /// A kick is not among them and never was: it records nothing and there is
+    /// nothing to lift. It lives in the `agent` domain of the SDK.
     pub kind: String,
     pub reason: String,
     pub issued_at: DateTime<Utc>,
