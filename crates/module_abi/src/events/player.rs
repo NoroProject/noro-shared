@@ -29,6 +29,24 @@ impl PlayerPreJoin {
     }
 }
 
+/// A player is about to say something in chat.
+///
+/// The one event that costs the game server a round trip per message, so it is
+/// asked only when somebody is subscribed — and the budget is the tightest of
+/// any handler. Slow work here is felt by everyone in chat, not by you.
+///
+/// `text` is yours to change: hiding a link reads better than refusing the
+/// whole line, and a refusal is a message the player has to be told about.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PlayerPreChat {
+    pub ctx: EventCtx,
+    pub player: Player,
+    pub text: String,
+    pub game_server_id: Uuid,
+    #[serde(default)]
+    pub cancel: crate::events::Cancel,
+}
+
 /// A player joined the game.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlayerJoined {
@@ -158,6 +176,7 @@ pub struct IdentityUnlinked {
     pub provider: String,
 }
 
+impl_event!(PlayerPreChat, super::EV_PLAYER_PRE_CHAT, Pre);
 impl_event!(PlayerPreJoin, super::EV_PLAYER_PRE_JOIN, Pre);
 impl_event!(PlayerJoined, super::EV_PLAYER_JOINED, Post);
 impl_event!(PlayerLeft, super::EV_PLAYER_LEFT, Post);

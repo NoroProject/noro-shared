@@ -218,6 +218,7 @@ macro_rules! events {
 
 events! {
     // --- Players and signing in -----------------------------------------------
+    EV_PLAYER_PRE_CHAT        = "player.pre_chat",          Pre,  "player",     "ev-player-pre-chat",        "PlayerPreChat";
     EV_PLAYER_PRE_JOIN        = "player.pre_join",          Pre,  "player",     "ev-player-pre-join",        "PlayerPreJoin";
     EV_PLAYER_JOINED          = "player.joined",            Post, "player",     "ev-player-joined",          "PlayerJoined";
     EV_PLAYER_LEFT            = "player.left",              Post, "player",     "ev-player-left",            "PlayerLeft";

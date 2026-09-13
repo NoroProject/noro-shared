@@ -16,10 +16,37 @@ use crate::project::Project;
 /// Что уезжает в пакет целыми каталогами.
 const DIRS: [&str; 3] = ["web", "locales", "migrations"];
 
-pub fn run(p: &Project, debug: bool) -> Result<()> {
+pub fn run(p: &Project, debug: bool, signed: bool) -> Result<()> {
     let id = &p.manifest.module.id;
     let dist = p.path("dist");
     std::fs::create_dir_all(&dist).context("не создаётся dist/")?;
+
+    // Сначала собираем записи, потом пишем архив: подпись считается по
+    // содержимому, и знать его надо целиком до первой записи в файл.
+    let mut entries: Vec<(String, Vec<u8>)> = vec![
+        (
+            "manifest.toml".to_string(),
+            std::fs::read(p.path("manifest.toml"))?,
+        ),
+        ("module.wasm".to_string(), std::fs::read(p.wasm(debug)?)?),
+    ];
+    if p.has("icon.png") {
+        entries.push(("icon.png".to_string(), std::fs::read(p.path("icon.png"))?));
+    }
+    for dir in DIRS {
+        collect(&p.path(dir), dir, &mut entries)?;
+    }
+    // Порядок фиксируется: иначе две сборки одного и того же дают разный
+    // sha256, и мастер считает пакет новым там, где ничего не менялось.
+    entries.sort_by(|a, b| a.0.cmp(&b.0));
+
+    if signed {
+        let signature = crate::sign::sign(p, &entries)?;
+        entries.push((
+            noro_module_abi::signing::SIGNATURE_ENTRY.to_string(),
+            toml::to_string_pretty(&signature)?.into_bytes(),
+        ));
+    }
 
     let out = dist.join(format!("{id}.noromod"));
     let file =
@@ -27,49 +54,31 @@ pub fn run(p: &Project, debug: bool) -> Result<()> {
     let mut zip = zip::ZipWriter::new(file);
     let opts = SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
 
-    zip.start_file("manifest.toml", opts)?;
-    zip.write_all(&std::fs::read(p.path("manifest.toml"))?)?;
-
-    zip.start_file("module.wasm", opts)?;
-    zip.write_all(&std::fs::read(p.wasm(debug)?)?)?;
-
-    if p.has("icon.png") {
-        zip.start_file("icon.png", opts)?;
-        zip.write_all(&std::fs::read(p.path("icon.png"))?)?;
-    }
-
-    for dir in DIRS {
-        add_dir(&mut zip, &p.path(dir), dir, opts)?;
+    for (name, body) in &entries {
+        zip.start_file(name, opts)?;
+        zip.write_all(body)?;
     }
 
     zip.finish().context("архив не закрывается")?;
 
     let bytes = std::fs::read(&out)?;
     println!(
-        "готово: {} ({}, sha256 {})",
+        "готово: {} ({}, sha256 {}){}",
         out.display(),
         human(bytes.len()),
-        &hex(&Sha256::digest(&bytes))[..12]
+        &hex(&Sha256::digest(&bytes))[..12],
+        if signed { ", подписан" } else { "" }
     );
     Ok(())
 }
 
-/// Кладёт каталог рекурсивно, сохраняя пути внутри архива.
-fn add_dir<W: Write + std::io::Seek>(
-    zip: &mut zip::ZipWriter<W>,
-    dir: &Path,
-    prefix: &str,
-    opts: SimpleFileOptions,
-) -> Result<()> {
+/// Собирает каталог рекурсивно, сохраняя пути такими, какими они лягут в пакет.
+fn collect(dir: &Path, prefix: &str, out: &mut Vec<(String, Vec<u8>)>) -> Result<()> {
     let Ok(entries) = std::fs::read_dir(dir) else {
         return Ok(());
     };
-    // Порядок фиксируется: иначе две сборки одного и того же дают разный
-    // sha256, и мастер считает пакет новым там, где ничего не менялось.
-    let mut paths: Vec<_> = entries.filter_map(|e| e.ok()).map(|e| e.path()).collect();
-    paths.sort();
-
-    for path in paths {
+    for entry in entries.filter_map(|e| e.ok()) {
+        let path = entry.path();
         let name = path.file_name().unwrap_or_default().to_string_lossy();
         // Прячем то, что кладёт система, а не автор.
         if name.starts_with('.') {
@@ -77,10 +86,9 @@ fn add_dir<W: Write + std::io::Seek>(
         }
         let inner = format!("{prefix}/{name}");
         if path.is_dir() {
-            add_dir(zip, &path, &inner, opts)?;
+            collect(&path, &inner, out)?;
         } else {
-            zip.start_file(&inner, opts)?;
-            zip.write_all(&std::fs::read(&path)?)?;
+            out.push((inner, std::fs::read(&path)?));
         }
     }
     Ok(())

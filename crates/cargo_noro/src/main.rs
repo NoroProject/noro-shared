@@ -14,6 +14,7 @@ mod dev;
 mod new;
 mod package;
 mod project;
+mod sign;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
@@ -32,6 +33,14 @@ struct Cli {
     _cargo: Option<String>,
     #[command(subcommand)]
     cmd: Cmd,
+}
+
+#[derive(Subcommand)]
+enum KeyCmd {
+    /// Создать ключ для этого модуля.
+    New,
+    /// Показать открытую часть — её публикуют рядом с модулем.
+    Show,
 }
 
 #[derive(Subcommand)]
@@ -68,6 +77,15 @@ enum Cmd {
     Package {
         #[arg(long)]
         debug: bool,
+        /// Подписать ключом автора. Без него мастер примет пакет, но обновить
+        /// подписанный модуль неподписанным уже не даст.
+        #[arg(long)]
+        sign: bool,
+    },
+    /// Ключ автора, которым подписывают пакет.
+    Key {
+        #[command(subcommand)]
+        cmd: KeyCmd,
     },
     /// Пересобирать на каждое сохранение — для dev-режима мастера.
     Dev,
@@ -107,13 +125,20 @@ fn run() -> Result<()> {
             build::run(&p, debug)?;
             Ok(())
         }
-        Cmd::Package { debug } => {
+        Cmd::Package { debug, sign } => {
             let p = project::find()?;
             check::run(&p, false)?;
             build::run(&p, debug)?;
             // Второй раз уже строго: теперь файлы мини-аппа обязаны быть.
             check::run(&p, true)?;
-            package::run(&p, debug)
+            package::run(&p, debug, sign)
+        }
+        Cmd::Key { cmd } => {
+            let id = project::find()?.manifest.module.id;
+            match cmd {
+                KeyCmd::New => sign::create(&id),
+                KeyCmd::Show => sign::show(&id),
+            }
         }
         Cmd::Dev => {
             let p = project::find()?;

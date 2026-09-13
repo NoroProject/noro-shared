@@ -12,11 +12,13 @@ name = "cargo-noro"
 path = "src/main.rs"
 
 [dependencies]
-noro-module-abi = { workspace = true }
+noro-module-abi = { workspace = true, features = ["signing"] }
 serde_json = { workspace = true }
 zip = { workspace = true }
 
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+rand_core = { version = "0.6", features = ["getrandom"] }
 sha2 = "0.10"
 toml = "0.8"

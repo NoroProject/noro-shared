@@ -18,3 +18,16 @@ uuid = { version = "1", default-features = false, features = ["serde"] }
 # По той же причине без `clock`: системных часов у wasm нет. Время модуль берёт
 # у мастера через `noro_sdk::now()`.
 chrono = { version = "0.4", default-features = false, features = ["serde", "alloc"] }
+
+# Подпись линкуется только в тех, кто её проверяет: `cargo noro` и мастер. В
+# самом модуле она не нужна, а ed25519 и sha2 весят в wasm заметно.
+[features]
+signing = ["dep:ed25519-dalek", "dep:sha2"]
+
+[dependencies.ed25519-dalek]
+version = "2"
+optional = true
+
+[dependencies.sha2]
+version = "0.10"
+optional = true

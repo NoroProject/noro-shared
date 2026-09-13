@@ -35,6 +35,8 @@ pub mod manifest;
 pub mod ops;
 pub mod player;
 pub mod registration;
+#[cfg(feature = "signing")]
+pub mod signing;
 pub mod sql;
 pub mod store;
 pub mod validate;

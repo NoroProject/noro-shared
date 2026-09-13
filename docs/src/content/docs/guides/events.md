@@ -85,7 +85,7 @@ one module's fee lands on an amount another module already changed, rather than 
 original.
 
 :::note[Where each one fires]
-All eight `Pre` events are delivered. Two are worth knowing precisely:
+All nine `Pre` events are delivered. Two are worth knowing precisely:
 
 `player.pre_join` is asked only when the master would otherwise let the player in — a ban
 needs no confirmation from you — and only for a single-player lookup, never for the
@@ -94,6 +94,12 @@ roster batch. A stop becomes the agent's refusal, with your key as the reason.
 `user.pre_role_granted` fires for a grant made **in the panel**. A role handed out by
 another module does not go through it; module-to-module gating is not something this
 boundary offers.
+
+`player.pre_chat` is the one event the game server pays for per message, so the master
+tells the agent whether anybody is subscribed and the agent stays silent until somebody
+is. Your budget there is **700 ms** measured from the game server, not one second — the
+player has already pressed Enter and is watching for their line. Past it the message goes
+through unchanged.
 :::
 
 ### What a Pre handler must know
