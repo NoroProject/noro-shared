@@ -1,9 +1,12 @@
 [package]
 name = "noro-sdk-macros"
-version.workspace = true
+version = "0.1.0"
 edition.workspace = true
-license.workspace = true
-description = "Макросы для модулей Noro: #[noro::module] и разметка обработчиков"
+license = "MIT"
+repository = "https://github.com/NoroProject/noro-shared"
+documentation = "https://noroproject.github.io/noro-shared/"
+readme = "README.md"
+description = "Macros for Noro modules: #[noro::module] and the handler attributes"
 
 [lib]
 proc-macro = true

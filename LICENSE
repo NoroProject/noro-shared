@@ -1,3 +1,7 @@
+Noro ships under two licences. This file is the AGPL-3.0 that covers Noro
+itself; the crates a module links against are MIT. Which is which — and why —
+is in LICENSING.md, and the MIT text is in LICENSE-MIT.
+
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
