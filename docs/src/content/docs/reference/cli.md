@@ -4,7 +4,7 @@ description: Creating, building, checking and packaging a module from the comman
 ---
 
 ```bash
-cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+cargo install cargo-noro
 ```
 
 It installs as a cargo subcommand. Every command below works from anywhere inside the

@@ -13,7 +13,7 @@ description: От пустого каталога до работающего м
 ## Поставить инструмент
 
 ```bash
-cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+cargo install cargo-noro
 ```
 
 Он становится подкомандой cargo: `cargo noro …` из любого места внутри модуля.

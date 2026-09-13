@@ -13,7 +13,7 @@ description: From an empty directory to a running module in the panel.
 ## Get the tool
 
 ```bash
-cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+cargo install cargo-noro
 ```
 
 It becomes a cargo subcommand: `cargo noro …` from anywhere inside your module.

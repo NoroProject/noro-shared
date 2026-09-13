@@ -4,7 +4,7 @@ description: Создание, сборка, проверка и упаковк�
 ---
 
 ```bash
-cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+cargo install cargo-noro
 ```
 
 Ставится подкомандой cargo. Любая команда ниже работает из любого места внутри модуля:
