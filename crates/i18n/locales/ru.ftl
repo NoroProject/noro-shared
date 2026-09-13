@@ -412,6 +412,7 @@ cabinet-messages-none-title = Переписок пока нет
 cabinet-messages-none-text = Напишите кому-нибудь из его профиля или наберите /msg в игре.
 cabinet-messages-nothing-found = Никого с таким ником
 cabinet-messages-pick = Выберите переписку
+cabinet-messages-empty-list = Здесь пока пусто
 cabinet-messages-empty-thread = Здесь пока пусто. Напишите первым.
 cabinet-messages-placeholder = Напишите сообщение…
 cabinet-messages-send = Отправить

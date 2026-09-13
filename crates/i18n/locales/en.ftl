@@ -407,6 +407,7 @@ cabinet-messages-none-title = No conversations yet
 cabinet-messages-none-text = Write to someone from their profile, or use /msg in game.
 cabinet-messages-nothing-found = Nobody by that name
 cabinet-messages-pick = Pick a conversation
+cabinet-messages-empty-list = Nothing here yet
 cabinet-messages-empty-thread = Nothing here yet. Write the first message.
 cabinet-messages-placeholder = Write a message…
 cabinet-messages-send = Send
