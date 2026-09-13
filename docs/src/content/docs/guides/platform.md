@@ -306,3 +306,18 @@ not count toward the failure budget that disables one; it means wait and try aga
 
 Two other limits sit alongside it: a handler has 5 seconds (a `Pre` handler, 1), and a
 file you read or write through the platform is capped at a few megabytes.
+
+## When your module fails
+
+A handler that returns an error, panics or runs out of time is written to the module's
+call log, which the operator reads on your module's page. If the instance has Sentry set
+up, the same failure goes there too — tagged with your module, its version and the entry
+point, and fingerprinted separately from everyone else's.
+
+That separation is the point: your failure is not the master's bug, and it should not
+land in the same pile. The operator can filter to `module:your-id` and see only what you
+are responsible for.
+
+Ten failures in five minutes and the master turns the module off, records why, and says
+so on its page. That one is an error rather than a warning — part of what players had
+stopped working, and nobody should learn it from a complaint.
