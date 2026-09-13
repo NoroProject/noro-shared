@@ -191,6 +191,8 @@ nodes! {
     PERM_MODULES_ENABLE       = "noro.admin.modules.enable", "perm-group-system", "perm-node-modules-enable";
     PERM_MODULES_SETTINGS     = "noro.admin.modules.settings", "perm-group-system", "perm-node-modules-settings";
     PERM_MODULES_DELETE       = "noro.admin.modules.delete", "perm-group-system", "perm-node-modules-delete";
+    PERM_BOTS_VIEW            = "noro.admin.bots.view", "perm-group-system", "perm-node-bots-view";
+    PERM_BOTS_MANAGE          = "noro.admin.bots.manage", "perm-group-system", "perm-node-bots-manage";
 
     // --- Игрок ----------------------------------------------------------------
     PERM_LAUNCHER_BETA        = "noro.launcher.beta", "perm-group-player", "perm-node-launcher-beta";
