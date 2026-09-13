@@ -36,6 +36,6 @@ zip = "2"
 schema = { path = "crates/schema" }
 i18n = { path = "crates/i18n" }
 mc_mod_utils = { path = "crates/mc_mod_utils" }
-noro-module-abi = { path = "crates/module_abi", version = "0.2.0" }
-noro-sdk = { path = "crates/sdk", version = "0.2.0" }
-noro-sdk-macros = { path = "crates/sdk_macros", version = "0.2.0" }
+noro-module-abi = { path = "crates/module_abi", version = "0.3.0" }
+noro-sdk = { path = "crates/sdk", version = "0.3.0" }
+noro-sdk-macros = { path = "crates/sdk_macros", version = "0.3.0" }

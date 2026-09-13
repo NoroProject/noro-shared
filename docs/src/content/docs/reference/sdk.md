@@ -371,6 +371,7 @@ What you can do to a player you are holding.
 | `is_online() -> Result<bool, ModuleError>` | Whether they are in game right now. |
 | `launcher_online() -> Result<bool, ModuleError>` | Whether their launcher is connected. |
 | `send(payload: impl serde::Serialize) -> Result<bool, ModuleError>` | Sends their launcher a frame. |
+| `store() -> crate::store::Store` | Their corner of your storage. |
 | `identities() -> Result<Vec<Identity>, ModuleError>` | Their linked logins. |
 | `sessions() -> Result<Vec<Session>, ModuleError>` | Their sessions in the panel and the launcher. |
 | `revoke_sessions() -> Result<u64, ModuleError>` | Ends every session they have. |
@@ -386,6 +387,7 @@ What you can do with a server build you are holding.
 | `game_servers() -> Result<Vec<GameServer>, ModuleError>` | Its game servers. |
 | `treasury() -> Result<Account, ModuleError>` | Its treasury account. |
 | `announce(message: &str) -> Result<(), ModuleError>` | An announcement to everybody on it. |
+| `store() -> crate::store::Store` | This server's corner of your storage. |
 | `feed(page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError>` | Its hub feed, paginated. |
 | `members(page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError>` | Its hub members. |
 

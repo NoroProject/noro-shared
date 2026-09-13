@@ -20,6 +20,25 @@ let points = store::user(player_id).get_or::<i64>("points")?;
 
 Values are anything `serde` can handle. Requires `store = true`.
 
+### Reaching it from what you are holding
+
+```rust
+#[event]
+fn on_join(e: PlayerJoined) -> Result<()> {
+    e.player.store().incr("joins", 1)?;
+    Ok(())
+}
+```
+
+`player.store()` is `store::user(player.id)` and `server.store()` is
+`store::server(server.id)` — the same scope, spelled without the detour through an
+identifier.
+
+There is no `store()` on a build or a game server. The scopes are the instance, a server
+and a player, and neither of those two is one of them: a `store()` on a game server would
+have to hand back its server's scope, and two game servers of one build would then
+quietly share a key that reads as if it were theirs.
+
 ### get returns None only when the key is absent
 
 If a value is there but does not parse into the type you asked for, that is an error, not

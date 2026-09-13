@@ -22,6 +22,14 @@
 //! the prelude brings them in: `use noro_sdk::prelude::*` and the methods are
 //! simply there.
 //!
+//! # Where there is no method
+//!
+//! `Build` and `GameServer` have no `store()`. The storage has three scopes —
+//! the instance, a server, a player — and neither of those two is one of them.
+//! A `store()` on a game server would have to hand back its server's scope, and
+//! two game servers of one build would then quietly share a key that reads as
+//! if it were theirs.
+//!
 //! # What is not here
 //!
 //! Anything that does not begin with a thing you are holding. `players::get`,
@@ -103,6 +111,13 @@ pub trait PlayerActions {
     fn launcher_online(&self) -> Result<bool, ModuleError>;
     /// Sends their launcher a frame. See [`crate::launcher::send`].
     fn send(&self, payload: impl serde::Serialize) -> Result<bool, ModuleError>;
+
+    /// Their corner of your storage. See [`crate::store::user`].
+    ///
+    /// ```ignore
+    /// e.player.store().incr("joins", 1)?;
+    /// ```
+    fn store(&self) -> crate::store::Store;
 
     /// Their linked logins. See [`crate::identities::of`].
     fn identities(&self) -> Result<Vec<Identity>, ModuleError>;
@@ -206,6 +221,10 @@ impl PlayerActions for Player {
         crate::launcher::send(self.id, payload)
     }
 
+    fn store(&self) -> crate::store::Store {
+        crate::store::user(self.id)
+    }
+
     fn identities(&self) -> Result<Vec<Identity>, ModuleError> {
         crate::identities::of(self.id)
     }
@@ -229,6 +248,8 @@ pub trait ServerActions {
     fn treasury(&self) -> Result<Account, ModuleError>;
     /// An announcement to everybody on it. See [`crate::agent::announce_on`].
     fn announce(&self, message: &str) -> Result<(), ModuleError>;
+    /// This server's corner of your storage. See [`crate::store::server`].
+    fn store(&self) -> crate::store::Store;
     /// Its hub feed, paginated. See [`crate::hub::feed`].
     fn feed(&self, page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError>;
     /// Its hub members. See [`crate::hub::members`].
@@ -250,6 +271,9 @@ impl ServerActions for Server {
     }
     fn announce(&self, message: &str) -> Result<(), ModuleError> {
         crate::agent::announce_on(self.id, message)
+    }
+    fn store(&self) -> crate::store::Store {
+        crate::store::server(self.id)
     }
     fn feed(&self, page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError> {
         crate::hub::feed(self.id, page)
