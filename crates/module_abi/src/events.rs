@@ -8,12 +8,14 @@
 use serde::{Deserialize, Serialize};
 
 pub mod access;
+pub mod dm;
 pub mod economy;
 pub mod infra;
 pub mod moderation;
 pub mod player;
 
 pub use access::*;
+pub use dm::*;
 pub use economy::*;
 pub use infra::*;
 pub use moderation::*;
@@ -38,6 +40,12 @@ pub struct EventMeta {
     pub name: &'static str,
     pub kind: EventKind,
     /// The group for the admin panel: `player`, `access`, `infra`, `moderation`, `economy`.
+    /// The Rust module the payload lives in — `events/<group>.rs`.
+    ///
+    /// Also the heading events are grouped under, and the path documentation
+    /// links into: `events/<group>/struct.<payload>.html`. Name a group that is
+    /// not a module and every link in that section leads nowhere, quietly.
+    /// `every_group_is_a_real_module` holds it to that.
     pub group: &'static str,
     /// The Fluent key holding the human-readable name.
     pub title: &'static str,
@@ -219,6 +227,8 @@ macro_rules! events {
 events! {
     // --- Players and signing in -----------------------------------------------
     EV_PLAYER_PRE_CHAT        = "player.pre_chat",          Pre,  "player",     "ev-player-pre-chat",        "PlayerPreChat";
+    EV_DM_PRE_SEND            = "dm.pre_send",              Pre,  "dm",             "ev-dm-pre-send",            "DmPreSend";
+    EV_DM_SENT                = "dm.sent",                  Post, "dm",         "ev-dm-sent",                "DmSent";
     EV_PLAYER_PRE_JOIN        = "player.pre_join",          Pre,  "player",     "ev-player-pre-join",        "PlayerPreJoin";
     EV_PLAYER_JOINED          = "player.joined",            Post, "player",     "ev-player-joined",          "PlayerJoined";
     EV_PLAYER_LEFT            = "player.left",              Post, "player",     "ev-player-left",            "PlayerLeft";
@@ -285,3 +295,7 @@ events! {
 pub fn find(name: &str) -> Option<&'static EventMeta> {
     ALL_EVENTS.iter().copied().find(|e| e.name == name)
 }
+
+#[cfg(test)]
+#[path = "events_tests.rs"]
+mod tests;

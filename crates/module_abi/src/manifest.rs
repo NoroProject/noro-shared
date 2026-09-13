@@ -180,6 +180,19 @@ capabilities! {
     events => ["emit"];
     /// `read`, `notify` — seeing who has a launcher open, and sending it a frame.
     launcher => ["read", "notify"];
+    /// `create` — a bot account your module writes as.
+    ///
+    /// A bot appears in people's conversations under its own name, beside their
+    /// friends. That is why it is asked for separately from `dm = ["send"]`:
+    /// sending as a player and becoming a new face in their list are different
+    /// things to agree to.
+    bots => ["create"];
+    /// `read`, `send` — private messages between players.
+    ///
+    /// The heaviest thing an operator can hand a module: `read` opens
+    /// conversations people hold to be between two of them. Grant it for
+    /// filtering and for answering machines, not to see what is written.
+    dm => ["read", "send"];
 }
 
 impl Capabilities {

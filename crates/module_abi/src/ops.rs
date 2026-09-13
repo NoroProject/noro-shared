@@ -825,6 +825,67 @@ pub struct PetitionVote {
     pub player: PlayerRef,
 }
 
+/// One conversation in a player's list.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DmThread {
+    pub id: Uuid,
+    /// The other person.
+    pub peer_id: Uuid,
+    pub peer_name: String,
+    pub last_message_at: chrono::DateTime<chrono::Utc>,
+    /// The start of the last message — the list is read without opening it.
+    pub preview: String,
+    /// Messages the owner of the list has not read.
+    pub unread: i64,
+}
+
+/// One private message.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DmMessage {
+    pub id: Uuid,
+    pub thread_id: Uuid,
+    pub author_id: Uuid,
+    pub author_name: String,
+    pub body: String,
+    /// `site`, `game` or `module`.
+    pub source: String,
+    /// The game server it was written on, if it was written in game. Empty when
+    /// that server has since been deleted — the message outlives it.
+    #[serde(default)]
+    pub game_server_name: Option<String>,
+    /// The module that sent it on someone's behalf, if a module did.
+    #[serde(default)]
+    pub via_module: Option<String>,
+    pub at: chrono::DateTime<chrono::Utc>,
+    #[serde(default)]
+    pub read_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+/// Sending a private message on a player's behalf.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DmDraft {
+    /// Who is writing. A module has no person of its own, and a message from
+    /// nobody leaves the recipient with nobody to answer.
+    pub from: PlayerRef,
+    pub to: PlayerRef,
+    pub body: String,
+}
+
+/// Where a player is right now.
+///
+/// Three states and not two, because "online" means different things here. In
+/// game they will see a message at once; on the site they will too, but calling
+/// them into the game is pointless. A player hidden by vanish reads as offline:
+/// they left the online list on purpose, and this must not give them away.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DmPresence {
+    /// `in_game`, `on_site`, `in_launcher` or `offline`.
+    pub kind: String,
+    /// Which game server, when `in_game`.
+    #[serde(default)]
+    pub game_server_id: Option<Uuid>,
+}
+
 /// An event a module publishes for other modules to handle.
 ///
 /// The name must start with `mod.<your-id>.` — checked on the way out, the same

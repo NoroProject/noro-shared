@@ -127,6 +127,12 @@ extern "ExtismHost" {
     fn store_get(input: String) -> String;
     fn store_set(input: String) -> String;
     fn store_delete(input: String) -> String;
+    fn bot_ensure(input: String) -> String;
+    fn bot_list(input: String) -> String;
+    fn dm_threads(input: String) -> String;
+    fn dm_history(input: String) -> String;
+    fn dm_send(input: String) -> String;
+    fn dm_presence(input: String) -> String;
     fn store_incr(input: String) -> String;
     fn store_list(input: String) -> String;
     fn host_now(input: String) -> String;
@@ -790,4 +796,30 @@ fn bridge_failed(e: extism_pdk::Error) -> ModuleError {
         ErrorKind::Internal,
         format!("the call to the master did not go through: {e}"),
     )
+}
+
+pub(crate) fn dm_threads_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(dm_threads, arg)
+}
+
+pub(crate) fn dm_history_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(dm_history, arg)
+}
+
+pub(crate) fn dm_send_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(dm_send, arg)
+}
+
+pub(crate) fn dm_presence_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(dm_presence, arg)
+}
+
+pub(crate) fn bot_ensure_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(bot_ensure, arg)
+}
+
+pub(crate) fn bot_list_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(bot_list, arg)
 }

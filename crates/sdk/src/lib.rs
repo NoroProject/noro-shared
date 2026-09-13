@@ -74,9 +74,11 @@
 pub mod access;
 pub mod agent;
 pub mod bank;
+pub mod bots;
 pub mod builds;
 pub mod cases;
 pub mod db;
+pub mod dm;
 pub mod events;
 pub mod files;
 pub mod fluent;
@@ -134,7 +136,8 @@ pub mod prelude {
         PlayerRef, Punishment, Role, Server,
     };
     pub use crate::{
-        access, agent, bank, builds, cases, db, events, files, fluent, http, hub, identities,
+        access, agent, bank, bots, builds, cases, db, dm, events, files, fluent, http, hub,
+        identities,
         instance, launcher, log, news, noro, now, permissions, players, punish, restarts, roles,
         roster, servers, sessions, store, telemetry, tickets, Result,
     };
