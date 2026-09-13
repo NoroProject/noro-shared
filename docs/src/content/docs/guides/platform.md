@@ -6,6 +6,39 @@ description: Players, roles, permissions, access and servers — the typed calls
 Every call below is a function call into the master's own code. No HTTP, no router, no
 serialization of your own — you pass typed arguments and get typed results.
 
+## Methods on what you are holding
+
+Everything above is also a method on the thing it acts upon. `use noro_sdk::prelude::*`
+and they are there:
+
+```rust
+let player = players::require("Dalynkaa")?;
+
+player.server_ban(server_id, "griefing", Some(7 * 24 * 3600))?;
+player.grant_role("vip")?;
+player.tell("See you in a week.")?;
+
+let server = servers::by_slug("survival")?.unwrap();
+server.published_build()?.unwrap().allow(player.id)?;
+server.announce("Maintenance in 10 minutes.")?;
+```
+
+Each one forwards to the domain function of the same name and does nothing else: same
+capability, same behaviour, same error. What changes is that you stop carrying an
+identifier from call to call, and stop reading `punish::server_ban(player.id, server_id,
+…)` where the first argument is the only one that ever varies.
+
+They arrive as traits rather than plain methods because `Player` and the rest are defined
+in `noro-module-abi`, which knows nothing about host functions — it is the wire contract,
+linked by both sides — and Rust will not let one crate add inherent methods to another's
+type. The prelude imports them, so this is not something you have to think about.
+
+Calls that do not start from a thing you are holding stay functions: `players::get`,
+`servers::list`, a transfer between two accounts. A method there would have to hang off
+one of two equals, and reading it would suggest that one mattered more.
+
+The full list is in [SDK domains](../../reference/sdk/#fluent).
+
 ## Players
 
 One entry point, because an account has four natural keys and a real module meets all of

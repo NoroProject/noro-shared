@@ -30,7 +30,115 @@ pub struct Call {
 }
 
 /// Файлы, которые в справочник не идут: у них нет домена в смысле возможностей.
-const SKIP: &[&str] = &["lib", "host", "log"];
+/// `fluent` пропускается здесь и разбирается отдельно: там не функции, а методы
+/// трейтов, и в общую таблицу доменов они не ложатся.
+const SKIP: &[&str] = &["lib", "host", "log", "fluent"];
+
+/// Трейт с методами — так в справочник попадают методы на сущностях.
+pub struct Facade {
+    /// Тип, которому трейт добавляет методы.
+    pub subject: String,
+    pub summary: String,
+    pub calls: Vec<Call>,
+}
+
+/// Читает `fluent.rs`: объявления трейтов вместе с документацией.
+///
+/// Из объявления, а не из реализации: документация написана там, а сигнатура в
+/// реализации та же самая.
+pub fn facades(sdk_src: &Path) -> Vec<Facade> {
+    let Ok(src) = std::fs::read_to_string(sdk_src.join("fluent.rs")) else {
+        return Vec::new();
+    };
+    let lines: Vec<&str> = src.lines().collect();
+    let mut out: Vec<Facade> = Vec::new();
+
+    for (i, line) in lines.iter().enumerate() {
+        let Some(rest) = line.strip_prefix("pub trait ") else {
+            continue;
+        };
+        let name = rest.trim_end_matches(" {").trim().to_string();
+        let marker = format!("impl {name} for ");
+        let subject = lines
+            .iter()
+            .find_map(|l| {
+                l.strip_prefix(marker.as_str())
+                    .map(|s| s.trim_end_matches(" {").trim().to_string())
+            })
+            .unwrap_or(name);
+
+        out.push(Facade {
+            subject,
+            summary: doc_above(&lines, i),
+            calls: trait_methods(&lines, i),
+        });
+    }
+    out
+}
+
+/// Методы между `{` объявления трейта и его `}`.
+fn trait_methods(lines: &[&str], start: usize) -> Vec<Call> {
+    let mut out = Vec::new();
+    for (i, line) in lines.iter().enumerate().skip(start + 1) {
+        if line.starts_with('}') {
+            break;
+        }
+        let Some(rest) = line.trim_start().strip_prefix("fn ") else {
+            continue;
+        };
+        let Some((name, tail)) = rest.split_once('(') else {
+            continue;
+        };
+        let doc = docs_above(lines, i);
+        out.push(Call {
+            signature: signature(name, tail, &lines[i..])
+                .replace("&self, ", "")
+                .replace("&self", "")
+                // Объявление трейта кончается точкой с запятой, сигнатура — нет.
+                .trim_end_matches(';')
+                .to_string(),
+            summary: table_text(
+                doc.iter()
+                    .find(|l| !l.is_empty())
+                    .cloned()
+                    .unwrap_or_default(),
+            ),
+            requires: None,
+        });
+    }
+    out
+}
+
+/// Описание для таблицы: без хвоста «See [`crate::…`]».
+///
+/// Ссылка полезна в rustdoc и бесполезна здесь: Markdown отрисует её квадратными
+/// скобками как есть, а вести ей всё равно некуда.
+fn table_text(text: String) -> String {
+    match text.find("See [`") {
+        Some(at) => text[..at].trim().to_string(),
+        None => text,
+    }
+}
+
+/// Подряд идущие `///` над строкой.
+fn docs_above(lines: &[&str], i: usize) -> Vec<String> {
+    let mut doc: Vec<String> = Vec::new();
+    for prev in lines[..i].iter().rev() {
+        match prev.trim_start().strip_prefix("///") {
+            Some(text) => doc.push(text.trim().to_string()),
+            None => break,
+        }
+    }
+    doc.reverse();
+    doc
+}
+
+fn doc_above(lines: &[&str], i: usize) -> String {
+    docs_above(lines, i)
+        .into_iter()
+        .find(|l| !l.is_empty())
+        .unwrap_or_default()
+}
 
 pub fn read(sdk_src: &Path) -> Vec<Domain> {
     let mut out = Vec::new();
@@ -140,6 +248,48 @@ fn tidy(text: &str) -> String {
         .replace("( ", "(")
         .replace(", )", ")")
         .replace(" )", ")")
+}
+
+/// Раздел про методы сущностей. Отдельной таблицей, потому что столбца
+/// «нужно» у них нет: возможность у метода та же, что у функции, в которую он
+/// ведёт, и третий столбец обещал бы вторую проверку.
+pub fn facade_section(facades: &[Facade], lang: crate::Lang) -> String {
+    if facades.is_empty() {
+        return String::new();
+    }
+    let mut out = String::new();
+    out.push_str(match lang {
+        crate::Lang::En => {
+            "\n## Fluent\n\nMethods on the thing you are holding. Each \
+             forwards to the domain function of the same name — same capability, same \
+             behaviour. The prelude imports them.\n\n```rust\nlet player = \
+             players::require(\"Dalynkaa\")?;\nplayer.server_ban(server_id, \"griefing\", \
+             Some(7 * 24 * 3600))?;\n```\n"
+        }
+        crate::Lang::Ru => {
+            "\n## Методы на сущностях\n\nМетоды на том, что уже в руках. \
+             Каждый ведёт в доменную функцию того же имени — та же возможность, то же \
+             поведение. Prelude их импортирует.\n\n```rust\nlet player = \
+             players::require(\"Dalynkaa\")?;\nplayer.server_ban(server_id, \"гриф\", \
+             Some(7 * 24 * 3600))?;\n```\n"
+        }
+    });
+
+    for f in facades {
+        let _ = write!(out, "\n### `{}`\n\n", f.subject);
+        if !f.summary.is_empty() {
+            let _ = writeln!(out, "{}\n", f.summary);
+        }
+        let head = match lang {
+            crate::Lang::En => "| Method | What it does |",
+            crate::Lang::Ru => "| Метод | Что делает |",
+        };
+        let _ = write!(out, "{head}\n|---|---|\n");
+        for c in &f.calls {
+            let _ = writeln!(out, "| `{}` | {} |", c.signature, escape(&c.summary));
+        }
+    }
+    out
 }
 
 pub fn page(domains: &[Domain], lang: crate::Lang) -> String {

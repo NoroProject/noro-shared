@@ -79,6 +79,7 @@ pub mod chat;
 pub mod db;
 pub mod events;
 pub mod files;
+pub mod fluent;
 pub mod host;
 pub mod http;
 pub mod hub;
@@ -133,9 +134,16 @@ pub mod prelude {
         PlayerRef, Punishment, Role, Server,
     };
     pub use crate::{
-        access, bank, builds, cases, chat, db, events, files, http, hub, identities, instance,
-        launcher, log, news, noro, now, permissions, players, punish, restarts, roles, roster,
-        servers, sessions, store, telemetry, tickets, Result,
+        access, bank, builds, cases, chat, db, events, files, fluent, http, hub, identities,
+        instance, launcher, log, news, noro, now, permissions, players, punish, restarts, roles,
+        roster, servers, sessions, store, telemetry, tickets, Result,
+    };
+    // Методы на сущностях приходят трейтами: `Player` определён в
+    // `noro-module-abi`, и добавить ему обычные методы из SDK нельзя. В
+    // prelude они ради того, чтобы автор об этом не думал.
+    pub use crate::fluent::{
+        AccountActions, BuildActions, GameServerActions, PlayerActions, PunishmentActions,
+        RoleActions, ServerActions,
     };
 
     // The crate itself, not just its names: the `plugin_fn` macro expands into

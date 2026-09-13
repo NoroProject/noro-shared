@@ -329,3 +329,113 @@ Conversations with players.
 | `reply(id: Uuid, content: &str) -> Result<(), ModuleError>` | Writes a reply, signed with your module. | `tickets = ["read", "reply"]` |
 | `open(who: impl IntoPlayerRef, subject: &str, content: &str) -> Result<Uuid, ModuleError>` | Opens a conversation with a player and returns its identifier. | `tickets = ["read", "reply"]` |
 | `close(id: Uuid) -> Result<(), ModuleError>` | Closes a conversation. | `tickets = ["read", "reply"]` |
+
+## Методы на сущностях
+
+Методы на том, что уже в руках. Каждый ведёт в доменную функцию того же имени — та же возможность, то же поведение. Prelude их импортирует.
+
+```rust
+let player = players::require("Dalynkaa")?;
+player.server_ban(server_id, "гриф", Some(7 * 24 * 3600))?;
+```
+
+### `Player`
+
+What you can do to a player you are holding.
+
+| Метод | Что делает |
+|---|---|
+| `ban(reason: Option<&str>) -> Result<(), ModuleError>` | Bans the account. |
+| `unban() -> Result<(), ModuleError>` | Lifts the account ban. |
+| `rename(username: &str) -> Result<(), ModuleError>` | Renames them. Refused if the name is taken. |
+| `set_skin(url: Option<&str>, slim: bool) -> Result<(), ModuleError>` | Sets the skin; `slim` travels with it. |
+| `set_cape(cape_id: Option<Uuid>) -> Result<(), ModuleError>` | Puts a cape on, or takes it off with `None`. |
+| `presets() -> Result<Vec<SkinPreset>, ModuleError>` | Their saved skin presets. |
+| `roles() -> Result<Vec<Role>, ModuleError>` | Their roles. |
+| `grant_role(role: impl IntoRoleRef) -> Result<(), ModuleError>` | Grants a role by name or id. |
+| `revoke_role(role: impl IntoRoleRef) -> Result<(), ModuleError>` | Takes a role away. |
+| `can(node: &str) -> Result<bool, ModuleError>` | Whether they effectively hold a permission. |
+| `can_on(node: &str, server_id: Uuid) -> Result<bool, ModuleError>` | The same on one server build. |
+| `grant(node: &str) -> Result<(), ModuleError>` | Grants a personal permission. |
+| `revoke(node: &str) -> Result<(), ModuleError>` | Takes a personal permission away. |
+| `allow_join(server_id: Uuid) -> Result<(), ModuleError>` | Lets them into a server build. |
+| `revoke_join(server_id: Uuid) -> Result<(), ModuleError>` | Takes that away. |
+| `punish_ban(reason: &str, seconds: Option<i64>) -> Result<Punishment, ModuleError>` | Bans them with a punishment — the kind the player reads and can appeal. |
+| `mute(reason: &str, seconds: Option<i64>) -> Result<Punishment, ModuleError>` | Mutes them. |
+| `warn(reason: &str) -> Result<Punishment, ModuleError>` | Warns them. |
+| `server_ban(server_id: Uuid, reason: &str, seconds: Option<i64>) -> Result<Punishment, ModuleError>` | Bans them from one server only. |
+| `punishments() -> Result<Vec<Punishment>, ModuleError>` | Their punishments in force. |
+| `account(server_id: Uuid) -> Result<Option<Account>, ModuleError>` | Their account on a server. |
+| `balance(server_id: Uuid) -> Result<i64, ModuleError>` | What they have, in the smallest unit. |
+| `tell(message: &str) -> Result<bool, ModuleError>` | A private message. `false` — they are not in game. |
+| `kick(reason: &str) -> Result<bool, ModuleError>` | Throws them off the server. |
+| `is_online() -> Result<bool, ModuleError>` | Whether they are in game right now. |
+| `launcher_online() -> Result<bool, ModuleError>` | Whether their launcher is connected. |
+| `send(payload: impl serde::Serialize) -> Result<bool, ModuleError>` | Sends their launcher a frame. |
+| `identities() -> Result<Vec<Identity>, ModuleError>` | Their linked logins. |
+| `sessions() -> Result<Vec<Session>, ModuleError>` | Their sessions in the panel and the launcher. |
+| `revoke_sessions() -> Result<u64, ModuleError>` | Ends every session they have. |
+
+### `Server`
+
+What you can do with a server build you are holding.
+
+| Метод | Что делает |
+|---|---|
+| `builds() -> Result<Vec<Build>, ModuleError>` | Its client builds. |
+| `published_build() -> Result<Option<Build>, ModuleError>` | The build players are getting. |
+| `game_servers() -> Result<Vec<GameServer>, ModuleError>` | Its game servers. |
+| `treasury() -> Result<Account, ModuleError>` | Its treasury account. |
+| `announce(message: &str) -> Result<(), ModuleError>` | An announcement to everybody on it. |
+| `feed(page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError>` | Its hub feed, paginated. |
+| `members(page: i64) -> Result<noro_module_abi::ops::HubPage, ModuleError>` | Its hub members. |
+
+### `Build`
+
+What you can do with a build you are holding.
+
+| Метод | Что делает |
+|---|---|
+| `files() -> Result<Vec<BuildFile>, ModuleError>` | Everything inside it. |
+| `read(path: &str) -> Result<Option<String>, ModuleError>` | The text of one file. |
+| `write(path: &str, text: &str) -> Result<BuildFile, ModuleError>` | Writes a text file into it. |
+| `attach(path: &str, sha1: &str) -> Result<BuildFile, ModuleError>` | Puts an already-stored file in by hash. |
+| `remove(path: &str) -> Result<bool, ModuleError>` | Removes a file. |
+| `unpublish() -> Result<(), ModuleError>` | Stops the launcher handing it out. |
+| `allow(who: impl noro_module_abi::player::IntoPlayerRef) -> Result<(), ModuleError>` | Lets one player download it. |
+
+### `GameServer`
+
+What you can do with a game server you are holding.
+
+| Метод | Что делает |
+|---|---|
+| `set_maintenance(enabled: bool) -> Result<(), ModuleError>` | Puts it into maintenance, or takes it out. |
+| `telemetry() -> Result<Option<noro_module_abi::ops::Telemetry>, ModuleError>` | Its last telemetry. |
+
+### `Account`
+
+What you can do with an account you are holding.
+
+| Метод | Что делает |
+|---|---|
+| `transfer_to(to: &Account, amount: i64, comment: &str) -> Result<i64, ModuleError>` | Moves money to another account. |
+| `transfer_once_to(to: &Account, amount: i64, comment: &str, key: &str) -> Result<i64, ModuleError>` | The same, but a repeat with the same key pays once. |
+
+### `Punishment`
+
+What you can do with a punishment you are holding.
+
+| Метод | Что делает |
+|---|---|
+| `lift() -> Result<bool, ModuleError>` | Lifts it. |
+
+### `Role`
+
+What you can do with a role you are holding.
+
+| Метод | Что делает |
+|---|---|
+| `grant_to(who: impl noro_module_abi::player::IntoPlayerRef)` | Gives it to a player. |
+| `revoke_from(who: impl noro_module_abi::player::IntoPlayerRef) -> Result<(), ModuleError>` | Takes it from a player. |
+| `delete() -> Result<(), ModuleError>` | Deletes it. |

@@ -115,8 +115,14 @@ fn main() {
     }
 
     let calls: usize = found.iter().map(|d| d.calls.len()).sum();
-    fs::write(dir.join("sdk.md"), domains::page(&found, Lang::En)).expect("write sdk.md");
-    fs::write(ru.join("sdk.md"), domains::page(&found, Lang::Ru)).expect("write ru sdk.md");
+    let facades = domains::facades(sdk);
+    for (path, lang) in [
+        (dir.join("sdk.md"), Lang::En),
+        (ru.join("sdk.md"), Lang::Ru),
+    ] {
+        let page = domains::page(&found, lang) + &domains::facade_section(&facades, lang);
+        fs::write(path, page).expect("write sdk.md");
+    }
     println!("generated {} calls across {} domains", calls, found.len());
 
     println!(
