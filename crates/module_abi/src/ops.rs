@@ -753,6 +753,57 @@ pub struct ClaimDraft {
     pub subject: serde_json::Value,
 }
 
+/// Starting a petition, in the name of the player who signs it first.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PetitionDraft {
+    pub server_id: Uuid,
+    /// Who starts it. They are its first signature and they answer for it.
+    pub author: PlayerRef,
+    pub title: String,
+    pub body: String,
+    /// Whom it is addressed to: `server`, `town` or `account`.
+    pub target_kind: String,
+    /// The town's address, when addressed to a town.
+    #[serde(default)]
+    pub target_town: String,
+    /// The account's code, when addressed to one.
+    #[serde(default)]
+    pub target_account: String,
+}
+
+/// Naming one file inside a build.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BuildFileRef {
+    pub build_id: Uuid,
+    pub path: String,
+}
+
+/// Writing a text file into a build.
+///
+/// Text only, and small: this is for configuration. A mod is tens of megabytes
+/// and would have to travel through the sandbox as a string — put it in the
+/// file store with `files::put` and attach it by hash instead.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BuildTextWrite {
+    pub build_id: Uuid,
+    pub path: String,
+    pub text: String,
+    /// `client`, `server` or `both`. Empty means `both`.
+    #[serde(default)]
+    pub side: String,
+}
+
+/// Attaching an already-stored file to a build by its hash.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BuildFileAttach {
+    pub build_id: Uuid,
+    pub path: String,
+    /// The address `files::put` gave back.
+    pub sha1: String,
+    #[serde(default)]
+    pub side: String,
+}
+
 /// Signing or unsigning a petition, as a named player.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PetitionVote {

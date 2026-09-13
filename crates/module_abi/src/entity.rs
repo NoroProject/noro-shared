@@ -45,6 +45,24 @@ pub struct Build {
     pub minecraft_version: Option<String>,
 }
 
+/// A file inside a build, exactly as the launcher will download it.
+///
+/// `sha1` is the store's address, not a checksum you compute: two builds
+/// carrying the same mod carry the same `sha1` and the file is stored once.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BuildFile {
+    pub id: Uuid,
+    pub build_id: Uuid,
+    /// Where it lands in the game directory: `mods/sodium.jar`, `config/x.toml`.
+    pub path: String,
+    pub sha1: String,
+    pub size: i64,
+    /// `client`, `server` or `both`.
+    pub side: String,
+    /// What it is: `mod`, `config`, `resource`, and the rest the panel shows.
+    pub kind: String,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Role {
     pub id: Uuid,

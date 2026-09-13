@@ -75,7 +75,7 @@ own domain because the node has to be spelled exactly right, and a module buildi
 
 ```rust
 access::allow_join(player, server_id)?;
-access::allow_build(player, servers::published_build(server_id)?.unwrap().id)?;
+access::allow_build(player, builds::published(server_id)?.unwrap().id)?;
 access::revoke_join(player, server_id)?;
 ```
 
@@ -91,8 +91,8 @@ server** is one running process with an agent attached.
 ```rust
 for s in servers::list()? { … }
 let s = servers::by_slug("survival")?;        // the /s/<slug> address
-let builds = servers::builds(server_id)?;
-let live = servers::published_build(server_id)?;
+let all = builds::of(server_id)?;
+let live = builds::published(server_id)?;
 
 for gs in servers::game_servers(server_id)? {
     if gs.online && gs.players_online == 0 {

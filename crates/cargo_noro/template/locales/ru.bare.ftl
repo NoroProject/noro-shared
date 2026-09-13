@@ -1,0 +1,1 @@
+mod-{{id}}-title = {{name}}

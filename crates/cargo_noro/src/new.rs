@@ -19,15 +19,25 @@ pub enum Ui {
     None,
 }
 
+/// Что положить в `src/lib.rs` и в локали.
+///
+/// Примеры выбрасываются не «для чистоты»: пустой модуль читается за минуту, а
+/// готовый обработчик входа в чужом проекте сначала приходится опознать как
+/// чужой и удалить. Кому нужен образец — он в документации и в `--example`.
+#[derive(Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum Body {
+    /// По одному рабочему примеру каждого вида объявления.
+    Example,
+    /// Только каркас: `impl` без единого обработчика.
+    Bare,
+}
+
 /// Файлы шаблона: путь в проекте → содержимое.
 const CORE: &[(&str, &str)] = &[
     ("manifest.toml", include_str!("../template/manifest.toml")),
     // Имя не `Cargo.toml`: настоящий манифест внутри исходников пакета cargo
     // принимает за вложенный проект и отказывается собирать весь воркспейс.
     ("Cargo.toml", include_str!("../template/cargo.toml.in")),
-    ("src/lib.rs", include_str!("../template/src/lib.rs")),
-    ("locales/en.ftl", include_str!("../template/locales/en.ftl")),
-    ("locales/ru.ftl", include_str!("../template/locales/ru.ftl")),
     ("README.md", include_str!("../template/README.md")),
     (
         "rust-toolchain.toml",
@@ -38,6 +48,25 @@ const CORE: &[(&str, &str)] = &[
     (".gitignore", include_str!("../template/gitignore")),
 ];
 
+/// То, что зависит от выбора содержимого.
+const EXAMPLE: &[(&str, &str)] = &[
+    ("src/lib.rs", include_str!("../template/src/lib.rs")),
+    ("locales/en.ftl", include_str!("../template/locales/en.ftl")),
+    ("locales/ru.ftl", include_str!("../template/locales/ru.ftl")),
+];
+
+const BARE: &[(&str, &str)] = &[
+    ("src/lib.rs", include_str!("../template/src/lib.bare.rs")),
+    (
+        "locales/en.ftl",
+        include_str!("../template/locales/en.bare.ftl"),
+    ),
+    (
+        "locales/ru.ftl",
+        include_str!("../template/locales/ru.bare.ftl"),
+    ),
+];
+
 const VUE: &[(&str, &str)] = &[
     ("package.json", include_str!("../template/package.json")),
     (
@@ -45,10 +74,19 @@ const VUE: &[(&str, &str)] = &[
         include_str!("../template/vite.config.mjs"),
     ),
     ("ui/app.js", include_str!("../template/ui/app.js")),
-    ("ui/App.vue", include_str!("../template/ui/App.vue")),
 ];
 
-pub fn run(id: &str, name: Option<&str>, ui: Ui, path: Option<PathBuf>) -> Result<()> {
+/// Экран под каждый выбор: пример зовёт свою ручку, каркасу звать нечего.
+const VUE_EXAMPLE: (&str, &str) = ("ui/App.vue", include_str!("../template/ui/App.vue"));
+const VUE_BARE: (&str, &str) = ("ui/App.vue", include_str!("../template/ui/App.bare.vue"));
+
+pub fn run(
+    id: &str,
+    name: Option<&str>,
+    ui: Ui,
+    body: Body,
+    path: Option<PathBuf>,
+) -> Result<()> {
     check_id(id)?;
     let name = name.map(str::to_string).unwrap_or_else(|| title(id));
     let root = path.unwrap_or_else(|| PathBuf::from(id));
@@ -58,8 +96,14 @@ pub fn run(id: &str, name: Option<&str>, ui: Ui, path: Option<PathBuf>) -> Resul
     }
 
     let mut files: Vec<&(&str, &str)> = CORE.iter().collect();
+    files.extend(if body == Body::Bare { BARE } else { EXAMPLE });
     if ui == Ui::Vue {
         files.extend(VUE.iter());
+        files.push(if body == Body::Bare {
+            &VUE_BARE
+        } else {
+            &VUE_EXAMPLE
+        });
     }
 
     for (rel, body) in files {

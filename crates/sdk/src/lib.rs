@@ -73,6 +73,7 @@
 
 pub mod access;
 pub mod bank;
+pub mod builds;
 pub mod cases;
 pub mod chat;
 pub mod db;
@@ -127,13 +128,13 @@ pub mod prelude {
     pub use crate::abi::HttpRequest;
     pub use crate::abi::Registration;
     pub use crate::abi::{
-        Account, ActorRef, Build, EventCtx, GameServer, IntoPlayerRef, Origin, Player, PlayerRef,
-        Punishment, Role, Server,
+        Account, ActorRef, Build, BuildFile, EventCtx, GameServer, IntoPlayerRef, Origin, Player,
+        PlayerRef, Punishment, Role, Server,
     };
     pub use crate::{
-        access, bank, cases, chat, db, events, files, http, hub, identities, instance, log, news,
-        noro, now, permissions, players, punish, restarts, roles, roster, servers, sessions, store,
-        telemetry, tickets, Result,
+        access, bank, builds, cases, chat, db, events, files, http, hub, identities, instance,
+        log, news, noro, now, permissions, players, punish, restarts, roles, roster, servers,
+        sessions, store, telemetry, tickets, Result,
     };
 
     // The crate itself, not just its names: the `plugin_fn` macro expands into

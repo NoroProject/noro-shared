@@ -58,13 +58,13 @@ async function reset() {
                 <span class="grow text-sm">
                     {{ noro.t('mod-playtime-rewards-played', 'Наиграно') }}
                 </span>
-                <AtomBadge tone="outline" mono>{{ noro.format.duration(data.seconds_played) }}</AtomBadge>
+                {{ data.seconds_played }}
             </div>
             <div class="flex items-center gap-2">
                 <span class="grow text-sm">
                     {{ noro.t('mod-playtime-rewards-points', 'Начислено очков') }}
                 </span>
-                <AtomBadge tone="success">{{ data.points }}</AtomBadge>
+                {{ data.points }}
             </div>
 
             <AtomButton v-if="canReset" variant="danger-soft" size="sm" @click="reset">

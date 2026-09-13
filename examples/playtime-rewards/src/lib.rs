@@ -1,29 +1,14 @@
-//! Награды за время в игре — пример модуля Noro.
-//!
-//! Считает, сколько игрок провёл на серверах, начисляет за это очки и выдаёт
-//! роль тем, кто перешагнул порог. Показывает четыре вещи, из которых состоит
-//! почти любой модуль: подписку на события, своё хранилище, собственную ручку
-//! для мини-аппа и действие над платформой.
-//!
-//! Ничего из этого не объявляется в манифесте: `#[event]` и `#[route]` стоят
-//! прямо над обработчиками, а имя события мастер выводит из типа аргумента.
+use std::{fmt::format, str::FromStr};
 
 use noro_sdk::prelude::*;
 
-/// Сколько очков за час игры, пока настройки не заданы.
 const DEFAULT_PER_HOUR: i64 = 100;
-/// Сколько часов до роли, пока настройки не заданы.
 const DEFAULT_HOURS_FOR_ROLE: i64 = 10;
 
 pub struct PlaytimeRewards;
 
 #[noro::module]
 impl PlaytimeRewards {
-    /// Что модуль объявляет о себе сверх того, что видно по атрибутам.
-    ///
-    /// Вызывается при установке и при включении — в песочнице, где модулю ещё
-    /// ничего не выдано. Сюда идёт то, что не привязано к конкретному
-    /// обработчику: поля формы настроек.
     #[register]
     fn setup(reg: &mut Registration) {
         reg.setting(
@@ -51,10 +36,6 @@ impl PlaytimeRewards {
         .default("veteran");
     }
 
-    /// Разовая подготовка при включении.
-    ///
-    /// В отличие от `#[register]`, здесь у модуля уже есть выданные
-    /// возможности: можно читать хранилище и ходить наружу.
     #[init]
     fn start() -> Result<()> {
         let per_hour: i64 = store::instance()
@@ -64,7 +45,6 @@ impl PlaytimeRewards {
         Ok(())
     }
 
-    /// Игрок вошёл: запоминаем момент, чтобы на выходе было от чего считать.
     #[event]
     fn on_join(e: PlayerJoined) -> Result<()> {
         if e.first_join {
@@ -78,11 +58,20 @@ impl PlaytimeRewards {
         Ok(())
     }
 
-    /// Игрок вышел: начисляем за наигранное.
+    #[task("30s")]
+    fn execute() -> Result<()> {
+        let user_uuid = "95bf010b-8e9f-55d5-8f1c-766c624ab7e0";
+        let uuid = Uuid::from_str(user_uuid).unwrap();
+        let player = players::require(PlayerRef::mc_uuid(uuid))?;
+        let me = store::user(player.id);
+        me.incr("points", 1)?;
+        me.incr("seconds_played", 10)?;
+        log::info("test");
+        Ok(())
+    }
+
     #[event(priority = normal)]
     fn on_left(e: PlayerLeft) -> Result<()> {
-        // Длительность считает мастер: она у него уже есть из закрытой сессии,
-        // а разница с нашей отметкой врала бы при перезапуске сервера.
         let seconds = e.session_secs.max(0);
         if seconds == 0 {
             return Ok(());
@@ -108,14 +97,6 @@ impl PlaytimeRewards {
         Ok(())
     }
 
-    /// Выдаёт роль тем, кто перешагнул порог наигранного.
-    ///
-    /// Не обработчик события, а обычный метод: атрибута на нём нет, и в экспорты
-    /// модуля он не попадает.
-    ///
-    /// Проверка `has_role` не ради экономии — выдать роль повторно не ошибка, —
-    /// а ради журнала: без неё каждый выход игрока писал бы в аудит строку о
-    /// выдаче роли, которая у него уже есть.
     fn maybe_promote(player: &Player, played_secs: i64) -> Result<()> {
         let hours: i64 = store::instance()
             .get("role_after_hours")?
@@ -131,8 +112,6 @@ impl PlaytimeRewards {
             return Ok(());
         }
 
-        // Роль могли переименовать или удалить: тогда это отказ мастера, а не
-        // повод уронить обработчик выхода вместе с начислением.
         match roles::grant(player.id, role.as_str()) {
             Ok(()) => log::info(format!("{} получает роль «{role}»", player.label())),
             Err(e) => log::warn(format!("роль «{role}» не выдана: {e}")),
@@ -140,11 +119,6 @@ impl PlaytimeRewards {
         Ok(())
     }
 
-    /// Сбросить свои очки.
-    ///
-    /// Право проверяет мастер по узлу из манифеста: до модуля запрос без него
-    /// не доходит, и проверять ещё раз здесь нечего. Кнопку мини-апп прячет
-    /// сам — через `noro.can`, тем же матчером, что и панель.
     #[route(POST, "/reset", auth = permission("noro.module.playtime-rewards.reset"))]
     fn route_reset(req: HttpRequest) -> Result<Points> {
         let user_id = req.require_user()?;
@@ -158,11 +132,6 @@ impl PlaytimeRewards {
         })
     }
 
-    /// Чужое событие: его выпускает другой модуль, и типа под него нет.
-    ///
-    /// Имя пишется строкой именно поэтому — у событий мастера оно берётся из
-    /// типа аргумента, и писать его руками там нельзя. Полезная нагрузка
-    /// приходит как есть: её форма — договор с тем, кто событие выпускает.
     #[event("mod.shop.purchase")]
     fn on_purchase(e: noro_sdk::serde_json::Value) -> Result<()> {
         let Some(player) = e.get("player").and_then(|v| v.as_str()) else {
@@ -172,10 +141,6 @@ impl PlaytimeRewards {
         Ok(())
     }
 
-    /// Сколько очков у того, кто открыл мини-апп.
-    ///
-    /// Права проверил мастер: до модуля запрос без входа не доходит, поэтому
-    /// здесь достаточно взять идентификатор из запроса.
     #[route(GET, "/me")]
     fn route_me(req: HttpRequest) -> Result<Points> {
         let user_id = req.require_user()?;

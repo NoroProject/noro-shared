@@ -144,10 +144,10 @@ capabilities! {
     restarts => ["read", "manage"];
     /// `read`, `revoke` — sessions in the panel and the launcher.
     sessions => ["read", "revoke"];
-    /// `read`, `publish`. `publish` covers taking a build *out* of publication;
-    /// putting one in rebuilds and signs the manifest, which takes minutes and
-    /// stays with the operator.
-    builds => ["read", "publish"];
+    /// `read`, `files`, `publish`. `publish` covers taking a build *out* of
+    /// publication; putting one in reassembles it, which takes minutes and
+    /// stays with the operator. `files` reaches what the launcher downloads.
+    builds => ["read", "files", "publish"];
     /// `read`, `transfer`.
     bank => ["read", "transfer"];
     /// `read`, `issue`, `revoke`.
@@ -162,8 +162,8 @@ capabilities! {
     market => ["read", "sell"];
     /// `read`, `file` — filing a claim, with its fee.
     court => ["read", "file"];
-    /// `read`, `sign`.
-    petitions => ["read", "sign"];
+    /// `read`, `sign`, `create`.
+    petitions => ["read", "sign", "create"];
     /// `read`, `issue`.
     fines => ["read", "issue"];
     /// `read`, `publish`, `edit`.

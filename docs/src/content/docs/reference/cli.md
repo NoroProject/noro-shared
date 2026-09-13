@@ -14,14 +14,21 @@ module — the tool walks up until it finds `manifest.toml`, the way `cargo buil
 ## `cargo noro new <id>`
 
 Creates a module: manifest, crate, locales, a mini-app, and a `src/lib.rs` with one
-working example of each thing a module can declare.
+working example of each thing a module can declare — or nothing at all, with `--bare`.
 
 | Flag | Effect |
 |---|---|
 | `--ui vue` | a Vue component the panel mounts inside itself (default) |
 | `--ui none` | no screen — events, endpoints and tasks only |
+| `--bare` | an empty `impl Module {}` instead of the examples |
 | `--name "My Module"` | the display name; derived from the identifier otherwise |
 | `--path DIR` | where to put it; a directory named after the module otherwise |
+
+`--bare` is for when you know what you are writing. The examples are quick to read but
+somebody else's code in your project: you recognise them as foreign before you delete
+them. The bare crate carries a comment listing the five attributes and a link to the
+catalog, and nothing else — the screen it ships, if you asked for one, calls no endpoint,
+because there is none to call.
 
 The identifier is asked for once because it travels into four places that have to agree:
 the crate name, the manifest `id`, the prefix of every locale key, and the mini-app

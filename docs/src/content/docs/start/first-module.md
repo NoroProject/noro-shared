@@ -26,8 +26,8 @@ cd my-module
 ```
 
 You get a working module: a settings field, a startup step, an event handler and an
-endpoint, one of each and all of them deletable. `--ui none` leaves out the mini-app;
-`--name "My Module"` sets the display name.
+endpoint, one of each and all of them deletable. `--ui none` leaves out the mini-app,
+`--bare` leaves out the examples, and `--name "My Module"` sets the display name.
 
 The identifier is asked for once because it travels: into the crate name, the manifest,
 the prefix of every locale key and the mini-app package. `cargo noro new` fills all four

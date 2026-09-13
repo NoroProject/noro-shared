@@ -16,11 +16,10 @@ http = ["discord.com"]
 
 An empty list is a denial. A domain you do not mention is closed.
 
-## Status
+## What each one reaches
 
-The capability model, the manifest fields and the operator's grant screen are all in
-place. The host functions behind each domain are not all there yet, and this table says
-which are.
+Every action below has a host function behind it, and a test that says so — see the note
+after the table.
 
 | Capability | Actions | What you can call |
 |---|---|---|
@@ -37,8 +36,9 @@ which are.
 | | `grant` | `permissions::grant`, `permissions::revoke` |
 | `access` | `grant` | `access::allow_join`, `access::allow_build`, and their `revoke_*` |
 | `servers` | `read` | `servers::list`, `get`, `by_slug` |
-| `builds` | `read` | `servers::builds`, `servers::published_build` |
-| | `publish` | `servers::unpublish` — publishing itself stays with the operator |
+| `builds` | `read` | `builds::of`, `builds::published`, `builds::files`, `builds::read` |
+| | `files` | `builds::write`, `builds::attach`, `builds::remove` |
+| | `publish` | `builds::unpublish` — publishing itself stays with the operator |
 | `gameservers` | `read` | `servers::game_servers`, `servers::game_server` |
 | | `maintenance` | `servers::set_maintenance` |
 | `punish` | `read` | `punish::active`, `punish::history` |
@@ -78,6 +78,7 @@ which are.
 | | `file` | `hub::file_claim` |
 | `petitions` | `read` | `hub::petitions` |
 | | `sign` | `hub::sign`, `hub::unsign` |
+| | `create` | `hub::start_petition` |
 | `fines` | `read` | `hub::fines`, `hub::fines_of` |
 | | `issue` | `hub::fine` |
 | `events` | `emit` | `events::emit`, `events::emit_on` |
@@ -85,20 +86,20 @@ which are.
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |
 
-## What is not there yet
+## The one with a long arm
 
-These are the ones worth having next. The domain exists, so the manifest takes the line;
-the action does not, so there is no call to make with it. `cargo noro check` says so
-before you upload.
+`builds = ["files"]` writes what the launcher downloads and puts in somebody's game
+directory. Nothing has to be re-signed afterwards: the manifest is assembled and signed
+on every launcher request from the current rows, so a written file is live from the next
+one. There is no review step between the call and the player.
 
-| Capability | Actions | What it would give you |
-|---|---|---|
-| `petitions` | `create` | starting a petition rather than only signing one |
-| `builds` | `files` | reading and writing the files inside a build |
+That is why it is its own action rather than part of `read`, and why the operator sees it
+spelled out at install time. Text goes in directly and is capped at a megabyte —
+configuration, not mods. Anything bigger is stored once with `files::put` and attached by
+hash, because dragging tens of megabytes through the sandbox as a string is not a plan.
 
-`builds = ["files"]` touches what the launcher downloads and verifies by signature, so
-writing there means resigning the manifest — the same reason publishing a build stays
-with the operator.
+Publishing a build still stays with the operator: that reassembles artifacts and fetches
+what is missing, minutes of work, and a module's call has seconds.
 
 :::note[The list and the code cannot drift]
 Every action in the first table is checked by a test that reads the master's own source:

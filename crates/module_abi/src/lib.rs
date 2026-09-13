@@ -40,7 +40,7 @@ pub mod store;
 pub mod validate;
 
 pub use context::{ActorRef, EventCtx, Origin};
-pub use entity::{Account, Build, GameServer, Punishment, Role, Server};
+pub use entity::{Account, Build, BuildFile, GameServer, Punishment, Role, Server};
 pub use error::{ModuleError, ModuleResult};
 pub use events::{Cancel, Event, EventKind, EventMeta, ALL_EVENTS};
 pub use http::HttpRequest;

@@ -46,6 +46,12 @@ enum Cmd {
         /// Мини-апп: `vue` — компонент внутри панели, `none` — без экрана.
         #[arg(long, default_value = "vue")]
         ui: new::Ui,
+        /// Содержимое: `example` — по образцу каждого объявления, `bare` — пусто.
+        #[arg(long, default_value = "example")]
+        body: new::Body,
+        /// То же, что `--body bare`.
+        #[arg(long, conflicts_with = "body")]
+        bare: bool,
         /// Куда положить. По умолчанию — каталог с именем модуля.
         #[arg(long)]
         path: Option<std::path::PathBuf>,
@@ -78,7 +84,17 @@ fn main() {
 
 fn run() -> Result<()> {
     match Cli::parse().cmd {
-        Cmd::New { id, name, ui, path } => new::run(&id, name.as_deref(), ui, path),
+        Cmd::New {
+            id,
+            name,
+            ui,
+            body,
+            bare,
+            path,
+        } => {
+            let body = if bare { new::Body::Bare } else { body };
+            new::run(&id, name.as_deref(), ui, body, path)
+        }
         Cmd::Check => {
             let p = project::find()?;
             check::run(&p, false)?;

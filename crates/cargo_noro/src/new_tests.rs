@@ -17,9 +17,15 @@ fn scratch(name: &str) -> std::path::PathBuf {
 
 #[test]
 fn a_new_module_passes_its_own_check() {
-    for (ui, name) in [(Ui::Vue, "with-ui"), (Ui::None, "no-ui")] {
+    let cases = [
+        (Ui::Vue, Body::Example, "with-ui"),
+        (Ui::None, Body::Example, "no-ui"),
+        (Ui::Vue, Body::Bare, "bare-ui"),
+        (Ui::None, Body::Bare, "bare"),
+    ];
+    for (ui, body, name) in cases {
         let dir = scratch(name);
-        run("test-module", None, ui, Some(dir.clone())).expect("шаблон разворачивается");
+        run("test-module", None, ui, body, Some(dir.clone())).expect("шаблон разворачивается");
 
         let manifest: noro_module_abi::manifest::Manifest =
             toml::from_str(&std::fs::read_to_string(dir.join("manifest.toml")).unwrap())
@@ -47,6 +53,27 @@ fn a_new_module_passes_its_own_check() {
             ui == Ui::None,
             "{name}: раздел [[apps]] не соответствует выбору"
         );
+
+        // Пустой вариант не должен тащить примеры: обработчик входа в чужом
+        // проекте сначала опознают как чужой, а потом удаляют. Проверяется
+        // пустой `impl`, а не `#[event]`: перечень атрибутов есть и в
+        // комментарии каркаса, и поиск подстроки нашёл бы его там.
+        let lib = std::fs::read_to_string(dir.join("src/lib.rs")).unwrap();
+        assert_eq!(
+            lib.contains("impl Module {}"),
+            body == Body::Bare,
+            "{name}: содержимое не соответствует выбору"
+        );
+        if ui == Ui::Vue {
+            // Каркасу звать нечего: экран из примера дёргает `/me`, ручки для
+            // которого в пустом модуле нет, и панель показала бы ошибку.
+            let app = std::fs::read_to_string(dir.join("ui/App.vue")).unwrap();
+            assert_eq!(
+                app.contains("noro.api"),
+                body == Body::Example,
+                "{name}: экран зовёт ручку, которой в модуле нет"
+            );
+        }
     }
 }
 
@@ -54,7 +81,7 @@ fn a_new_module_passes_its_own_check() {
 fn a_bad_identifier_is_refused_before_anything_is_written() {
     for id in ["Shop", "my_shop", "-shop", "shop-", ""] {
         assert!(
-            run(id, None, Ui::None, Some(scratch("rejected"))).is_err(),
+            run(id, None, Ui::None, Body::Bare, Some(scratch("rejected"))).is_err(),
             "`{id}` приняли за идентификатор"
         );
     }
@@ -67,7 +94,7 @@ fn a_bad_identifier_is_refused_before_anything_is_written() {
 #[test]
 fn vue_interpolation_survives_substitution() {
     let dir = scratch("vue-braces");
-    run("shop", None, Ui::Vue, Some(dir.clone())).expect("шаблон разворачивается");
+    run("shop", None, Ui::Vue, Body::Example, Some(dir.clone())).expect("шаблон разворачивается");
 
     let app = std::fs::read_to_string(dir.join("ui/App.vue")).unwrap();
     assert!(

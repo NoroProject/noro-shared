@@ -25,7 +25,8 @@
 
 use noro_module_abi::error::ModuleError;
 use noro_module_abi::ops::{
-    ClaimDraft, FineDraft, HubItem, HubPage, HubPost, HubQuery, LotDraft, PetitionVote, TownDraft,
+    ClaimDraft, FineDraft, HubItem, HubPage, HubPost, HubQuery, LotDraft, PetitionDraft,
+    PetitionVote, TownDraft,
 };
 use noro_module_abi::player::IntoPlayerRef;
 use uuid::Uuid;
@@ -230,4 +231,14 @@ pub fn list_lot(draft: LotDraft) -> Result<serde_json::Value, ModuleError> {
 /// Requires `court = ["read", "file"]`.
 pub fn file_claim(draft: ClaimDraft) -> Result<serde_json::Value, ModuleError> {
     crate::host::hub_file_claim_call(draft)
+}
+
+/// Starts a petition, in the name of its author.
+///
+/// The author becomes its first signature and the name people see. The filing
+/// fee, where the hub charges one, comes off their primary card.
+///
+/// Requires `petitions = ["read", "create"]`.
+pub fn start_petition(draft: PetitionDraft) -> Result<serde_json::Value, ModuleError> {
+    crate::host::hub_file_petition_call(draft)
 }
