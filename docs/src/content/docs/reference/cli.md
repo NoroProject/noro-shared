@@ -62,10 +62,34 @@ failure: the package is simply larger.
 `--debug` skips the release profile and the optimiser. Faster to build, roughly four
 times the size, and not what you ship.
 
-## `cargo noro package [--debug]`
+## `cargo noro key new` · `key show`
+
+Makes the key your packages are signed with, and prints its public half.
+
+Signing is not about a master trusting a stranger: the owner installs the file
+themselves, and a file they put there is already familiar. It is about the **update** — a
+package with the same identifier and a different key is a different author, and the
+master refuses it rather than accepting it quietly. It already holds that module's
+granted capabilities, its schema and its players' data.
+
+The key lands in `~/.config/noro/keys/<id>.key`, not next to the project: there it would
+travel into git with the first `git add .`, and that would be the end of the signature.
+Keep a copy somewhere safe — without it, shipping an update to that module means the
+operator has to remove it and install anew.
+
+## `cargo noro package [--debug] [--sign]`
 
 Build, then zip into `dist/<id>.noromod`. Prints the size and the sha256 the master will
 identify the package by.
+
+`--sign` adds `signature.toml`. What is signed is the **entries** — each name and its
+bytes, sorted — not the archive: a zip carries timestamps, ordering and a compression
+method of its own, so two identical builds would differ, and you would see "wrong key"
+after an ordinary rebuild.
+
+An unsigned package installs normally. Going from unsigned to signed is fine — you made a
+key. The other way is not: that is exactly what a substitution would look like, and
+nothing distinguishes it from a forgotten key.
 
 The archive is written directly rather than by calling `zip`: that is not installed
 everywhere, and on macOS it slips `__MACOSX` entries in, which makes the master see files
