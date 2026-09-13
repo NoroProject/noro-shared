@@ -84,9 +84,28 @@ after the table.
 | `events` | `emit` | `events::emit`, `events::emit_on` |
 | `launcher` | `read` | `launcher::is_online`, `launcher::connected` |
 | | `notify` | `launcher::send`, `launcher::broadcast` |
+| `dm` | `read` | `dm::threads`, `dm::history`, `dm::presence` |
+| | `send` | `dm::send` |
+| `bots` | `create` | `bots::ensure`, `bots::list` |
 | `store` | `true` | the whole key-value store |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |
+
+## The one that reads other people's mail
+
+`dm = ["read"]` opens private messages — what two players wrote to each other, on the
+site or in game. The instance's privacy policy promises that staff do not read them in
+the course of moderation; a module holding this capability is the one exception the
+operator has agreed to.
+
+Ask for it when the job needs it: filtering links, an answering machine for someone who
+is away, a bot that replies. Do not ask for it "in case it comes in handy" — the operator
+sees the line in your manifest and has to decide, and a module that reads correspondence
+without needing to is a module they should refuse.
+
+`dm = ["send"]` writes on a player's behalf, and the recipient sees their name. That is
+deliberate: they are going to answer, and a message from nobody leaves them with nobody
+to answer to. The history records which module wrote it, and the conversation shows it.
 
 ## The one with a long arm
 

@@ -44,6 +44,13 @@ fn on_join(e: PlayerJoined) -> Result<()> { Ok(()) }
 | `user.identity_linked` | `Post` | [`IdentityLinked`](../../api/noro_module_abi/events/player/struct.IdentityLinked.html) |
 | `user.identity_unlinked` | `Post` | [`IdentityUnlinked`](../../api/noro_module_abi/events/player/struct.IdentityUnlinked.html) |
 
+## Личные сообщения
+
+| Событие | Вид | Структура |
+|---|---|---|
+| `dm.pre_send` | `Pre` | [`DmPreSend`](../../api/noro_module_abi/events/dm/struct.DmPreSend.html) |
+| `dm.sent` | `Post` | [`DmSent`](../../api/noro_module_abi/events/dm/struct.DmSent.html) |
+
 ## Роли, права, доступы
 
 | Событие | Вид | Структура |

@@ -1,0 +1,16 @@
+---
+title: "instance"
+description: "Instance settings."
+---
+
+:::note
+Собирается из исходников самого SDK. Править руками бесполезно.
+:::
+
+Instance settings.
+
+| Вызов | Что делает | Нужно |
+|---|---|---|
+| `all() -> Result<BTreeMap<String, Value>, ModuleError>` | Every setting, by key. | `instance = ["read"]` |
+| `get<T: DeserializeOwned>(key: &str) -> Result<Option<T>, ModuleError>` | One setting, parsed into the type you expect. | `instance = ["read"]` |
+| `set<T: Serialize>(key: &str, value: &T) -> Result<(), ModuleError>` | Writes a setting. | `instance = ["read", "write"]` |

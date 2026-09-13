@@ -14,9 +14,9 @@ and they are there:
 ```rust
 let player = players::require("Dalynkaa")?;
 
-player.server_ban(server_id, "griefing", Some(7 * 24 * 3600))?;
-player.grant_role("vip")?;
-player.tell("See you in a week.")?;
+player.punish().server_ban(server_id, "griefing", Some(7 * 24 * 3600))?;
+player.roles().grant("vip")?;
+player.in_game().tell("See you in a week.")?;
 
 let server = servers::by_slug("survival")?.unwrap();
 server.published_build()?.unwrap().allow(player.id)?;

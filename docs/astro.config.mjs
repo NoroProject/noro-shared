@@ -122,6 +122,16 @@ export default defineConfig({
                             slug: 'reference/sdk',
                         },
                         {
+                            // Автогенерация, а не список руками: доменов
+                            // двадцать семь, и новый появляется вместе с новым
+                            // файлом в SDK — перечислять их здесь значит
+                            // однажды забыть.
+                            label: 'By domain',
+                            translations: { ru: 'По доменам' },
+                            collapsed: true,
+                            items: [{ autogenerate: { directory: 'reference/sdk' } }],
+                        },
+                        {
                             label: 'Mini-app API',
                             translations: { ru: 'API мини-аппа' },
                             slug: 'reference/mini-app-api',

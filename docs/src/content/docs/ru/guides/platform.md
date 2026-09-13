@@ -15,9 +15,9 @@ noro_sdk::prelude::*` — и они на месте:
 ```rust
 let player = players::require("Dalynkaa")?;
 
-player.server_ban(server_id, "гриф", Some(7 * 24 * 3600))?;
-player.grant_role("vip")?;
-player.tell("Увидимся через неделю.")?;
+player.punish().server_ban(server_id, "гриф", Some(7 * 24 * 3600))?;
+player.roles().grant("vip")?;
+player.in_game().tell("Увидимся через неделю.")?;
 
 let server = servers::by_slug("survival")?.unwrap();
 server.published_build()?.unwrap().allow(player.id)?;

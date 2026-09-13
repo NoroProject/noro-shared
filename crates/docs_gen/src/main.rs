@@ -26,6 +26,7 @@ mod pairs;
 /// unnamed one shows up under the fallback title and gets noticed.
 const GROUPS: &[(&str, &str, &str)] = &[
     ("player", "Players and signing in", "Игроки и вход"),
+    ("dm", "Private messages", "Личные сообщения"),
     (
         "access",
         "Roles, permissions, access",
@@ -116,11 +117,38 @@ fn main() {
 
     let calls: usize = found.iter().map(|d| d.calls.len()).sum();
     let facades = domains::facades(sdk);
+    let handles = domains::handles(sdk);
+
+    // По странице на домен: общий свиток на двадцать семь разделов листали
+    // поиском по браузеру, а ссылка на домен вела в середину страницы.
+    for (dir_of_lang, lang) in [(dir, Lang::En), (ru.as_path(), Lang::Ru)] {
+        let sub = dir_of_lang.join("sdk");
+        fs::create_dir_all(&sub).expect("create sdk directory");
+        for d in &found {
+            fs::write(sub.join(format!("{}.md", d.name)), domains::domain_page(d, lang))
+                .expect("write domain page");
+        }
+        // Методы на сущностях — своей страницей: они не домен, а способ звать
+        // те же вызовы, и в списке доменов выглядели бы двадцать восьмым.
+        let front = match lang {
+            Lang::En => "---\ntitle: Methods on entities\ndescription: Calling the same \
+                         domain functions from the thing you are holding.\n---\n",
+            Lang::Ru => "---\ntitle: Методы на сущностях\ndescription: Те же доменные \
+                         вызовы — от того, что уже в руках.\n---\n",
+        };
+        fs::write(
+            sub.join("fluent.md"),
+            front.to_string()
+                + &domains::facade_section(&facades, lang)
+                + &domains::handle_section(&handles, lang),
+        )
+        .expect("write fluent page");
+    }
     for (path, lang) in [
         (dir.join("sdk.md"), Lang::En),
         (ru.join("sdk.md"), Lang::Ru),
     ] {
-        let page = domains::page(&found, lang) + &domains::facade_section(&facades, lang);
+        let page = domains::page(&found, lang);
         fs::write(path, page).expect("write sdk.md");
     }
     println!("generated {} calls across {} domains", calls, found.len());

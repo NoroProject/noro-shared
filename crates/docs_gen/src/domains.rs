@@ -42,12 +42,19 @@ pub struct Facade {
     pub calls: Vec<Call>,
 }
 
-/// Читает `fluent.rs`: объявления трейтов вместе с документацией.
+/// Читает трейты `fluent/mod.rs` вместе с документацией.
 ///
 /// Из объявления, а не из реализации: документация написана там, а сигнатура в
 /// реализации та же самая.
+///
+/// Хендлы (`player.punish()` и соседи) собираются отдельно в [`handles`]: у них
+/// не трейт, а обычный `impl`, и методы там — то, ради чего группировка и
+/// затевалась.
 pub fn facades(sdk_src: &Path) -> Vec<Facade> {
-    let Ok(src) = std::fs::read_to_string(sdk_src.join("fluent.rs")) else {
+    let Ok(src) = std::fs::read_to_string(sdk_src.join("fluent/mod.rs")) else {
+        // Пусто вместо паники — но молчать нельзя: страница просто потеряла бы
+        // раздел, и заметили бы это через месяц.
+        eprintln!("fluent/mod.rs не прочитан: раздел методов будет пустым");
         return Vec::new();
     };
     let lines: Vec<&str> = src.lines().collect();
@@ -71,6 +78,68 @@ pub fn facades(sdk_src: &Path) -> Vec<Facade> {
             subject,
             summary: doc_above(&lines, i),
             calls: trait_methods(&lines, i),
+        });
+    }
+    out
+}
+
+/// Хендлы: `impl Profile { … }` в `fluent/player.rs` и `fluent/server.rs`.
+///
+/// Без них справочник показывал бы `player.punish()` и обрывался на этом —
+/// ровно там, где начинается то, что человек искал.
+pub fn handles(sdk_src: &Path) -> Vec<Facade> {
+    let mut out = Vec::new();
+    for file in ["fluent/player.rs", "fluent/server.rs"] {
+        let Ok(src) = std::fs::read_to_string(sdk_src.join(file)) else {
+            eprintln!("{file} не прочитан: хендлы в справочник не попадут");
+            continue;
+        };
+        let lines: Vec<&str> = src.lines().collect();
+        for (i, line) in lines.iter().enumerate() {
+            let Some(rest) = line.strip_prefix("impl ") else {
+                continue;
+            };
+            let name = rest.trim_end_matches(" {").trim();
+            // Документация стоит над `pub struct`, а не над `impl`.
+            let decl = lines
+                .iter()
+                .position(|l| l.starts_with(&format!("pub struct {name}")))
+                .unwrap_or(i);
+            out.push(Facade {
+                subject: name.to_string(),
+                summary: doc_above(&lines, decl),
+                calls: impl_methods(&lines, i),
+            });
+        }
+    }
+    out
+}
+
+/// Публичные методы внутри `impl`.
+fn impl_methods(lines: &[&str], start: usize) -> Vec<Call> {
+    let mut out = Vec::new();
+    for (i, line) in lines.iter().enumerate().skip(start + 1) {
+        if line.starts_with('}') {
+            break;
+        }
+        let Some(rest) = line.trim_start().strip_prefix("pub fn ") else {
+            continue;
+        };
+        let Some((name, tail)) = rest.split_once('(') else {
+            continue;
+        };
+        let doc = docs_above(lines, i);
+        out.push(Call {
+            signature: signature(name, tail, &lines[i..])
+                .replace("&self, ", "")
+                .replace("&self", ""),
+            summary: table_text(
+                doc.iter()
+                    .find(|l| !l.is_empty())
+                    .cloned()
+                    .unwrap_or_default(),
+            ),
+            requires: None,
         });
     }
     out
@@ -121,10 +190,18 @@ fn table_text(text: String) -> String {
 }
 
 /// Подряд идущие `///` над строкой.
+///
+/// Атрибуты между документацией и объявлением пропускаются: `#[derive(…)]`
+/// стоит ровно там у каждой структуры, и без этого описание хендла терялось —
+/// молча, потому что пустая строка в таблице выглядит как «автор не написал».
 fn docs_above(lines: &[&str], i: usize) -> Vec<String> {
     let mut doc: Vec<String> = Vec::new();
     for prev in lines[..i].iter().rev() {
-        match prev.trim_start().strip_prefix("///") {
+        let trimmed = prev.trim_start();
+        if trimmed.starts_with("#[") {
+            continue;
+        }
+        match trimmed.strip_prefix("///") {
             Some(text) => doc.push(text.trim().to_string()),
             None => break,
         }
@@ -263,14 +340,14 @@ pub fn facade_section(facades: &[Facade], lang: crate::Lang) -> String {
             "\n## Fluent\n\nMethods on the thing you are holding. Each \
              forwards to the domain function of the same name — same capability, same \
              behaviour. The prelude imports them.\n\n```rust\nlet player = \
-             players::require(\"Dalynkaa\")?;\nplayer.server_ban(server_id, \"griefing\", \
+             players::require(\"Dalynkaa\")?;\nplayer.punish().server_ban(server_id, \"griefing\", \
              Some(7 * 24 * 3600))?;\n```\n"
         }
         crate::Lang::Ru => {
             "\n## Методы на сущностях\n\nМетоды на том, что уже в руках. \
              Каждый ведёт в доменную функцию того же имени — та же возможность, то же \
              поведение. Prelude их импортирует.\n\n```rust\nlet player = \
-             players::require(\"Dalynkaa\")?;\nplayer.server_ban(server_id, \"гриф\", \
+             players::require(\"Dalynkaa\")?;\nplayer.punish().server_ban(server_id, \"гриф\", \
              Some(7 * 24 * 3600))?;\n```\n"
         }
     });
@@ -290,6 +367,63 @@ pub fn facade_section(facades: &[Facade], lang: crate::Lang) -> String {
         }
     }
     out
+}
+
+/// Страница одного домена.
+///
+/// По странице на домен, а не одним свитком на все двадцать семь: свиток
+/// приходилось листать поиском по браузеру, и ссылка «смотри `punish`» вела на
+/// середину общей страницы, откуда не видно, где начался нужный раздел.
+pub fn domain_page(d: &Domain, lang: crate::Lang) -> String {
+    let mut page = String::new();
+    let _ = write!(
+        page,
+        "---\ntitle: \"{}\"\ndescription: \"{}\"\n---\n\n",
+        d.name,
+        if d.summary.is_empty() {
+            match lang {
+                crate::Lang::En => "An SDK domain.".to_string(),
+                crate::Lang::Ru => "Домен SDK.".to_string(),
+            }
+        } else {
+            escape_front(&d.summary)
+        }
+    );
+    page.push_str(match lang {
+        crate::Lang::En => {
+            ":::note\nGenerated from the SDK's own sources. Editing it by hand has no \
+             effect.\n:::\n\n"
+        }
+        crate::Lang::Ru => {
+            ":::note\nСобирается из исходников самого SDK. Править руками бесполезно.\n:::\n\n"
+        }
+    });
+    if !d.summary.is_empty() {
+        let _ = writeln!(page, "{}\n", d.summary);
+    }
+
+    let head = match lang {
+        crate::Lang::En => "| Call | What it does | Needs |",
+        crate::Lang::Ru => "| Вызов | Что делает | Нужно |",
+    };
+    let _ = write!(page, "{head}\n|---|---|---|\n");
+    for c in &d.calls {
+        let _ = writeln!(
+            page,
+            "| `{}` | {} | {} |",
+            c.signature,
+            escape(&c.summary),
+            c.requires.as_deref().unwrap_or("—")
+        );
+    }
+    page
+}
+
+/// Значение frontmatter всегда в кавычках: описания доменов содержат двоеточие
+/// («Linked logins: Discord, …»), а без кавычек YAML читает его как вложенный
+/// ключ и сборка сайта падает. Свои кавычки внутри заменяются одинарными.
+fn escape_front(text: &str) -> String {
+    text.replace('"', "'")
 }
 
 pub fn page(domains: &[Domain], lang: crate::Lang) -> String {
@@ -327,25 +461,22 @@ pub fn page(domains: &[Domain], lang: crate::Lang) -> String {
         }
     });
 
+    // Индекс, а не содержимое: у каждого домена своя страница, и здесь только
+    // список — чтобы было видно, что вообще есть, и сколько в чём вызовов.
+    let head = match lang {
+        crate::Lang::En => "\n| Domain | What it is | Calls |",
+        crate::Lang::Ru => "\n| Домен | О чём он | Вызовов |",
+    };
+    let _ = write!(page, "{head}\n|---|---|---|\n");
     for d in domains {
-        let _ = write!(page, "\n## `{}`\n\n", d.name);
-        if !d.summary.is_empty() {
-            let _ = writeln!(page, "{}\n", d.summary);
-        }
-        let head = match lang {
-            crate::Lang::En => "| Call | What it does | Needs |",
-            crate::Lang::Ru => "| Вызов | Что делает | Нужно |",
-        };
-        let _ = write!(page, "{head}\n|---|---|---|\n");
-        for c in &d.calls {
-            let _ = writeln!(
-                page,
-                "| `{}` | {} | {} |",
-                c.signature,
-                escape(&c.summary),
-                c.requires.as_deref().unwrap_or("—")
-            );
-        }
+        let _ = writeln!(
+            page,
+            "| [`{}`](./sdk/{}/) | {} | {} |",
+            d.name,
+            d.name,
+            escape(&d.summary),
+            d.calls.len()
+        );
     }
     page
 }
@@ -353,4 +484,38 @@ pub fn page(domains: &[Domain], lang: crate::Lang) -> String {
 /// Вертикальная черта в описании разорвала бы строку таблицы.
 fn escape(text: &str) -> String {
     text.replace('|', "\\|")
+}
+
+/// Хендлы отдельной секцией: их методы и есть то, ради чего группировка.
+pub fn handle_section(handles: &[Facade], lang: crate::Lang) -> String {
+    if handles.is_empty() {
+        return String::new();
+    }
+    let mut out = String::new();
+    out.push_str(match lang {
+        crate::Lang::En => {
+            "\n## Handles\n\nWhat each group hands back. `player.punish()` gives \
+             a `Punish`, and the verbs live inside it.\n"
+        }
+        crate::Lang::Ru => {
+            "\n## Хендлы\n\nЧто возвращает каждая группа. `player.punish()` \
+             отдаёт `Punish`, и глаголы живут внутри него.\n"
+        }
+    });
+
+    for h in handles {
+        let _ = write!(out, "\n### `{}`\n\n", h.subject);
+        if !h.summary.is_empty() {
+            let _ = writeln!(out, "{}\n", h.summary);
+        }
+        let head = match lang {
+            crate::Lang::En => "| Method | What it does |",
+            crate::Lang::Ru => "| Метод | Что делает |",
+        };
+        let _ = write!(out, "{head}\n|---|---|\n");
+        for c in &h.calls {
+            let _ = writeln!(out, "| `{}` | {} |", c.signature, escape(&c.summary));
+        }
+    }
+    out
 }
