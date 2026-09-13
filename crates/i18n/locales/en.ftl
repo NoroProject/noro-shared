@@ -2030,6 +2030,7 @@ hub-members-first-seen = First seen { $date }
 hub-members-last-seen = Last seen { $date }
 hub-members-never-played = Has not played here yet
 hub-members-online = Online
+hub-profile-write = Write a message
 hub-profile-not-found = This player has not been on this server
 hub-profile-about = About
 hub-profile-about-placeholder = Tell others about yourself on this server

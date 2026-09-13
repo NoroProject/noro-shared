@@ -2035,6 +2035,7 @@ hub-members-first-seen = Впервые { $date }
 hub-members-last-seen = Последний раз { $date }
 hub-members-never-played = Ещё не играл здесь
 hub-members-online = В игре
+hub-profile-write = Написать сообщение
 hub-profile-not-found = Этот игрок не бывал на этом сервере
 hub-profile-about = О себе
 hub-profile-about-placeholder = Расскажите о себе на этом сервере
