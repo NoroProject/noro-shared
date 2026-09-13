@@ -22,7 +22,7 @@ pub struct ModuleError {
 | `NotFound` | the object is not there | `ModuleError::not_found(…)` |
 | `Invalid` | the arguments do not pass | `ModuleError::invalid(…)` |
 | `Conflict` | the state does not allow it — insufficient funds, a duplicate | `ModuleError::conflict(…)` |
-| `Quota` | the module's quota is exceeded | — |
+| `Quota` | a limit was hit: call rate, file size | back off and retry |
 | `Internal` | a failure inside the master | — |
 
 Returning `Err` from a handler is the normal way to fail. Panicking is caught, becomes a

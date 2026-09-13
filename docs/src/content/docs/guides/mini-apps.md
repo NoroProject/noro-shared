@@ -113,7 +113,7 @@ const noro = useNoro()
 | `navigate(path)` | moving around the panel |
 | `can(node)` · `canAny([…])` · `canOn(node, serverId)` | what the viewer is allowed |
 | `confirm({ title, text?, danger? })` | asks, with the panel's dialog |
-| `format.duration` · `money` · `date` · `ago` | the panel's own formatting |
+| `format.duration` · `money` · `date` · `ago` | the panel's own formatting. `duration` takes **seconds** — the unit the master speaks in — and reads them out down to the second |
 | `paged(path, opts?)` | a paginated list from your endpoint |
 | `platform.*` | reading platform data |
 

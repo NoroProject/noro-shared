@@ -97,11 +97,10 @@ fn events_page() -> String {
          ```\n\n\
          `Post` events run after everything has happened and been written. `Pre` events run\n\
          before the action and are meant to cancel or change it.\n\n\
-         :::note[Not every Pre event has a caller yet]\n\
-         A `Pre` handler is declared by taking its event as `&mut`. The master publishes the\n\
-         ones whose insertion point exists — `user.pre_rename`, `bank.pre_transfer` and\n\
-         `punishment.pre_issue` today. Subscribing to another compiles and installs, and the\n\
-         handler never runs. See [Events](../../guides/events/).\n\
+         :::note[Pre events]\n\
+         A `Pre` handler is declared by taking its event as `&mut`: the reference is what\n\
+         tells the master your answer is worth waiting for. All of them are delivered; the\n\
+         two with conditions are described in [Events](../../guides/events/).\n\
          :::\n",
     );
 

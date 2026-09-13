@@ -294,3 +294,15 @@ about one thing is how an answer gets lost.
 
 Resolving a case closes the reports behind it with the same outcome. A resolved case with
 its reports still open is the state in which the work gets done twice.
+
+## How often you may call
+
+The platform answers at most **200 calls a second**, with a burst of **2000** saved up —
+so a task that walks a thousand players once an hour never notices, and a loop that calls
+in earnest gets `Quota` back rather than taking the master's connection pool with it.
+
+The burst refills continuously. A `Quota` error is not a failure of your module and does
+not count toward the failure budget that disables one; it means wait and try again.
+
+Two other limits sit alongside it: a handler has 5 seconds (a `Pre` handler, 1), and a
+file you read or write through the platform is capped at a few megabytes.
