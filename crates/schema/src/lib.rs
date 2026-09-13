@@ -4,6 +4,7 @@
 //! frontend, the backend and the master all pull it in.
 
 pub mod admin_ws;
+pub mod player_ws;
 pub mod blocklist;
 pub mod build;
 pub mod hub;
@@ -23,6 +24,7 @@ pub mod user;
 pub mod ws_protocol;
 
 pub use admin_ws::*;
+pub use player_ws::*;
 pub use blocklist::*;
 pub use build::*;
 pub use hub::*;
