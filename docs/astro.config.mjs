@@ -23,15 +23,18 @@ export default defineConfig({
     integrations: [
         starlight({
             title: 'Noro Modules',
-            // Один язык, объявленный корневым: языкового переключателя не будет.
+            // Английский корневой, русский рядом. Корневым он не случайно:
+            // адреса страниц остаются прежними, а ссылки, которые кто-то уже
+            // сохранил, продолжают работать.
             //
-            // Сборка при этом всё равно пишет два предупреждения — про пустую
-            // коллекцию `i18n` и про отсутствующую запись `404`. Оба про
-            // необязательное содержимое, которого у одноязычного сайта нет, и
-            // конфигом они не убираются. Заводить `404.md` не надо: своя
-            // страница конфликтует с маршрутом Starlight, и он её не отдаёт.
+            // Страницы без перевода Starlight отдаёт на языке по умолчанию и
+            // помечает. Это лучше, чем прятать их из меню: ненайденная
+            // страница выглядит как отсутствующая возможность.
             defaultLocale: 'root',
-            locales: { root: { label: 'English', lang: 'en' } },
+            locales: {
+                root: { label: 'English', lang: 'en' },
+                ru: { label: 'Русский', lang: 'ru' },
+            },
             description:
                 'Write a module for a Noro instance: events, data, endpoints and mini-apps, without the master sources.',
             social: [
@@ -47,37 +50,103 @@ export default defineConfig({
             sidebar: [
                 {
                     label: 'Start here',
+                    translations: { ru: 'Начало' },
                     items: [
-                        { label: 'What a module is', slug: 'start/what-a-module-is' },
-                        { label: 'Your first module', slug: 'start/first-module' },
-                        { label: 'Inside the package', slug: 'start/package' },
+                        {
+                            label: 'What a module is',
+                            translations: { ru: 'Что такое модуль' },
+                            slug: 'start/what-a-module-is',
+                        },
+                        {
+                            label: 'Your first module',
+                            translations: { ru: 'Первый модуль' },
+                            slug: 'start/first-module',
+                        },
+                        {
+                            label: 'Inside the package',
+                            translations: { ru: 'Внутри пакета' },
+                            slug: 'start/package',
+                        },
                     ],
                 },
                 {
                     label: 'Guides',
+                    translations: { ru: 'Руководства' },
                     items: [
-                        { label: 'Events', slug: 'guides/events' },
-                        { label: 'Reaching the platform', slug: 'guides/platform' },
-                        { label: 'Storing data', slug: 'guides/data' },
-                        { label: 'Your own endpoints', slug: 'guides/endpoints' },
-                        { label: 'Mini-apps', slug: 'guides/mini-apps' },
-                        { label: 'Talking to the launcher', slug: 'guides/launcher' },
-                        { label: 'Scheduled work', slug: 'guides/tasks' },
-                        { label: 'Development mode', slug: 'guides/dev-mode' },
+                        { label: 'Events', translations: { ru: 'События' }, slug: 'guides/events' },
+                        {
+                            label: 'Reaching the platform',
+                            translations: { ru: 'Доступ к платформе' },
+                            slug: 'guides/platform',
+                        },
+                        {
+                            label: 'Storing data',
+                            translations: { ru: 'Хранение данных' },
+                            slug: 'guides/data',
+                        },
+                        {
+                            label: 'Your own endpoints',
+                            translations: { ru: 'Свои ручки' },
+                            slug: 'guides/endpoints',
+                        },
+                        {
+                            label: 'Mini-apps',
+                            translations: { ru: 'Мини-аппы' },
+                            slug: 'guides/mini-apps',
+                        },
+                        {
+                            label: 'Talking to the launcher',
+                            translations: { ru: 'Разговор с лаунчером' },
+                            slug: 'guides/launcher',
+                        },
+                        {
+                            label: 'Scheduled work',
+                            translations: { ru: 'Работа по расписанию' },
+                            slug: 'guides/tasks',
+                        },
+                        {
+                            label: 'Development mode',
+                            translations: { ru: 'Режим разработки' },
+                            slug: 'guides/dev-mode',
+                        },
                     ],
                 },
                 {
                     label: 'Reference',
+                    translations: { ru: 'Справочник' },
                     items: [
                         { label: 'cargo noro', slug: 'reference/cli' },
-                        { label: 'Event catalog', slug: 'reference/events' },
-                        { label: 'Capabilities', slug: 'reference/capabilities' },
-                        { label: 'Errors', slug: 'reference/errors' },
+                        {
+                            label: 'SDK domains',
+                            translations: { ru: 'Домены SDK' },
+                            slug: 'reference/sdk',
+                        },
+                        {
+                            label: 'Mini-app API',
+                            translations: { ru: 'API мини-аппа' },
+                            slug: 'reference/mini-app-api',
+                        },
+                        {
+                            label: 'Event catalog',
+                            translations: { ru: 'Каталог событий' },
+                            slug: 'reference/events',
+                        },
+                        {
+                            label: 'Capabilities',
+                            translations: { ru: 'Возможности' },
+                            slug: 'reference/capabilities',
+                        },
+                        { label: 'Errors', translations: { ru: 'Ошибки' }, slug: 'reference/errors' },
                         // Built by `cargo doc`, not by Astro — hence a raw
                         // link rather than a slug. The `base` prefix is not
                         // written here: Astro prepends it to a leading slash,
                         // and adding it manually gave /noro-shared/noro-shared/api/.
-                        { label: 'API reference (rustdoc)', link: '/api/', attrs: { target: '_blank' } },
+                        {
+                            label: 'API reference (rustdoc)',
+                            translations: { ru: 'Справочник API (rustdoc)' },
+                            link: '/api/',
+                            attrs: { target: '_blank' },
+                        },
                     ],
                 },
             ],

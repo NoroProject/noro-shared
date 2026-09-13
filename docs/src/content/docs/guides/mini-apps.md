@@ -100,6 +100,9 @@ of styling.
 
 ## What `useNoro()` gives you
 
+A summary below; every field in full is in the
+[Mini-app API](../../reference/mini-app-api/).
+
 ```ts
 const noro = useNoro()
 ```

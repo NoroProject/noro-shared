@@ -18,16 +18,35 @@ use std::path::Path;
 
 use noro_module_abi::events::{EventKind, ALL_EVENTS};
 
+mod domains;
+mod pairs;
+
 /// The groups, in the order they appear on the page. Named rather than derived
 /// from the data so a new group has to be given a heading deliberately — an
 /// unnamed one shows up under the fallback title and gets noticed.
-const GROUPS: &[(&str, &str)] = &[
-    ("player", "Players and signing in"),
-    ("access", "Roles, permissions, access"),
-    ("infra", "Servers, builds, game servers"),
-    ("moderation", "Moderation"),
-    ("economy", "Economy and the hub"),
+const GROUPS: &[(&str, &str, &str)] = &[
+    ("player", "Players and signing in", "Игроки и вход"),
+    (
+        "access",
+        "Roles, permissions, access",
+        "Роли, права, доступы",
+    ),
+    (
+        "infra",
+        "Servers, builds, game servers",
+        "Сборки, билды, игровые серверы",
+    ),
+    ("moderation", "Moderation", "Модерация"),
+    ("economy", "Economy and the hub", "Экономика и подсайт"),
 ];
+
+/// Язык страницы. Таблицы у них общие — имена событий и сигнатуры не
+/// переводятся, — а различается только то, что вокруг.
+#[derive(Clone, Copy, PartialEq)]
+pub enum Lang {
+    En,
+    Ru,
+}
 
 fn main() {
     let mut args = std::env::args().skip(1);
@@ -55,8 +74,50 @@ fn main() {
         println!("verified {} event links against {root}", ALL_EVENTS.len());
     }
 
+    // Русская половина живёт в `ru/`, там же, где её ждёт Starlight. Каталог
+    // создаётся здесь, а не руками: страница генерируемая, и пустой каталог в
+    // репозитории только вводил бы в заблуждение.
+    let ru = dir
+        .parent()
+        .map(|d| d.join("ru/reference"))
+        .unwrap_or_else(|| dir.join("ru"));
+
     fs::create_dir_all(dir).expect("create the reference directory");
-    fs::write(dir.join("events.md"), events_page()).expect("write events.md");
+    fs::create_dir_all(&ru).expect("create the russian reference directory");
+    fs::write(dir.join("events.md"), events_page(Lang::En)).expect("write events.md");
+    fs::write(ru.join("events.md"), events_page(Lang::Ru)).expect("write ru events.md");
+
+    // Справочник доменов — из исходников SDK. Путь относительный от корня
+    // репозитория: генератор запускается оттуда же, откуда собирается сайт.
+    let sdk = Path::new("crates/sdk/src");
+    let found = domains::read(sdk);
+    if found.is_empty() {
+        eprintln!("не найдено ни одного домена в {}", sdk.display());
+        std::process::exit(1);
+    }
+    // Полнота перевода — после генерации: сгенерированные страницы тоже
+    // ложатся парами, и считать до них значило бы ругаться на них самих.
+    let docs = dir
+        .ancestors()
+        .find(|p| p.join("astro.config.mjs").exists())
+        .unwrap_or(Path::new("docs"));
+    let untranslated = pairs::missing(docs, "ru");
+    if !untranslated.is_empty() {
+        eprintln!("{} страниц без перевода на ru:", untranslated.len());
+        for p in &untranslated {
+            eprintln!("  {p}");
+        }
+        eprintln!(
+            "положите перевод в docs/src/content/docs/ru/ — иначе сайт обещает язык, \
+             которого у половины страниц нет"
+        );
+        std::process::exit(1);
+    }
+
+    let calls: usize = found.iter().map(|d| d.calls.len()).sum();
+    fs::write(dir.join("sdk.md"), domains::page(&found, Lang::En)).expect("write sdk.md");
+    fs::write(ru.join("sdk.md"), domains::page(&found, Lang::Ru)).expect("write ru sdk.md");
+    println!("generated {} calls across {} domains", calls, found.len());
 
     println!(
         "generated {} events into {}",
@@ -79,9 +140,10 @@ fn check_links(root: &Path) -> Vec<String> {
         .collect()
 }
 
-fn events_page() -> String {
-    let mut page = String::from(
-        "---\n\
+fn events_page(lang: Lang) -> String {
+    let mut page = String::from(match lang {
+        Lang::En => {
+            "---\n\
          title: Event catalog\n\
          description: Every event a module can subscribe to, generated from the ABI.\n\
          ---\n\n\
@@ -101,19 +163,45 @@ fn events_page() -> String {
          A `Pre` handler is declared by taking its event as `&mut`: the reference is what\n\
          tells the master your answer is worth waiting for. All of them are delivered; the\n\
          two with conditions are described in [Events](../../guides/events/).\n\
-         :::\n",
-    );
+         :::\n"
+        }
+        Lang::Ru => {
+            "---\n\
+         title: Каталог событий\n\
+         description: Все события, на которые можно подписаться. Собирается из ABI.\n\
+         ---\n\n\
+         :::note\n\
+         Страница собирается из `ALL_EVENTS` в `noro-module-abi` при сборке сайта. Отстать\n\
+         от кода она не может, а править её руками бесполезно.\n\
+         :::\n\n\
+         Обработчик не называет событие строкой. `#[event]` берёт имя из типа аргумента —\n\
+         значит, столбец **Структура** и есть то, чем подписываются:\n\n\
+         ```rust\n\
+         #[event]\n\
+         fn on_join(e: PlayerJoined) -> Result<()> { Ok(()) }\n\
+         ```\n\n\
+         `Post` приходит после того, как всё случилось и записано. `Pre` — до действия, и\n\
+         существует ради того, чтобы его отменить или изменить.\n\n\
+         :::note[Про Pre]\n\
+         Обработчик `Pre` объявляется тем, что берёт событие по `&mut`: ссылка и говорит\n\
+         мастеру, что ответа стоит подождать. Доставляются все; у двух есть условия, и они\n\
+         описаны в [Событиях](../../guides/events/).\n\
+         :::\n"
+        }
+    });
 
-    for (group, title) in GROUPS {
+    for (group, title_en, title_ru) in GROUPS {
+        let title = if lang == Lang::Ru { title_ru } else { title_en };
         let rows: Vec<_> = ALL_EVENTS.iter().filter(|e| e.group == *group).collect();
         if rows.is_empty() {
             continue;
         }
 
-        let _ = write!(
-            page,
-            "\n## {title}\n\n| Event | Kind | Payload |\n|---|---|---|\n"
-        );
+        let head = match lang {
+            Lang::En => "| Event | Kind | Payload |",
+            Lang::Ru => "| Событие | Вид | Структура |",
+        };
+        let _ = write!(page, "\n## {title}\n\n{head}\n|---|---|---|\n");
         for e in rows {
             let kind = match e.kind {
                 EventKind::Pre => "`Pre`",
@@ -131,10 +219,14 @@ fn events_page() -> String {
 
     let unlisted: Vec<_> = ALL_EVENTS
         .iter()
-        .filter(|e| !GROUPS.iter().any(|(g, _)| *g == e.group))
+        .filter(|e| !GROUPS.iter().any(|(g, _, _)| *g == e.group))
         .collect();
     if !unlisted.is_empty() {
-        let _ = write!(page, "\n## Ungrouped\n\n| Event | Group |\n|---|---|\n");
+        let head = match lang {
+            Lang::En => "## Ungrouped\n\n| Event | Group |",
+            Lang::Ru => "## Без группы\n\n| Событие | Группа |",
+        };
+        let _ = write!(page, "\n{head}\n|---|---|\n");
         for e in unlisted {
             let _ = writeln!(page, "| `{}` | `{}` |", e.name, e.group);
         }

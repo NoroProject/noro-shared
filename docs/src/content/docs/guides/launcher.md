@@ -10,7 +10,39 @@ and the master is not open. A module is that half.
 Nothing here is a special case: it is the ordinary endpoint you already have, plus one
 frame for the direction an endpoint cannot cover.
 
-## The fork asks: an endpoint
+## Receiving what the fork sends
+
+There is no special macro. A frame from the launcher is an event like any other, and you
+subscribe to it the same way — by the type of the argument.
+
+```rust
+use noro_sdk::prelude::*;
+
+#[noro::module]
+impl Module {
+    #[event]
+    fn on_frame(e: LauncherMessage) -> Result<()> {
+        let kind = e.payload["kind"].as_str().unwrap_or("");
+        log::info(format!("{} sent {kind}", e.player.label()));
+        Ok(())
+    }
+}
+```
+
+The fork writes into the socket it already has open:
+
+```json
+{"t":"ModuleMessage","d":{"module":"your-id","payload":{"kind":"hello"}}}
+```
+
+The frame reaches **only the module it names** — this is one half of a conversation
+between a fork and its own module, and a neighbouring module reading it would surprise
+both of them. Receiving needs no `launcher` capability: the frame is addressed to you,
+and there is nothing to permit.
+
+There is no reply. Where you need one, use the endpoint.
+
+## Answering a question: an endpoint
 
 ```rust
 #[route(GET, "/my-fork/state")]
@@ -28,7 +60,7 @@ endpoint is reachable to any signed-in player unless your manifest says otherwis
 Use this whenever the fork is asking a question. It has a status code, a body and an
 error you can show.
 
-## The master speaks first: a frame
+## Speaking first: a frame outward
 
 ```rust
 #[event]
@@ -44,23 +76,6 @@ it has to survive being offline, write it down and let the fork ask on startup.
 
 `broadcast` reaches every signed-in launcher. `is_online` and `connected` answer who is
 there, and need only `launcher = ["read"]`.
-
-## The fork speaks first: a frame the other way
-
-```rust
-#[event]
-fn on_frame(e: LauncherMessage) -> Result<()> {
-    log::info(format!("{} says {}", e.player.label(), e.payload));
-    Ok(())
-}
-```
-
-The fork sends `{"t":"ModuleMessage","d":{"module":"your-id","payload":{…}}}` over the
-socket it already has open. The frame reaches **only the module it names** — this is one
-half of a conversation between a fork and its own module, and a neighbouring module
-reading it would surprise both of them.
-
-There is no reply. Where you need one, use the endpoint.
 
 ## What the payload looks like
 
