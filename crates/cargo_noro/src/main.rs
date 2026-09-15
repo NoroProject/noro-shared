@@ -1,3 +1,4 @@
+// This file exceeds 150 lines because it serves as the central CLI definition and dispatcher.
 //! `cargo noro` — создание, сборка и проверка модулей.
 //!
 //! Инструмент существует ради одной вещи, которой не может дать скрипт: он
@@ -8,6 +9,7 @@
 //! шаблоне. Они работали, но жили в шаблоне: исправление доезжало только до тех,
 //! кто создал проект заново.
 
+mod add;
 mod build;
 mod check;
 mod dev;
@@ -15,6 +17,7 @@ mod new;
 mod package;
 mod project;
 mod sign;
+mod ui;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
@@ -89,6 +92,13 @@ enum Cmd {
     },
     /// Пересобирать на каждое сохранение — для dev-режима мастера.
     Dev,
+    /// Добавить обработчик события, маршрут, задачу или миграцию.
+    Add {
+        #[command(subcommand)]
+        cmd: add::AddCmd,
+    },
+    /// Запустить локальную среду разработки UI мини-аппа с моками Noro.
+    Ui,
 }
 
 fn main() {
@@ -144,6 +154,14 @@ fn run() -> Result<()> {
             let p = project::find()?;
             check::run(&p, false)?;
             dev::run(&p)
+        }
+        Cmd::Add { cmd } => {
+            let p = project::find()?;
+            add::run(&p, cmd)
+        }
+        Cmd::Ui => {
+            let p = project::find()?;
+            ui::run(&p)
         }
     }
 }

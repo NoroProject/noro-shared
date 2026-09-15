@@ -84,6 +84,7 @@ notif-server-error = Server error: { $reason }
 notif-rate-limited = Too many attempts — try again in a minute
 notif-no-server-access = No access to this server
 notif-no-published-build = This server has no published build
+notif-build-pending-import = The build is not ready: the operator still has to upload mods whose authors forbid third-party downloads
 notif-build-files-restored = Build files were restored
 notif-launch-blocked = Launch blocked: a banned file was found in the game folder
 notif-support-sent = Logs sent — thank you
@@ -3124,3 +3125,114 @@ admin-modules-dev-linked = Module connected from folder
 # годятся всюду: до сих пор каждый раздел заводил своё «Отменить».
 common-cancel = Cancel
 common-confirm = Confirm
+
+admin-pending-title = Missing files
+admin-pending-subtitle = { $count } mods have to be downloaded by hand
+admin-pending-open = Open page
+admin-pending-skip = Drop this mod from the build
+admin-pending-drop = Drop the downloaded files here
+admin-pending-drop-hint = All at once — each file finds its own row by checksum
+admin-pending-accepted = Added: { $count }
+admin-pending-unmatched = { $name } did not match anything on the list
+admin-pending-upload-failed = Could not upload the files
+admin-pending-skip-failed = Could not drop the mod
+
+# ── Отказы мастера ──────────────────────────────────────────────────────────
+#
+# Имя ключа — код из `error_codes.rs`, где `_` заменён на `-`: код стабилен по
+# контракту, и переводу он служит именем. Ищет его `apiErrorMessage` в вебе;
+# нет ключа — показывается сообщение самого мастера.
+#
+# `$detail` — это самое сообщение. Оно передаётся всегда, а используют его
+# только те ключи, чей отказ без конкретики теряет смысл: какое право, какой
+# предел, какое имя файла. Остальные его молча игнорируют.
+
+err-unauthorized = Sign in to continue
+err-forbidden = Not allowed: { $detail }
+err-step-up-required = Confirm it is you to continue
+err-rate-limited = Too many attempts: { $detail }
+err-banned = The account is banned
+err-session-expired = The session has expired — sign in again
+err-login-challenge-invalid = The sign-in confirmation did not match
+err-user-required = This needs a signed-in player
+err-root-protected = The root account cannot be changed this way
+err-oauth-unknown-client = Unknown application
+err-oauth-bad-redirect = This return address is not registered for the application
+err-oauth-bad-scope = The application asked for access it cannot have
+err-bad-request = { $detail }
+err-validation-error = Check the highlighted fields
+err-bad-identifier = That identifier does not look right: { $detail }
+err-bad-enum = Unexpected value: { $detail }
+err-bad-duration = That is not a duration: { $detail }
+err-slug-invalid = The address may hold latin letters, digits and hyphens only
+err-slug-reserved = This address is reserved
+err-upload-field-missing = No file came with the request
+err-upload-bad-format = This file format is not accepted: { $detail }
+err-upload-too-large = The file is too large: { $detail }
+err-path-escapes-build = The path leads outside the build
+err-archive-broken = The archive could not be read: { $detail }
+err-checksum-mismatch = The checksum did not match — the file arrived damaged
+err-not-found = Not found
+err-conflict = { $detail }
+err-already-exists = This already exists
+err-already-claimed = Somebody has already taken it
+err-case-not-open = The case is closed
+err-player-not-found = No such player
+err-launcher-offline = The launcher is not connected
+err-wrapper-offline = The game server wrapper is not connected
+err-agent-offline = The game server agent is not connected
+err-no-published-build = This server has no published build
+err-already-lifted = It has already been lifted
+err-hub-disabled = This section is turned off here: { $detail }
+err-hub-archived = The hub is archived — it is read-only now
+err-hub-muted = You are muted on this hub
+err-bank-insufficient = Not enough money
+err-bank-card-too-young = The card is too new for this
+err-bank-no-primary-card = No primary card — open one first
+err-hub-feature-requires = This needs another section, and it is off: { $detail }
+err-town-limit-reached = The town has reached its limit: { $detail }
+err-town-chunk-taken = This chunk already belongs to somebody
+err-town-too-close = Too close to another town
+err-town-detached = The plot has to touch the town
+err-town-already-citizen = Already a citizen of a town
+err-town-playtime-required = Not enough time played for this: { $detail }
+err-community-limit-reached = The community has reached its limit: { $detail }
+err-community-inactive = The community is not active
+err-market-disabled-mode = This is not available in the current market mode
+err-market-no-cells = No free cells left at the point
+err-market-fill-expired = The time to stock the lot has run out
+err-market-not-stocked = The lot has not been stocked yet
+err-market-lot-gone = This lot is no longer on sale
+err-market-packs-gone = Fewer packs are left than you asked for
+err-market-trade-banned = Trading is closed for you
+err-market-lot-limit = You have as many lots as allowed: { $detail }
+err-market-point-full = The point has no room left
+err-market-cell-taken = This cell is taken
+err-market-cart-claimed = The cart has already been collected
+err-market-cell-claimed = The cell has already been emptied
+err-market-barrel-missing = The barrel is gone from the world
+err-delivery-not-offered = Delivery is not offered here
+err-delivery-courier-hidden = The courier is not visible right now
+err-delivery-bad-code = The handover code did not match
+err-delivery-limit = The delivery limit has been reached: { $detail }
+err-upstream-failed = An outside source did not answer: { $detail }
+err-no-compatible-version = No compatible version found
+err-not-distributable = The author forbids third-party downloads of this mod
+err-not-configured = Not configured yet: { $detail }
+err-build-pending-import = The build is waiting for mods whose authors forbid third-party downloads. Upload them or drop them from the build.
+err-module-not-found = No module with that identifier
+err-module-disabled = The module is turned off
+err-module-cancelled = A module refused this: { $detail }
+err-module-timeout = The module did not answer in time
+err-module-failed = The module failed: { $detail }
+err-module-capability-denied = The module asks for something it was not granted: { $detail }
+err-module-quota = The module ran out of its quota: { $detail }
+err-module-bad-package = The package could not be read: { $detail }
+err-module-api-mismatch = The module needs a different ABI version: { $detail }
+err-module-migration-failed = The module migrations did not apply: { $detail }
+err-module-route-not-found = The module did not declare this endpoint
+err-dm-too-long = The message is too long
+err-dm-empty = The message is empty
+err-dm-self = You cannot write to yourself
+err-dm-refused = The message was not delivered
+err-internal-error = Something broke on our side

@@ -7,6 +7,8 @@ Create, build, check and package a module for a
 cargo install cargo-noro
 
 cargo noro new my-module     # a working module, or --bare for an empty one
+cargo noro add event join    # scaffold event handler, route, task or migration
+cargo noro ui                # launch local web UI testbed with mock window.__noroUi
 cargo noro check             # the manifest, locale keys, migrations
 cargo noro dev               # rebuild on every save
 cargo noro package           # dist/my-module.noromod — this is what you upload

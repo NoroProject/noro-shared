@@ -125,16 +125,23 @@ fn main() {
         let sub = dir_of_lang.join("sdk");
         fs::create_dir_all(&sub).expect("create sdk directory");
         for d in &found {
-            fs::write(sub.join(format!("{}.md", d.name)), domains::domain_page(d, lang))
-                .expect("write domain page");
+            fs::write(
+                sub.join(format!("{}.md", d.name)),
+                domains::domain_page(d, lang),
+            )
+            .expect("write domain page");
         }
         // Методы на сущностях — своей страницей: они не домен, а способ звать
         // те же вызовы, и в списке доменов выглядели бы двадцать восьмым.
         let front = match lang {
-            Lang::En => "---\ntitle: Methods on entities\ndescription: Calling the same \
-                         domain functions from the thing you are holding.\n---\n",
-            Lang::Ru => "---\ntitle: Методы на сущностях\ndescription: Те же доменные \
-                         вызовы — от того, что уже в руках.\n---\n",
+            Lang::En => {
+                "---\ntitle: Methods on entities\ndescription: Calling the same \
+                         domain functions from the thing you are holding.\n---\n"
+            }
+            Lang::Ru => {
+                "---\ntitle: Методы на сущностях\ndescription: Те же доменные \
+                         вызовы — от того, что уже в руках.\n---\n"
+            }
         };
         fs::write(
             sub.join("fluent.md"),

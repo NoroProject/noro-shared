@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Noro Module UI Testbed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --noro-bg: #0d0e12;
+      --noro-card: #15171e;
+      --noro-border: #232734;
+      --noro-text: #e2e8f0;
+      --noro-muted: #94a3b8;
+      --noro-blue: #3b82f6;
+      --noro-blue-hover: #2563eb;
+      --noro-danger: #ef4444;
+      --noro-success: #10b981;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--noro-bg);
+      color: var(--noro-text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .testbed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: var(--noro-card);
+      border: 1px solid var(--noro-border);
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .testbed-title { font-weight: 600; font-size: 14px; color: var(--noro-blue); }
+    .testbed-badge { font-size: 12px; background: rgba(59,130,246,0.15); color: #60a5fa; padding: 2px 8px; border-radius: 4px; }
+    .noro-card { background: var(--noro-card); border: 1px solid var(--noro-border); border-radius: 8px; padding: 20px; }
+    .noro-btn { background: var(--noro-blue); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    .noro-btn:hover { background: var(--noro-blue-hover); }
+    .noro-input { background: #0d0e12; border: 1px solid var(--noro-border); color: #fff; padding: 8px 12px; border-radius: 6px; width: 100%; box-sizing: border-box; }
+    .ws-log { margin-top: 24px; background: #0a0b0e; border: 1px solid var(--noro-border); border-radius: 6px; padding: 12px; font-family: monospace; font-size: 12px; color: #a5b4fc; }
+  </style>
+</head>
+<body>
+  <div class="testbed-header">
+    <div class="testbed-title">Noro Mini-App Dev Environment</div>
+    <div class="testbed-badge">Mock window.__noroUi active</div>
+  </div>
+
+  <div id="app"></div>
+
+  <div class="ws-log" id="ws-log">
+    <strong>[Realtime WS Monitor]:</strong> Ready. Messages sent via <code>noro.ws.send()</code> will appear here.
+  </div>
+
+  <script type="module">
+    import * as Vue from 'vue'
+    import App from './ui/App.vue'
+
+    window.__noroVue = Vue
+
+    const mockUser = {
+      id: '00000000-0000-0000-0000-000000000001',
+      username: 'PlayerOne',
+      mc_username: 'PlayerOne',
+    }
+
+    const wsListeners = new Set()
+    function logWs(text) {
+      const el = document.getElementById('ws-log')
+      if (el) el.innerHTML += `<br>[${new Date().toLocaleTimeString()}] ${text}`
+    }
+
+    // Mock design system & context for window.__noroUi
+    window.__noroUi = {
+      NoroCard: {
+        props: ['title', 'icon', 'subtitle'],
+        template: `<div class="noro-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h2 style="margin:0;font-size:18px;">{{ title }}</h2>
+            <div style="color:#94a3b8;font-size:13px;">{{ subtitle }}</div>
+          </div>
+          <slot />
+        </div>`
+      },
+      AtomButton: {
+        props: ['loading', 'disabled', 'variant'],
+        template: `<button class="noro-btn" :disabled="loading || disabled" @click="$emit('click')"><slot /></button>`
+      },
+      AtomInput: {
+        props: ['modelValue', 'placeholder', 'label'],
+        template: `<div style="margin-bottom:12px;">
+          <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:4px;" v-if="label">{{ label }}</label>
+          <input class="noro-input" :value="modelValue" :placeholder="placeholder" @input="$emit('update:modelValue', $event.target.value)" />
+        </div>`
+      },
+      AtomBadge: {
+        props: ['tone', 'mono'],
+        template: `<span class="testbed-badge"><slot /></span>`
+      },
+      EmptyState: {
+        props: ['title', 'text'],
+        template: `<div style="text-align:center;padding:32px;color:#94a3b8;"><strong>{{ title }}</strong><p>{{ text }}</p></div>`
+      },
+      useNoro() {
+        return {
+          user: mockUser,
+          api(path, opts = {}) {
+            console.log('[Mock API]', (opts.method || 'GET'), path, opts.body || '')
+            return Promise.resolve({ ok: true, data: { status: 'mock_success' } })
+          },
+          t(key, fallback) { return fallback || key },
+          notify: {
+            ok(text) { alert('✅ ' + text) },
+            fail(err) { alert('❌ ' + err) },
+          },
+          can() { return true },
+          confirm({ title, text }) { return Promise.resolve(window.confirm(`${title}\n${text || ''}`)) },
+          format: {
+            money(m) { return (m / 100).toFixed(2) + ' ¤' },
+            date(d) { return new Date(d).toLocaleDateString() },
+            ago() { return 'только что' }
+          },
+          ws: {
+            send(payload) {
+              logWs('OUT (client -> module): ' + JSON.stringify(payload))
+            },
+            on(fn) {
+              wsListeners.add(fn)
+              return () => wsListeners.delete(fn)
+            }
+          }
+        }
+      },
+      useModuleWs() {
+        return this.useNoro().ws
+      }
+    }
+
+    Vue.createApp(App).mount('#app')
+  </script>
+</body>
+</html>

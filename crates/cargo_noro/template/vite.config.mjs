@@ -13,8 +13,35 @@
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 
-export default defineConfig({
-    plugins: [vue()],
+const noroDevPlugin = {
+    name: 'noro-ui-dev-mock',
+    resolveId(id) {
+        if (id === '@noroproject/module-ui') {
+            return '\0noro-ui-virtual'
+        }
+    },
+    load(id) {
+        if (id === '\0noro-ui-virtual') {
+            return `
+const ui = (typeof window !== 'undefined' ? window.__noroUi : null) || {};
+export const NoroCard = ui.NoroCard;
+export const AtomButton = ui.AtomButton;
+export const AtomInput = ui.AtomInput;
+export const AtomBadge = ui.AtomBadge;
+export const EmptyState = ui.EmptyState;
+export const useNoro = () => (ui.useNoro ? ui.useNoro() : {});
+export const useModuleWs = () => (ui.useModuleWs ? ui.useModuleWs() : (ui.useNoro ? ui.useNoro().ws : null));
+export default ui;
+`
+        }
+    },
+}
+
+export default defineConfig(({ command }) => ({
+    plugins: [
+        vue(),
+        ...(command === 'serve' ? [noroDevPlugin] : []),
+    ],
     build: {
         outDir: 'web',
         emptyOutDir: false,
