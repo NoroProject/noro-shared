@@ -1,6 +1,5 @@
 //! Helpers for unit testing module functions without running the master server.
 
-use chrono::Utc;
 use noro_module_abi::context::{ActorRef, EventCtx, Origin};
 use noro_module_abi::events::player::WebMessage;
 use noro_module_abi::http::HttpRequest;
@@ -11,13 +10,13 @@ use uuid::Uuid;
 /// Constructs a mock [`Player`] for tests.
 pub fn mock_player(name: &str) -> Player {
     Player {
-        id: Uuid::new_v4(),
+        id: Uuid::from_u128(0x0123_4567_89ab_cdef_0123_4567_89ab_cdef),
         name: Some(name.to_string()),
-        mc_uuid: Some(Uuid::new_v4()),
+        mc_uuid: Some(Uuid::from_u128(0xfeff_0000_1111_2222_3333_4444_5555_6666)),
         discord_id: None,
         roles: vec!["player".to_string()],
         banned: false,
-        created_at: Utc::now(),
+        created_at: chrono::DateTime::from_timestamp(1_700_000_000, 0).unwrap_or_default(),
         first_join: false,
     }
 }
@@ -30,7 +29,7 @@ pub fn mock_context() -> EventCtx {
         server_id: None,
         server_slug: None,
         game_server_id: None,
-        at: Utc::now(),
+        at: chrono::DateTime::from_timestamp(1_700_000_000, 0).unwrap_or_default(),
         depth: 0,
     }
 }
