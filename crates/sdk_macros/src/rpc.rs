@@ -46,8 +46,8 @@ pub fn process_rpc(
             ::noro_sdk::extism_pdk::Json(payload): ::noro_sdk::extism_pdk::Json<::serde_json::Value>,
         ) -> ::noro_sdk::extism_pdk::FnResult<::noro_sdk::extism_pdk::Json<::serde_json::Value>> {
             let request = ::noro_sdk::abi::http::HttpRequest {
-                method: "RPC".into(),
-                path: #rpc_name.into(),
+                method: "RPC".to_string(),
+                path: #rpc_name.to_string(),
                 query: ::serde_json::json!({}),
                 body: Some(payload),
                 user: None,
