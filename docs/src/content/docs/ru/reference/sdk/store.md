@@ -3,10 +3,6 @@ title: "store"
 description: "The module's own storage."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 The module's own storage.
 
 | Вызов | Что делает | Нужно |

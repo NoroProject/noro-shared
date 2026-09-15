@@ -3,10 +3,6 @@ title: "access"
 description: "Access to servers and builds."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Access to servers and builds.
 
 | Вызов | Что делает | Нужно |

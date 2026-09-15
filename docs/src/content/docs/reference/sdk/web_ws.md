@@ -3,10 +3,6 @@ title: "web_ws"
 description: "Talking to the player's web browser tab."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Talking to the player's web browser tab.
 
 | Call | What it does | Needs |

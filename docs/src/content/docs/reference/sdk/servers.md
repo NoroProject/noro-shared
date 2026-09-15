@@ -3,10 +3,6 @@ title: "servers"
 description: "Server builds, their client builds, and the game servers behind them."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Server builds, their client builds, and the game servers behind them.
 
 | Call | What it does | Needs |

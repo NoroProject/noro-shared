@@ -3,10 +3,6 @@ title: "news"
 description: "The instance's news."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 The instance's news.
 
 | Call | What it does | Needs |

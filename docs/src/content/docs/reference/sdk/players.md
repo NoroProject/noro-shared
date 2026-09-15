@@ -3,10 +3,6 @@ title: "players"
 description: "Players."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Players.
 
 | Call | What it does | Needs |

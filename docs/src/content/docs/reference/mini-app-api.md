@@ -37,6 +37,28 @@ said.
 | `options.method` | `'GET' \| 'POST'` | defaults by presence of a body |
 | `options.body` | `object` | sent as JSON |
 
+## `noro.ws` — realtime WebSocket
+
+Full-duplex real-time communication between your mini-app and the module backend without manual socket setup.
+
+```ts
+// Subscribe to messages pushed by your module:
+const unsubscribe = noro.ws.on<OrderUpdate>((data) => {
+    console.log('Received frame:', data)
+})
+
+// Unsubscribe when done:
+unsubscribe()
+
+// Send a frame from the browser tab to your module:
+noro.ws.send({ action: 'bid', amount: 100 })
+```
+
+| Method | Type | Notes |
+|---|---|---|
+| `ws.on<T>(callback)` | `(data: T) => void` | registers listener; returns unsubscribe function |
+| `ws.send(payload)` | `(payload: any) => void` | pushes frame to module; received as `WebMessage` |
+
 ## `noro.platform` — reading the panel
 
 Things the panel already knows and you should not re-implement: who the viewer is, what

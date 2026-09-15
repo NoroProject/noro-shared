@@ -3,10 +3,6 @@ title: "news"
 description: "The instance's news."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 The instance's news.
 
 | Вызов | Что делает | Нужно |

@@ -7,7 +7,6 @@ use uuid::Uuid;
 use crate::context::EventCtx;
 use crate::entity::{Build, GameServer, Server};
 use crate::events::impl_event;
-use crate::player::Player;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerCreated {
@@ -116,35 +115,6 @@ pub struct ModuleDisabled {
     pub automatic: bool,
 }
 
-/// A fork of the launcher sent this module a frame.
-///
-/// Delivered **only to the module the frame named**, not to everyone
-/// subscribed: the frame is one half of a conversation between a fork and its
-/// own module, and a neighbour reading it would be a surprise to both.
-///
-/// The shape of `payload` is yours. The protocol carries it as opaque JSON on
-/// purpose — a described shape would make every change to your fork a release
-/// of the wire contract.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct LauncherMessage {
-    pub ctx: EventCtx,
-    /// Whose launcher sent it. Always a signed-in player: an anonymous socket
-    /// has nothing to address and gets no frames through.
-    pub player: Player,
-    pub payload: serde_json::Value,
-}
-
-/// A frame sent by a player from their open website tab.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct WebMessage {
-    pub ctx: EventCtx,
-    /// Who sent it. Always an authenticated player.
-    pub player: Player,
-    pub payload: serde_json::Value,
-}
-
-impl_event!(LauncherMessage, super::EV_LAUNCHER_MESSAGE, Post);
-impl_event!(WebMessage, super::EV_WEB_MESSAGE, Post);
 impl_event!(ServerCreated, super::EV_SERVER_CREATED, Post);
 impl_event!(ServerUpdated, super::EV_SERVER_UPDATED, Post);
 impl_event!(ServerDeleted, super::EV_SERVER_DELETED, Post);

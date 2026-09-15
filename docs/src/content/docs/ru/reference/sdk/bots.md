@@ -3,10 +3,6 @@ title: "bots"
 description: "A face of your own to write from."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 A face of your own to write from.
 
 | Вызов | Что делает | Нужно |

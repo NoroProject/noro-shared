@@ -17,6 +17,20 @@ There is no event name anywhere. `#[event]` reads it from the argument type, whi
 why the [event catalog](../../reference/events/) lists the payload struct next to each
 name — that struct *is* how you subscribe.
 
+### Realtime browser messages: WebMessage
+
+When a player interacts with your web mini-app and sends actions over WebSocket via `noro.ws.send(...)`, the master routes them directly to your module as a `WebMessage` event:
+
+```rust
+#[event]
+fn on_web_action(e: WebMessage) -> Result<()> {
+    log::info(format!("Action from {}: {:?}", e.player.label(), e.payload));
+    Ok(())
+}
+```
+
+See the dedicated [Realtime & WebSockets](../websockets/) guide for details.
+
 ## Where an event happened
 
 Every event carries an `EventCtx`. On an instance with several server builds an event

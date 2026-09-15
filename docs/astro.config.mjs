@@ -95,6 +95,11 @@ export default defineConfig({
                             slug: 'guides/mini-apps',
                         },
                         {
+                            label: 'Realtime & WebSockets',
+                            translations: { ru: 'Веб-сокеты и Realtime' },
+                            slug: 'guides/websockets',
+                        },
+                        {
                             label: 'Talking to the launcher',
                             translations: { ru: 'Разговор с лаунчером' },
                             slug: 'guides/launcher',

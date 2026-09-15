@@ -3,10 +3,6 @@ title: "cases"
 description: "Moderation cases."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Moderation cases.
 
 | Вызов | Что делает | Нужно |

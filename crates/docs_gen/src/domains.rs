@@ -389,15 +389,6 @@ pub fn domain_page(d: &Domain, lang: crate::Lang) -> String {
             escape_front(&d.summary)
         }
     );
-    page.push_str(match lang {
-        crate::Lang::En => {
-            ":::note\nGenerated from the SDK's own sources. Editing it by hand has no \
-             effect.\n:::\n\n"
-        }
-        crate::Lang::Ru => {
-            ":::note\nСобирается из исходников самого SDK. Править руками бесполезно.\n:::\n\n"
-        }
-    });
     if !d.summary.is_empty() {
         let _ = writeln!(page, "{}\n", d.summary);
     }
@@ -433,10 +424,6 @@ pub fn page(domains: &[Domain], lang: crate::Lang) -> String {
          title: SDK domains\n\
          description: Every call the SDK offers, with what it needs granted.\n\
          ---\n\n\
-         :::note\n\
-         Generated from the SDK's own sources when the site is built. It cannot fall\n\
-         behind the code, and editing it by hand has no effect.\n\
-         :::\n\n\
          Each domain is one module of `noro_sdk`, and one line in `[capabilities]`. An\n\
          action the operator withheld answers `CapabilityDenied` naming what is missing;\n\
          it does not crash your module.\n\n\
@@ -448,10 +435,6 @@ pub fn page(domains: &[Domain], lang: crate::Lang) -> String {
          title: Домены SDK\n\
          description: Все вызовы SDK и то, что для каждого нужно выдать.\n\
          ---\n\n\
-         :::note\n\
-         Собирается из исходников самого SDK при сборке сайта. Отстать от кода не может,\n\
-         а править руками бесполезно.\n\
-         :::\n\n\
          Домен — это один модуль `noro_sdk` и одна строка в `[capabilities]`. Действие,\n\
          которое оператор не выдал, отвечает `CapabilityDenied` с именем недостающего —\n\
          модуль от этого не падает.\n\n\

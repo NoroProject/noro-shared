@@ -3,10 +3,6 @@ title: "cases"
 description: "Moderation cases."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Moderation cases.
 
 | Call | What it does | Needs |

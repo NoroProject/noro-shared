@@ -3,10 +3,6 @@ title: "permissions"
 description: "Permissions."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Permissions.
 
 | Вызов | Что делает | Нужно |

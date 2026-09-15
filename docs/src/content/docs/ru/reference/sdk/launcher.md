@@ -3,10 +3,6 @@ title: "launcher"
 description: "Talking to the launcher."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Talking to the launcher.
 
 | Вызов | Что делает | Нужно |

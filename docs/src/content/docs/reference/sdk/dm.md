@@ -3,10 +3,6 @@ title: "dm"
 description: "Private messages between players."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Private messages between players.
 
 | Call | What it does | Needs |

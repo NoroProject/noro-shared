@@ -3,11 +3,6 @@ title: SDK domains
 description: Every call the SDK offers, with what it needs granted.
 ---
 
-:::note
-Generated from the SDK's own sources when the site is built. It cannot fall
-behind the code, and editing it by hand has no effect.
-:::
-
 Each domain is one module of `noro_sdk`, and one line in `[capabilities]`. An
 action the operator withheld answers `CapabilityDenied` naming what is missing;
 it does not crash your module.

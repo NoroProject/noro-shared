@@ -3,10 +3,6 @@ title: "events"
 description: "Events of your own, for other modules to handle."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Events of your own, for other modules to handle.
 
 | Вызов | Что делает | Нужно |

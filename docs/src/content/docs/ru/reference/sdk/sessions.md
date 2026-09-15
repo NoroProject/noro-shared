@@ -3,10 +3,6 @@ title: "sessions"
 description: "A player's sessions — the launchers and browsers they are signed in from."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 A player's sessions — the launchers and browsers they are signed in from.
 
 | Вызов | Что делает | Нужно |

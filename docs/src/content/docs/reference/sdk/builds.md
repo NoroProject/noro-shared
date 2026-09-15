@@ -3,10 +3,6 @@ title: "builds"
 description: "Client builds and the files inside them."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Client builds and the files inside them.
 
 | Call | What it does | Needs |

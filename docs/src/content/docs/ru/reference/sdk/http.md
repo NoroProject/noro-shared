@@ -3,10 +3,6 @@ title: "http"
 description: "Calling out to the internet."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Calling out to the internet.
 
 | Вызов | Что делает | Нужно |

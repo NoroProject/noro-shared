@@ -3,10 +3,6 @@ title: "roles"
 description: "Roles."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Roles.
 
 | Call | What it does | Needs |

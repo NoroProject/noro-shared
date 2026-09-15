@@ -3,10 +3,6 @@ title: "permissions"
 description: "Permissions."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Permissions.
 
 | Call | What it does | Needs |

@@ -3,10 +3,6 @@ title: "identities"
 description: "Linked logins: Discord, Twitch, Google, anything else a player signs in with."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Linked logins: Discord, Twitch, Google, anything else a player signs in with.
 
 | Call | What it does | Needs |

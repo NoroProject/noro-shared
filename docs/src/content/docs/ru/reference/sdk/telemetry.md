@@ -3,10 +3,6 @@ title: "telemetry"
 description: "How a game server is holding up."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 How a game server is holding up.
 
 | Вызов | Что делает | Нужно |

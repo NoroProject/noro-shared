@@ -3,10 +3,6 @@ title: "hub"
 description: "A server's hub: the feed, its members, towns, market, court, petitions and"
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 A server's hub: the feed, its members, towns, market, court, petitions and
 
 | Вызов | Что делает | Нужно |

@@ -3,11 +3,6 @@ title: Каталог событий
 description: Все события, на которые можно подписаться. Собирается из ABI.
 ---
 
-:::note
-Страница собирается из `ALL_EVENTS` в `noro-module-abi` при сборке сайта. Отстать
-от кода она не может, а править её руками бесполезно.
-:::
-
 Обработчик не называет событие строкой. `#[event]` берёт имя из типа аргумента —
 значит, столбец **Структура** и есть то, чем подписываются:
 
@@ -43,6 +38,8 @@ fn on_join(e: PlayerJoined) -> Result<()> { Ok(()) }
 | `user.skin_changed` | `Post` | [`UserSkinChanged`](../../api/noro_module_abi/events/player/struct.UserSkinChanged.html) |
 | `user.identity_linked` | `Post` | [`IdentityLinked`](../../api/noro_module_abi/events/player/struct.IdentityLinked.html) |
 | `user.identity_unlinked` | `Post` | [`IdentityUnlinked`](../../api/noro_module_abi/events/player/struct.IdentityUnlinked.html) |
+| `launcher.message` | `Post` | [`LauncherMessage`](../../api/noro_module_abi/events/player/struct.LauncherMessage.html) |
+| `web.message` | `Post` | [`WebMessage`](../../api/noro_module_abi/events/player/struct.WebMessage.html) |
 
 ## Личные сообщения
 
@@ -81,8 +78,6 @@ fn on_join(e: PlayerJoined) -> Result<()> { Ok(()) }
 | `instance.setting_changed` | `Post` | [`InstanceSettingChanged`](../../api/noro_module_abi/events/infra/struct.InstanceSettingChanged.html) |
 | `module.enabled` | `Post` | [`ModuleEnabled`](../../api/noro_module_abi/events/infra/struct.ModuleEnabled.html) |
 | `module.disabled` | `Post` | [`ModuleDisabled`](../../api/noro_module_abi/events/infra/struct.ModuleDisabled.html) |
-| `launcher.message` | `Post` | [`LauncherMessage`](../../api/noro_module_abi/events/infra/struct.LauncherMessage.html) |
-| `web.message` | `Post` | [`WebMessage`](../../api/noro_module_abi/events/infra/struct.WebMessage.html) |
 
 ## Модерация
 

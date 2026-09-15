@@ -3,10 +3,6 @@ title: "punish"
 description: "Sanctions."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Sanctions.
 
 | Call | What it does | Needs |

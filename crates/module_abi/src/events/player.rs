@@ -176,6 +176,33 @@ pub struct IdentityUnlinked {
     pub provider: String,
 }
 
+/// A fork of the launcher sent this module a frame.
+///
+/// Delivered **only to the module the frame named**, not to everyone
+/// subscribed: the frame is one half of a conversation between a fork and its
+/// own module, and a neighbour reading it would be a surprise to both.
+///
+/// The shape of `payload` is yours. The protocol carries it as opaque JSON on
+/// purpose — a described shape would make every change to your fork a release
+/// of the wire contract.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LauncherMessage {
+    pub ctx: EventCtx,
+    /// Whose launcher sent it. Always a signed-in player: an anonymous socket
+    /// has nothing to address and gets no frames through.
+    pub player: Player,
+    pub payload: serde_json::Value,
+}
+
+/// A frame sent by a player from their open website tab.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WebMessage {
+    pub ctx: EventCtx,
+    /// Who sent it. Always an authenticated player.
+    pub player: Player,
+    pub payload: serde_json::Value,
+}
+
 impl_event!(PlayerPreChat, super::EV_PLAYER_PRE_CHAT, Pre);
 impl_event!(PlayerPreJoin, super::EV_PLAYER_PRE_JOIN, Pre);
 impl_event!(PlayerJoined, super::EV_PLAYER_JOINED, Post);
@@ -190,3 +217,5 @@ impl_event!(UserRenamed, super::EV_USER_RENAMED, Post);
 impl_event!(UserSkinChanged, super::EV_USER_SKIN_CHANGED, Post);
 impl_event!(IdentityLinked, super::EV_IDENTITY_LINKED, Post);
 impl_event!(IdentityUnlinked, super::EV_IDENTITY_UNLINKED, Post);
+impl_event!(LauncherMessage, super::EV_LAUNCHER_MESSAGE, Post);
+impl_event!(WebMessage, super::EV_WEB_MESSAGE, Post);

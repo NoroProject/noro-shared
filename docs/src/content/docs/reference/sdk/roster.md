@@ -3,10 +3,6 @@ title: "roster"
 description: "Who is in game right now."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Who is in game right now.
 
 | Call | What it does | Needs |

@@ -3,10 +3,6 @@ title: "restarts"
 description: "Restart schedules of game servers."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Restart schedules of game servers.
 
 | Вызов | Что делает | Нужно |

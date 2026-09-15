@@ -3,10 +3,6 @@ title: "db"
 description: "Your own tables."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Your own tables.
 
 | Call | What it does | Needs |

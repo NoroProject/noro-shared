@@ -3,10 +3,6 @@ title: "roster"
 description: "Who is in game right now."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Who is in game right now.
 
 | Вызов | Что делает | Нужно |

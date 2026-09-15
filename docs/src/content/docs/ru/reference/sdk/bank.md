@@ -3,10 +3,6 @@ title: "bank"
 description: "The hub's bank."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 The hub's bank.
 
 | Вызов | Что делает | Нужно |

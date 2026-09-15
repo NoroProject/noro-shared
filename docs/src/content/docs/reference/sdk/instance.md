@@ -3,10 +3,6 @@ title: "instance"
 description: "Instance settings."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Instance settings.
 
 | Call | What it does | Needs |

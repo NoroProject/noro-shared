@@ -3,10 +3,6 @@ title: "bank"
 description: "The hub's bank."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 The hub's bank.
 
 | Call | What it does | Needs |

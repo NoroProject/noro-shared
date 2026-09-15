@@ -3,10 +3,6 @@ title: "access"
 description: "Access to servers and builds."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Access to servers and builds.
 
 | Call | What it does | Needs |

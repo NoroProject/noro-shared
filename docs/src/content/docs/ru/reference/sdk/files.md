@@ -3,10 +3,6 @@ title: "files"
 description: "The shared file store."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 The shared file store.
 
 | Вызов | Что делает | Нужно |

@@ -3,10 +3,6 @@ title: "instance"
 description: "Instance settings."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Instance settings.
 
 | Вызов | Что делает | Нужно |

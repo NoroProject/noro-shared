@@ -188,10 +188,6 @@ fn events_page(lang: Lang) -> String {
          title: Event catalog\n\
          description: Every event a module can subscribe to, generated from the ABI.\n\
          ---\n\n\
-         :::note\n\
-         This page is generated from `ALL_EVENTS` in `noro-module-abi` when the site is\n\
-         built. It cannot fall behind the code, and editing it by hand has no effect.\n\
-         :::\n\n\
          A handler names no event by string. `#[event]` takes the name from the type of\n\
          its argument, so the **Payload** column is also what you subscribe with:\n\n\
          ```rust\n\
@@ -211,10 +207,6 @@ fn events_page(lang: Lang) -> String {
          title: Каталог событий\n\
          description: Все события, на которые можно подписаться. Собирается из ABI.\n\
          ---\n\n\
-         :::note\n\
-         Страница собирается из `ALL_EVENTS` в `noro-module-abi` при сборке сайта. Отстать\n\
-         от кода она не может, а править её руками бесполезно.\n\
-         :::\n\n\
          Обработчик не называет событие строкой. `#[event]` берёт имя из типа аргумента —\n\
          значит, столбец **Структура** и есть то, чем подписываются:\n\n\
          ```rust\n\

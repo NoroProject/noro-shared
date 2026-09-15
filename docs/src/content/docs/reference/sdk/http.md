@@ -3,10 +3,6 @@ title: "http"
 description: "Calling out to the internet."
 ---
 
-:::note
-Generated from the SDK's own sources. Editing it by hand has no effect.
-:::
-
 Calling out to the internet.
 
 | Call | What it does | Needs |

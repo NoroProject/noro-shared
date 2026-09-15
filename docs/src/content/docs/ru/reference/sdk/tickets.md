@@ -3,10 +3,6 @@ title: "tickets"
 description: "Conversations with players."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Conversations with players.
 
 | Вызов | Что делает | Нужно |

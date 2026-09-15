@@ -3,10 +3,6 @@ title: "agent"
 description: "Things done to a player in the running game."
 ---
 
-:::note
-Собирается из исходников самого SDK. Править руками бесполезно.
-:::
-
 Things done to a player in the running game.
 
 | Вызов | Что делает | Нужно |
