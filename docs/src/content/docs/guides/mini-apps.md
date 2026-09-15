@@ -118,6 +118,7 @@ const noro = useNoro()
 | `confirm({ title, text?, danger? })` | asks, with the panel's dialog |
 | `format.duration` · `money` · `date` · `ago` | the panel's own formatting. `duration` takes **seconds** — the unit the master speaks in — and reads them out down to the second |
 | `paged(path, opts?)` | a paginated list from your endpoint |
+| `ws.on(cb)` · `ws.send(data)` | realtime WebSocket messages between module and web UI |
 | `platform.*` | reading platform data |
 
 ### Deciding what to show
@@ -153,6 +154,30 @@ await list.load()
 Your endpoint answers `{ items, total }` — the shape every list in this platform answers
 with — and you get refs to bind straight into a template, with debounced search and page
 state already wired. `list.refresh()` re-reads the current page after your own mutation.
+
+### Realtime WebSocket messaging
+
+When you need to push realtime updates from the master to players' browser tabs without polling, use `noro.ws`:
+
+```ts
+// Listen for frames pushed by your module:
+const stop = noro.ws.on<{ type: string; reward: number }>((data) => {
+    if (data.type === 'reward') notify.ok(`You received ${data.reward} points!`)
+})
+
+// Send an action frame from the web tab back to your module:
+noro.ws.send({ action: 'ping' })
+```
+
+On the module's backend:
+```rust
+// Push to a single player's browser tab:
+web_ws::send(player_id, json!({ "type": "reward", "reward": 50 }))?;
+
+// Or broadcast to every player with an open website tab:
+web_ws::broadcast(json!({ "type": "announcement", "text": "Event started!" }))?;
+```
+Requires capability `web_ws = ["notify"]`.
 
 ### Reading platform data
 
