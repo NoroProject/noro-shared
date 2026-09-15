@@ -57,6 +57,7 @@ extern "ExtismHost" {
     fn gameservers_list(input: String) -> String;
     fn gameserver_get(input: String) -> String;
     fn gameserver_maintenance(input: String) -> String;
+    fn gameserver_command(input: String) -> String;
     fn event_emit(input: String) -> String;
     fn hub_feed(input: String) -> String;
     fn hub_members(input: String) -> String;
@@ -392,6 +393,12 @@ pub(crate) fn gameserver_maintenance_call<A: Serialize, R: DeserializeOwned>(
     arg: A,
 ) -> Result<R, ModuleError> {
     call!(gameserver_maintenance, arg)
+}
+
+pub(crate) fn gameserver_command_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(gameserver_command, arg)
 }
 pub(crate) fn event_emit_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(event_emit, arg)

@@ -96,6 +96,25 @@ pub fn parse_every(s: &str) -> Option<u64> {
     Some(n * mult)
 }
 
+/// Validates whether a schedule string is either an interval ("30s", "1h")
+/// or a 5-field cron expression ("cron:0 4 * * *" or "0 4 * * *").
+pub fn is_valid_schedule(s: &str) -> bool {
+    let s = s.trim();
+    if parse_every(s).is_some() {
+        return true;
+    }
+    let cron_part = s.strip_prefix("cron:").unwrap_or(s);
+    let parts: Vec<&str> = cron_part.split_whitespace().collect();
+    if parts.len() != 5 {
+        return false;
+    }
+    parts.iter().all(|p| {
+        !p.is_empty()
+            && p.chars()
+                .all(|c| c.is_ascii_digit() || matches!(c, '*' | '/' | '-' | ','))
+    })
+}
+
 /// Whether a module is compatible with this ABI version. The major is compared.
 /// Совместима ли требуемая версия ABI с той, что даёт мастер.
 ///

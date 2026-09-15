@@ -80,6 +80,7 @@ pub mod cases;
 pub mod db;
 pub mod dm;
 pub mod events;
+pub mod extract;
 pub mod files;
 pub mod fluent;
 pub mod host;
@@ -162,11 +163,12 @@ pub mod prelude {
         Account, ActorRef, Build, BuildFile, EventCtx, GameServer, IntoPlayerRef, Origin, Player,
         PlayerRef, Punishment, Role, Server,
     };
+    pub use crate::extract::{AuthUser, FromRequest, OptionalUser, QueryParams, RawParams};
     pub use crate::{
-        access, agent, bail, bank, bots, builds, cases, db, dm, ensure, events, files, fluent,
-        http, hub, identities, instance, launcher, log, news, noro, now, permissions, players,
-        punish, query, restarts, roles, roster, servers, sessions, store, telemetry, tickets,
-        web_ws, Result,
+        access, agent, bail, bank, bots, builds, cases, db, dm, ensure, events, extract, files,
+        fluent, http, hub, identities, instance, launcher, log, news, noro, now, permissions,
+        players, punish, query, restarts, roles, roster, servers, sessions, store, telemetry,
+        tickets, web_ws, Result,
     };
     // Методы на сущностях приходят трейтами: `Player` определён в
     // `noro-module-abi`, и добавить ему обычные методы из SDK нельзя. В
@@ -182,6 +184,7 @@ pub mod prelude {
     // Same idea: almost every module builds a JSON value somewhere — a frame to
     // a launcher, a hub document, an answer from an endpoint — and adding the
     // dependency by hand just to reach `json!` is a step with no decision in it.
+    pub use crate::noro::Settings;
     pub use crate::serde_json;
     pub use crate::serde_json::json;
     pub use extism_pdk::{plugin_fn, FnResult, Json};

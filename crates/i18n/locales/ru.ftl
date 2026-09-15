@@ -3125,6 +3125,19 @@ admin-modules-dev-hint = Мастер будет читать модуль с д
 admin-modules-dev-path = Каталог с manifest.toml
 admin-modules-dev-connect = Подключить
 admin-modules-dev-linked = Модуль подключён из каталога
+admin-modules-explorer-title = Тестирование API
+admin-modules-explorer-hint = Вызов ручек модуля напрямую через мастер-сервер
+admin-modules-explorer-route = Ручка
+admin-modules-explorer-custom = Свой путь
+admin-modules-explorer-method = Метод
+admin-modules-explorer-path = Путь
+admin-modules-explorer-query = Параметры строки запроса
+admin-modules-explorer-query-placeholder = key=val&limit=10
+admin-modules-explorer-body = Тело запроса (JSON)
+admin-modules-explorer-send = Отправить запрос
+admin-modules-explorer-response = Ответ
+admin-modules-explorer-empty = Выберите ручку и нажмите «Отправить запрос», чтобы увидеть результат
+admin-modules-explorer-error = Ошибка запроса
 
 common-cancel = Отменить
 common-confirm = Подтвердить

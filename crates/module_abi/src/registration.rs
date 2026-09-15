@@ -148,9 +148,9 @@ impl Registration {
         }
 
         for t in &self.tasks {
-            if crate::validate::parse_every(&t.every).is_none() {
+            if !crate::validate::is_valid_schedule(&t.every) {
                 out.push(format!(
-                    "the task interval `{}` did not parse: expected 30s, 5m, 1h",
+                    "the task interval `{}` did not parse: expected 30s, 5m, 1h, or cron:0 4 * * *",
                     t.every
                 ));
             }

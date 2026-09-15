@@ -13,6 +13,7 @@ mod add;
 mod build;
 mod check;
 mod dev;
+mod gen_types;
 mod new;
 mod package;
 mod project;
@@ -99,6 +100,8 @@ enum Cmd {
     },
     /// Запустить локальную среду разработки UI мини-аппа с моками Noro.
     Ui,
+    /// Сгенерировать TypeScript-типы из структур модуля для мини-аппа.
+    GenTypes,
 }
 
 fn main() {
@@ -162,6 +165,10 @@ fn run() -> Result<()> {
         Cmd::Ui => {
             let p = project::find()?;
             ui::run(&p)
+        }
+        Cmd::GenTypes => {
+            let p = project::find()?;
+            gen_types::run(&p)
         }
     }
 }

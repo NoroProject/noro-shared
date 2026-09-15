@@ -18,8 +18,15 @@ use syn::parse::{Parse, ParseStream};
 use syn::{parse_macro_input, FnArg, ImplItem, ItemImpl, LitStr, Pat, Token, Type};
 
 mod args;
+mod settings;
 
 use args::{EventArgs, RouteArgs, TaskArgs};
+
+/// Derive macro for declarative module settings.
+#[proc_macro_derive(Settings, attributes(setting))]
+pub fn derive_settings(input: TokenStream) -> TokenStream {
+    settings::derive(input)
+}
 
 /// The module's markup: exports plus the declaration for the master.
 ///
@@ -203,6 +210,19 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 });
             });
 
+            let call_args: Vec<_> = method
+                .sig
+                .inputs
+                .iter()
+                .filter_map(|arg| match arg {
+                    FnArg::Typed(t) => {
+                        let ty = &t.ty;
+                        Some(quote!(<#ty as ::noro_sdk::extract::FromRequest>::from_request(&request)?))
+                    }
+                    FnArg::Receiver(_) => None,
+                })
+                .collect();
+
             // The answer leaves as a `serde_json::Value`: there is no need to
             // know the handler's return type, only that it serializes.
             exports.push(quote! {
@@ -210,7 +230,7 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 pub fn #name(
                     ::noro_sdk::extism_pdk::Json(request): ::noro_sdk::extism_pdk::Json<::noro_sdk::abi::HttpRequest>,
                 ) -> ::noro_sdk::extism_pdk::FnResult<::noro_sdk::extism_pdk::Json<::noro_sdk::serde_json::Value>> {
-                    let answer = <#self_ty>::#name(request)?;
+                    let answer = <#self_ty>::#name(#(#call_args),*)?;
                     Ok(::noro_sdk::extism_pdk::Json(::noro_sdk::serde_json::to_value(answer)?))
                 }
             });
@@ -322,12 +342,23 @@ impl Parse for TaskArgs {
             });
         }
         let key: syn::Ident = input.parse()?;
-        if key != "every" {
-            return Err(syn::Error::new(key.span(), "expected every = \"1h\""));
+        if key == "every" {
+            input.parse::<Token![=]>()?;
+            Ok(TaskArgs {
+                every: input.parse()?,
+            })
+        } else if key == "cron" {
+            input.parse::<Token![=]>()?;
+            let cron_lit: LitStr = input.parse()?;
+            let s = format!("cron:{}", cron_lit.value());
+            Ok(TaskArgs {
+                every: LitStr::new(&s, cron_lit.span()),
+            })
+        } else {
+            Err(syn::Error::new(
+                key.span(),
+                "expected every = \"1h\" or cron = \"0 4 * * *\"",
+            ))
         }
-        input.parse::<Token![=]>()?;
-        Ok(TaskArgs {
-            every: input.parse()?,
-        })
     }
 }

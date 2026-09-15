@@ -134,8 +134,8 @@ capabilities! {
     optional_mods => ["grant"];
     /// `read`.
     servers => ["read"];
-    /// `read`, `maintenance`.
-    gameservers => ["read", "maintenance"];
+    /// `read`, `maintenance`, `command`.
+    gameservers => ["read", "maintenance", "command"];
     /// `read` — who is in the game right now.
     roster => ["read"];
     /// `read` — tick rate, memory, the numbers the agent reports.

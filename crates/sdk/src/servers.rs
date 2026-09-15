@@ -53,3 +53,10 @@ pub fn set_maintenance(game_server_id: Uuid, enabled: bool) -> Result<(), Module
         enabled,
     })
 }
+
+/// Sends a console command to a game server via wrapper.
+///
+/// Requires `gameservers = ["command"]`.
+pub fn command(game_server_id: Uuid, command: impl Into<String>) -> Result<bool, ModuleError> {
+    crate::host::gameserver_command_call((game_server_id, command.into()))
+}

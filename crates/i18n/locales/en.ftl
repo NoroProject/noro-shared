@@ -3120,6 +3120,19 @@ admin-modules-dev-hint = The master will read the module from disk and reload it
 admin-modules-dev-path = Folder with manifest.toml
 admin-modules-dev-connect = Connect
 admin-modules-dev-linked = Module connected from folder
+admin-modules-explorer-title = API Explorer
+admin-modules-explorer-hint = Test module endpoints directly from the master server
+admin-modules-explorer-route = Route
+admin-modules-explorer-custom = Custom endpoint
+admin-modules-explorer-method = Method
+admin-modules-explorer-path = Path
+admin-modules-explorer-query = Query parameters
+admin-modules-explorer-query-placeholder = key=val&limit=10
+admin-modules-explorer-body = Request body (JSON)
+admin-modules-explorer-send = Send request
+admin-modules-explorer-response = Response
+admin-modules-explorer-empty = Select an endpoint and click Send to inspect the response
+admin-modules-explorer-error = Request failed
 
 # Общие подписи кнопок. Заведены для диалога подтверждения у мини-аппов, но
 # годятся всюду: до сих пор каждый раздел заводил своё «Отменить».
