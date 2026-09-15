@@ -26,6 +26,7 @@ What you can do to a player you are holding.
 | `bank(server_id: Uuid) -> player::Bank` | Their money on one build. |
 | `in_game() -> player::InGame` | Them in game: tell, kick, ask if they are there. |
 | `launcher() -> player::Launcher` | Their launcher. |
+| `web_ws() -> player::WebWs` | Their website browser tab. |
 | `logins() -> player::Logins` | How they sign in and where they are signed in. |
 | `dm() -> crate::dm::Conversations` | Their private messages: `player.dm().send_to(other, "…")`. |
 | `presence() -> Result<DmPresence, ModuleError>` | Where they are: in game, on the site, in the launcher, nowhere. |
@@ -175,6 +176,15 @@ Their launcher.
 |---|---|
 | `online() -> Result<bool, ModuleError>` | Whether it is connected. |
 | `send(payload: impl serde::Serialize) -> Result<bool, ModuleError>` | Sends it a frame. |
+
+### `WebWs`
+
+Their browser website tab.
+
+| Method | What it does |
+|---|---|
+| `online() -> Result<bool, ModuleError>` | Whether they have a website tab open. |
+| `send(payload: impl serde::Serialize) -> Result<bool, ModuleError>` | Sends a frame to their open website tab. |
 
 ### `Logins`
 

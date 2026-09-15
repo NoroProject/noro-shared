@@ -24,7 +24,7 @@ description: Все вызовы SDK и то, что для каждого ну�
 | [`bots`](./sdk/bots/) | A face of your own to write from. | 2 |
 | [`builds`](./sdk/builds/) | Client builds and the files inside them. | 9 |
 | [`cases`](./sdk/cases/) | Moderation cases. | 5 |
-| [`db`](./sdk/db/) | Your own tables. | 4 |
+| [`db`](./sdk/db/) | Your own tables. | 6 |
 | [`dm`](./sdk/dm/) | Private messages between players. | 5 |
 | [`events`](./sdk/events/) | Events of your own, for other modules to handle. | 2 |
 | [`files`](./sdk/files/) | The shared file store. | 4 |
@@ -40,8 +40,9 @@ description: Все вызовы SDK и то, что для каждого ну�
 | [`restarts`](./sdk/restarts/) | Restart schedules of game servers. | 3 |
 | [`roles`](./sdk/roles/) | Roles. | 8 |
 | [`roster`](./sdk/roster/) | Who is in game right now. | 3 |
-| [`servers`](./sdk/servers/) | Server builds, their client builds, and the game servers behind them. | 6 |
+| [`servers`](./sdk/servers/) | Server builds, their client builds, and the game servers behind them. | 7 |
 | [`sessions`](./sdk/sessions/) | A player's sessions — the launchers and browsers they are signed in from. | 3 |
 | [`store`](./sdk/store/) | The module's own storage. | 3 |
 | [`telemetry`](./sdk/telemetry/) | How a game server is holding up. | 1 |
 | [`tickets`](./sdk/tickets/) | Conversations with players. | 6 |
+| [`web_ws`](./sdk/web_ws/) | Talking to the player's web browser tab. | 4 |

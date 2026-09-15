@@ -41,6 +41,7 @@ after the table.
 | | `publish` | `builds::unpublish` — publishing itself stays with the operator |
 | `gameservers` | `read` | `servers::game_servers`, `servers::game_server` |
 | | `maintenance` | `servers::set_maintenance` |
+| | `command` | `servers::command` |
 | `punish` | `read` | `punish::active`, `punish::history` |
 | | `issue` | `punish::ban`, `mute`, `warn`, `server_ban`, `issue` |
 | | `revoke` | `punish::revoke` |

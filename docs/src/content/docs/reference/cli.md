@@ -101,3 +101,13 @@ same hash.
 Rebuilds on every save, for the master's [development mode](../../guides/dev-mode/). A
 failed build prints the error and keeps watching — you fix the typo and save again rather
 than restarting the loop.
+
+## `cargo noro gen-types [-o FILE]`
+
+Generates TypeScript interface definitions from Rust structs in your module's crate (e.g. structures decorated with `Serialize` or `Deserialize`).
+
+| Option | Description |
+|---|---|
+| `-o`, `--output` | Destination file for generated TypeScript definitions. Defaults to `ui/types/module-generated.d.ts` (or `types/module-generated.d.ts`). |
+
+Ensures type safety across the boundary between your Web/UI components and module backend endpoints.

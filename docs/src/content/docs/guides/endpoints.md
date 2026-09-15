@@ -59,6 +59,26 @@ pub struct HttpRequest {
 Helpers: `req.json::<T>()` for the body, `req.param("name")` for a query parameter,
 `req.require_user()` when the endpoint needs a signed-in caller.
 
+### Declarative Extractors
+
+Handlers can declare their inputs directly as typed extractors in the signature:
+
+```rust
+#[route(POST, "/claim")]
+fn claim(AuthUser(user): AuthUser, Json(body): Json<ClaimReq>) -> Result<Receipt> {
+    // `user` is guaranteed Uuid; `body` is parsed `ClaimReq`
+    Ok(Receipt { id: user })
+}
+```
+
+Available extractors (in `noro_sdk::prelude::*`):
+- `AuthUser(pub Uuid)` — extracts signed-in user id, or fails with an error if unauthenticated
+- `OptionalUser(pub Option<Uuid>)` — extracts user id if available
+- `Json<T>(pub T)` — deserializes JSON request body into `T`
+- `QueryParams<T>(pub T)` — deserializes query string into `T`
+- `RawParams(pub Value)` — provides raw query map
+- `HttpRequest` — receives the complete underlying request object
+
 The master parses the HTTP itself — there are no headers or cookies to handle here, and
 the access decision was already made.
 

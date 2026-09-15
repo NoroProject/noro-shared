@@ -82,6 +82,7 @@ fn on_join(e: PlayerJoined) -> Result<()> { Ok(()) }
 | `module.enabled` | `Post` | [`ModuleEnabled`](../../api/noro_module_abi/events/infra/struct.ModuleEnabled.html) |
 | `module.disabled` | `Post` | [`ModuleDisabled`](../../api/noro_module_abi/events/infra/struct.ModuleDisabled.html) |
 | `launcher.message` | `Post` | [`LauncherMessage`](../../api/noro_module_abi/events/infra/struct.LauncherMessage.html) |
+| `web.message` | `Post` | [`WebMessage`](../../api/noro_module_abi/events/infra/struct.WebMessage.html) |
 
 ## Модерация
 

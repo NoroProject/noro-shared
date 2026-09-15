@@ -11,17 +11,23 @@ fn payout() -> Result<()> {
     }
     Ok(())
 }
+
+// Or with a 5-field cron expression:
+#[task(cron = "0 4 * * *")]
+fn daily_payout() -> Result<()> {
+    // runs every day at 04:00 UTC
+    Ok(())
+}
 ```
 
-The interval is `30s`, `5m`, `1h`, `2d` — a number and a unit. It is checked when the
+The schedule can be an interval (`30s`, `5m`, `1h`, `2d`) or a cron expression (`cron = "0 4 * * *"`). It is checked when the
 module is installed, so a typo is refused there rather than becoming a task that never
 runs.
 
-## What the interval means
+## Intervals vs Cron schedules
 
-Every hour of the master's uptime, not on the hour. A task with `1h` first run at 10:30
-goes again at 11:30. "At 04:00" is a schedule rather than an interval, and that is what
-[restart schedules](../platform/) are for.
+- **Intervals (`every = "1h"`):** Runs every hour of the master's uptime, not on the clock hour. A task with `1h` first run at 10:30 goes again at 11:30.
+- **Cron expressions (`cron = "0 4 * * *"`):** Evaluates against UTC clock time (`minute hour day-of-month month day-of-week`). Runs once whenever current time matches the expression.
 
 The first run is one interval after the master starts, not at startup. A module that
 wants something done at boot has `#[init]`, which runs once with capabilities already

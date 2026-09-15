@@ -59,6 +59,26 @@ pub struct HttpRequest {
 Помощники: `req.json::<T>()` для тела, `req.param("name")` для параметра строки запроса,
 `req.require_user()`, когда ручке нужен вошедший.
 
+### Декларативные экстракторы
+
+Вместо ручного разбора `HttpRequest` аргументы метода можно объявлять прямо через типизированные экстракторы:
+
+```rust
+#[route(POST, "/claim")]
+fn claim(AuthUser(user): AuthUser, Json(body): Json<ClaimReq>) -> Result<Receipt> {
+    // `user` — гарантированный Uuid; `body` — разобранный `ClaimReq`
+    Ok(Receipt { id: user })
+}
+```
+
+Доступные экстракторы (в `noro_sdk::prelude::*`):
+- `AuthUser(pub Uuid)` — извлекает ID вошедшего пользователя или сразу возвращает ошибку неавторизованного доступа
+- `OptionalUser(pub Option<Uuid>)` — опциональный ID пользователя (если запрос авторизован)
+- `Json<T>(pub T)` — парсит JSON-тело запроса в тип `T`
+- `QueryParams<T>(pub T)` — парсит параметры query-строки в тип `T`
+- `RawParams(pub Value)` — даёт доступ к сырому объекту параметров query
+- `HttpRequest` — полный объект запроса
+
 HTTP разбирает сам мастер: заголовков и кук здесь нет, а решение о допуске уже принято.
 
 ## Ошибки

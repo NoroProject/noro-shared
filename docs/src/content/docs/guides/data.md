@@ -138,3 +138,20 @@ module down with it. Add a `LIMIT`.
 Editing a migration that has already been applied is how you stop a module from loading.
 Add another file instead. This is the same rule the master's own migrations follow, for
 the same reason.
+
+## Module Settings with `#[derive(Settings)]`
+
+When declaring settings for operators to configure in the admin panel, define a struct with `#[derive(Settings)]`:
+
+```rust
+#[derive(Settings, Serialize, Deserialize, Default)]
+pub struct ModuleConfig {
+    #[setting(label = "mod-rewards-interval", type = "number", min = 1, max = 3600)]
+    pub reward_interval_secs: i64,
+
+    #[setting(label = "mod-rewards-enabled", type = "toggle")]
+    pub enabled: bool,
+}
+```
+
+Call `ModuleConfig::load()?` in your handlers or scheduled tasks to load the operator's current values directly from the store.

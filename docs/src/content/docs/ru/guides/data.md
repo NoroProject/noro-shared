@@ -135,3 +135,20 @@ ERROR: permission denied for table users
 
 Правка уже накатанной миграции — это способ остановить загрузку модуля. Добавьте вместо неё
 новый файл. То же правило и по той же причине действует для миграций самого мастера.
+
+## Настройки модуля с `#[derive(Settings)]`
+
+Для удобного объявления и чтения настроек модуля, редактируемых оператором в панели управления:
+
+```rust
+#[derive(Settings, Serialize, Deserialize, Default)]
+pub struct ModuleConfig {
+    #[setting(label = "mod-rewards-interval", type = "number", min = 1, max = 3600)]
+    pub reward_interval_secs: i64,
+
+    #[setting(label = "mod-rewards-enabled", type = "toggle")]
+    pub enabled: bool,
+}
+```
+
+Вызов `ModuleConfig::load()?` в обработчиках событий, ручках или задачах загружает актуальные значения напрямую из хранилища.
