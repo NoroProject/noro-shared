@@ -8,11 +8,24 @@ the admin panel, the server hub or the player's cabinet.
 
 ```toml
 [[apps]]
-placement = "cabinet"      # admin | hub | cabinet | widget
-kind = "vue"               # vue | page
-entry = "app.js"
-title = "mod-my-module-title"
+id = "rewards"              # unique app ID within this module
+placement = "cabinet"       # admin | hub | cabinet | widget
+category = "profile"        # place inside an existing sidebar group (or custom category)
+order = 10                  # sort order within the group (lower numbers appear first)
+kind = "vue"                # vue | page
+entry = "rewards.js"
+title = "mod-my-module-rewards"
 icon = "i-lucide-gift"
+
+[[apps]]
+id = "admin-settings"
+placement = "admin"
+category = "system"
+order = 50
+kind = "vue"
+entry = "admin_settings.js"
+title = "mod-my-module-settings"
+icon = "i-lucide-sliders"
 ```
 
 ## Where it can go
@@ -26,6 +39,49 @@ icon = "i-lucide-gift"
 
 `hub` sections are listed for the server they belong to. A module scoped to a server has
 its section on that hub and not on the neighbouring one.
+
+## Multiple Mini-Apps & Sidebar Categories
+
+A single module can register multiple mini-apps across different placements or categories by specifying multiple `[[apps]]` declarations. When a module has multiple apps, each app can be assigned an `id`: the app is accessible at `/admin/m/<module-id>?app=<id>` or `/cabinet/m/<module-id>?app=<id>`.
+
+### Built-in Sidebar Categories
+
+By default, an app without a category is placed in the generic `modules` group in the admin panel (or `cabinet-modules` in the cabinet).
+
+You can neatly nest your app into any standard sidebar category using `category = "..."`:
+
+| Panel | `category` | Group title | Contains |
+|---|---|---|---|
+| **Admin** | `overview` | Overview | Dashboard, analytics |
+| | `players` | Players | Users, roles, capes, bot accounts |
+| | `moderation` | Moderation | Cases, tickets, rules, chat filters, blocklist |
+| | `servers` | Servers | Clients, builds, mods, game server wrapper |
+| | `content` | Content | News, translations |
+| | `system` | System | Launcher, OAuth apps, tokens, audit, backup, settings |
+| **Cabinet** | `profile` | Profile | Overview, skin, punishments, messages, support |
+| | `account` | Account | Linked apps, account settings |
+
+### Custom Categories
+
+If you want your apps grouped into their own dedicated sidebar section:
+
+```toml
+[[apps]]
+id = "shop-catalog"
+placement = "admin"
+category = "shop"
+category_title = "Shop"            # text or Fluent translation key
+category_icon = "i-lucide-store"
+order = 1
+kind = "vue"
+entry = "catalog.js"
+title = "mod-shop-catalog"
+icon = "i-lucide-shopping-bag"
+```
+
+### Ordering with `order`
+
+Inside any category (built-in or custom), set `order = <integer>` to control position. Lower numbers appear closer to the top of the group. Items without an explicit order default to `50`.
 
 ### Widgets
 

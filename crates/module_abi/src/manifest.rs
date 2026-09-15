@@ -195,6 +195,10 @@ capabilities! {
     /// conversations people hold to be between two of them. Grant it for
     /// filtering and for answering machines, not to see what is written.
     dm => ["read", "send"];
+    /// `read`, `write` — in-memory cache with TTL.
+    cache => ["read", "write"];
+    /// `call` — calling other modules' exported RPC methods.
+    modules => ["call"];
 }
 
 impl Capabilities {
@@ -260,6 +264,21 @@ pub struct AppDecl {
     /// The slot, when `placement = "widget"`.
     #[serde(default)]
     pub slot: Option<String>,
+    /// Unique identifier for this app within the module (useful when a module registers multiple apps).
+    #[serde(default)]
+    pub id: Option<String>,
+    /// Sidebar category (e.g. "players", "economy", "moderation", "servers", "settings", or a custom category).
+    #[serde(default)]
+    pub category: Option<String>,
+    /// Display title for a custom category (Fluent key or label).
+    #[serde(default)]
+    pub category_title: Option<String>,
+    /// Icon for a custom category (`i-lucide-*`).
+    #[serde(default)]
+    pub category_icon: Option<String>,
+    /// Ordering / weight inside the category (lower appears first).
+    #[serde(default)]
+    pub order: Option<i32>,
 }
 
 /// How a mini-app reaches the screen.

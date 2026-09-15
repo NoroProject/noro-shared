@@ -90,6 +90,9 @@ http = ["discord.com"]
 | `dm` | `read` | `dm::threads`, `dm::history`, `dm::presence` |
 | | `send` | `dm::send` |
 | `bots` | `create` | `bots::ensure`, `bots::list` |
+| `cache` | `read` | `cache::get`, `cache::get_or` |
+| | `write` | `cache::set`, `cache::delete` |
+| `modules` | `call` | `modules::call` |
 | `store` | `true` | всё хранилище ключ-значение |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, и ваши миграции |
 | `http` | список разрешённых хостов | `http::send`, `http::get_json` |

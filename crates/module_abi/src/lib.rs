@@ -25,6 +25,7 @@
 //! from the master carries `#[serde(default)]` on new fields: a module built
 //! against an older ABI has to keep working.
 
+pub mod cache;
 pub mod context;
 pub mod entity;
 pub mod error;
@@ -35,12 +36,14 @@ pub mod manifest;
 pub mod ops;
 pub mod player;
 pub mod registration;
+pub mod rpc;
 #[cfg(feature = "signing")]
 pub mod signing;
 pub mod sql;
 pub mod store;
 pub mod validate;
 
+pub use cache::{CacheDelete, CacheGet, CacheSet};
 pub use context::{ActorRef, EventCtx, Origin};
 pub use entity::{Account, Build, BuildFile, GameServer, Punishment, Role, Server};
 pub use error::{ModuleError, ModuleResult};
@@ -58,6 +61,7 @@ pub use ops::{
 };
 pub use player::{IntoPlayerRef, Player, PlayerRef};
 pub use registration::{EventReg, Registration, RouteReg, TaskReg};
+pub use rpc::ModuleCall;
 pub use sql::{Query, Rows};
 
 /// The ABI version this crate understands.

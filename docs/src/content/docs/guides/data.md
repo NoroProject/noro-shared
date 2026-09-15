@@ -161,3 +161,93 @@ pub struct ModuleConfig {
 ```
 
 Call `ModuleConfig::load()?` in your handlers or scheduled tasks to load the operator's current values directly from the store.
+
+## In-memory TTL Cache
+
+When you need temporary, volatile storage with automatic expiration (e.g. rate-limit tokens, session states, computed analytics), use `cache`:
+
+```rust
+use noro_sdk::prelude::*;
+
+// Cache any serializable struct with a TTL in seconds:
+cache::set("verify_token:12345", &VerifyData { user_id, attempts: 0 }, 300)?; // 5 minutes
+
+// Retrieve:
+let cached: Option<VerifyData> = cache::get("verify_token:12345")?;
+
+// Or retrieve with fallback:
+let count: u64 = cache::get_or("global_counter")?;
+
+// Manually delete if completed early:
+cache::delete("verify_token:12345")?;
+```
+
+Requires capability:
+```toml
+[capabilities]
+cache = ["read", "write"]
+```
+
+## Inter-Module RPC (`#[rpc]` & `modules::call`)
+
+Modules can expose RPC methods and call other installed modules directly.
+
+### Exposing an RPC method
+
+Annotate a method with `#[rpc("method_name")]` (or bare `#[rpc]` to use the function's name):
+
+```rust
+#[derive(Serialize, Deserialize)]
+pub struct DiscountReq {
+    pub player_id: Uuid,
+    pub price: u64,
+}
+
+#[noro::module]
+impl ShopService {
+    #[rpc("calc_discount")]
+    fn calc_discount(Json(req): Json<DiscountReq>) -> Result<u64> {
+        let discount = req.price / 10;
+        Ok(req.price - discount)
+    }
+}
+```
+
+### Calling from another module
+
+Use `modules::call`:
+
+```rust
+let final_price: u64 = modules::call(
+    "shop_service",
+    "calc_discount",
+    &DiscountReq { player_id, price: 100 },
+)?;
+```
+
+Requires capability:
+```toml
+[capabilities]
+modules = ["call"]
+```
+
+## Testing with `noro_sdk::testing`
+
+Write unit tests for your event handlers, WebSocket actions, or HTTP endpoints without running the master server:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use noro_sdk::testing::*;
+    use noro_sdk::prelude::*;
+
+    #[test]
+    fn test_my_handler() {
+        let msg = mock_web_message("Steve", &json!({ "action": "bid", "amount": 100 }));
+        assert_eq!(msg.player.label(), "Steve");
+
+        let req = mock_request("GET", "/status", None, Some(msg.player.id));
+        assert_eq!(req.method, "GET");
+    }
+}
+```

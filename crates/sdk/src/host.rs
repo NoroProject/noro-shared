@@ -139,6 +139,10 @@ extern "ExtismHost" {
     fn dm_presence(input: String) -> String;
     fn store_incr(input: String) -> String;
     fn store_list(input: String) -> String;
+    fn cache_get(input: String) -> String;
+    fn cache_set(input: String) -> String;
+    fn cache_delete(input: String) -> String;
+    fn module_call(input: String) -> String;
     fn host_now(input: String) -> String;
     fn log(input: String);
 }
@@ -847,4 +851,24 @@ pub(crate) fn bot_ensure_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Resu
 
 pub(crate) fn bot_list_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
     call!(bot_list, arg)
+}
+
+pub(crate) fn cache_get_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(cache_get, arg)
+}
+
+pub(crate) fn cache_set_call<A: Serialize, R: DeserializeOwned>(arg: A) -> Result<R, ModuleError> {
+    call!(cache_set, arg)
+}
+
+pub(crate) fn cache_delete_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(cache_delete, arg)
+}
+
+pub(crate) fn module_call_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(module_call, arg)
 }

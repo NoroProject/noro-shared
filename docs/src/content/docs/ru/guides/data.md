@@ -158,3 +158,93 @@ pub struct ModuleConfig {
 ```
 
 Вызов `ModuleConfig::load()?` в обработчиках событий, ручках или задачах загружает актуальные значения напрямую из хранилища.
+
+## In-memory TTL-кеш
+
+Когда модулю требуется временное, энергозависимое хранилище с автоочисткой по истечении срока (токены подтверждения, состояние сессий, предварительно вычисленные результаты):
+
+```rust
+use noro_sdk::prelude::*;
+
+// Кеширование сериализуемой структуры с временем жизни (TTL) в секундах:
+cache::set("verify_token:12345", &VerifyData { user_id, attempts: 0 }, 300)?; // 5 минут
+
+// Получение значения:
+let cached: Option<VerifyData> = cache::get("verify_token:12345")?;
+
+// Получение со значением по умолчанию:
+let count: u64 = cache::get_or("global_counter")?;
+
+// Удаление ключа досрочно:
+cache::delete("verify_token:12345")?;
+```
+
+Требует разрешения:
+```toml
+[capabilities]
+cache = ["read", "write"]
+```
+
+## Межмодульный RPC (`#[rpc]` и `modules::call`)
+
+Модули могут предоставлять API друг другу и вызывать функции соседних модулей.
+
+### Объявление RPC-метода
+
+Пометьте метод атрибутом `#[rpc("имя_метода")]` (или просто `#[rpc]` для имени функции):
+
+```rust
+#[derive(Serialize, Deserialize)]
+pub struct DiscountReq {
+    pub player_id: Uuid,
+    pub price: u64,
+}
+
+#[noro::module]
+impl ShopService {
+    #[rpc("calc_discount")]
+    fn calc_discount(Json(req): Json<DiscountReq>) -> Result<u64> {
+        let discount = req.price / 10;
+        Ok(req.price - discount)
+    }
+}
+```
+
+### Вызов из другого модуля
+
+Используйте `modules::call`:
+
+```rust
+let final_price: u64 = modules::call(
+    "shop_service",
+    "calc_discount",
+    &DiscountReq { player_id, price: 100 },
+)?;
+```
+
+Требует разрешения:
+```toml
+[capabilities]
+modules = ["call"]
+```
+
+## Модульное тестирование с `noro_sdk::testing`
+
+Пишите локальные юнит-тесты на обработчики событий, WebSocket-действия и HTTP-ручки без необходимости запускать процесс мастера:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use noro_sdk::testing::*;
+    use noro_sdk::prelude::*;
+
+    #[test]
+    fn test_my_handler() {
+        let msg = mock_web_message("Steve", &json!({ "action": "bid", "amount": 100 }));
+        assert_eq!(msg.player.label(), "Steve");
+
+        let req = mock_request("GET", "/status", None, Some(msg.player.id));
+        assert_eq!(req.method, "GET");
+    }
+}
+```

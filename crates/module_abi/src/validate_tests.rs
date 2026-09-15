@@ -62,6 +62,11 @@ fn a_widget_needs_a_slot() {
         icon: None,
         permission: None,
         slot: None,
+        id: None,
+        category: None,
+        category_title: None,
+        category_icon: None,
+        order: None,
     });
     assert_eq!(violations(&m).len(), 1);
 }
@@ -78,6 +83,11 @@ fn mini_app_entries_cannot_escape_the_package() {
         icon: None,
         permission: None,
         slot: None,
+        id: None,
+        category: None,
+        category_title: None,
+        category_icon: None,
+        order: None,
     });
     assert_eq!(violations(&m).len(), 1);
 }

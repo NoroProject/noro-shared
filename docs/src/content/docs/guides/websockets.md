@@ -7,33 +7,54 @@ When your module powers an interactive web UI — a live auction, a casino, dyna
 
 Noro Master maintains a single, permanent WebSocket connection (`/api/player/ws`) with every player logged into the web cabinet or admin panel. Your module plugs directly into this transport in both directions.
 
-## Subscribing to web messages in Rust
+## Declarative Actions with `#[ws_action]`
 
-When a player's browser tab sends a message to your module, the master delivers it as a `WebMessage` event.
-
-There is no custom registration macro needed — you subscribe to it like any other event:
+When a player's browser tab sends a JSON frame containing an `"action"` or `"type"` field, you can route it directly to dedicated handler methods using `#[ws_action("action_name")]`:
 
 ```rust
 use noro_sdk::prelude::*;
 
+#[derive(Deserialize)]
+struct BetPayload {
+    amount: u64,
+}
+
 #[noro::module]
-impl Module {
-    #[event]
-    fn on_web_message(e: WebMessage) -> Result<()> {
-        log::info(format!(
-            "{} sent action from web: {:?}",
-            e.player.label(),
-            e.payload
-        ));
+impl Casino {
+    #[ws_action("place_bet")]
+    fn on_bet(player: Player, Json(bet): Json<BetPayload>) -> Result<()> {
+        log::info(format!("{} placed a bet of {}", player.label(), bet.amount));
 
-        // You can instantly push a reply back through the socket:
-        web_ws::send(e.player.id, json!({
-            "type": "pong",
-            "received_at": e.ctx.at
+        // Reply directly to this player over WebSocket:
+        web_ws::send(player.id, json!({
+            "type": "bet_confirmed",
+            "amount": bet.amount
         }))?;
-
         Ok(())
     }
+}
+```
+
+### Supported Extractors for `#[ws_action]`
+
+Like `#[route]`, parameters are injected automatically using type extractors:
+- `Player` — authenticated player details
+- `AuthUser` — player UUID (or error)
+- `OptionalUser` — optional player UUID
+- `Json<T>` — deserialized payload into your typed struct `T`
+- `RawParams` / `Value` — raw payload as `serde_json::Value`
+- `EventCtx` — context (timestamp, origin, actor)
+- `WebMessage` — the entire raw event
+
+### Manual Event Subscription with `#[event]`
+
+If you want to handle all incoming WebSocket messages in a single function without automatic dispatching, subscribe to the `WebMessage` event directly:
+
+```rust
+#[event]
+fn on_web_message(e: WebMessage) -> Result<()> {
+    log::info(format!("{} sent: {:?}", e.player.label(), e.payload));
+    Ok(())
 }
 ```
 

@@ -18,7 +18,9 @@ use syn::parse::{Parse, ParseStream};
 use syn::{parse_macro_input, FnArg, ImplItem, ItemImpl, LitStr, Pat, Token, Type};
 
 mod args;
+mod rpc;
 mod settings;
+mod ws_action;
 
 use args::{EventArgs, RouteArgs, TaskArgs};
 
@@ -79,6 +81,7 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut events = Vec::new();
     let mut routes = Vec::new();
     let mut tasks = Vec::new();
+    let mut ws_actions = Vec::new();
     // Manual additions to the declaration — called inside `noro_register`.
     let mut register_hook = None;
     // Initialization on enable — a separate export.
@@ -95,6 +98,9 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
             if path.is_ident("event")
                 || path.is_ident("route")
                 || path.is_ident("task")
+                || path.is_ident("ws_action")
+                || path.is_ident("ws")
+                || path.is_ident("rpc")
                 || path.is_ident("register")
                 || path.is_ident("init")
             {
@@ -234,7 +240,7 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
                     Ok(::noro_sdk::extism_pdk::Json(::noro_sdk::serde_json::to_value(answer)?))
                 }
             });
-        } else {
+        } else if attr.path().is_ident("task") {
             let args = match attr.parse_args::<TaskArgs>() {
                 Ok(a) => a,
                 Err(e) => return e.to_compile_error().into(),
@@ -255,7 +261,27 @@ pub fn module(_attr: TokenStream, item: TokenStream) -> TokenStream {
                     Ok(())
                 }
             });
+        } else if attr.path().is_ident("ws_action") || attr.path().is_ident("ws") {
+            let action_lit: LitStr = match attr.parse_args() {
+                Ok(a) => a,
+                Err(e) => return e.to_compile_error().into(),
+            };
+            ws_actions.push(ws_action::WsActionItem::from_fn(method, action_lit));
+        } else if attr.path().is_ident("rpc") {
+            match rpc::process_rpc(&self_ty, method, &attr) {
+                Ok((reg, exp)) => {
+                    routes.push(reg);
+                    exports.push(exp);
+                }
+                Err(e) => return e.to_compile_error().into(),
+            }
         }
+    }
+
+    let (ws_reg, ws_export) = ws_action::generate_dispatcher(&self_ty, &ws_actions);
+    if !ws_actions.is_empty() {
+        events.push(ws_reg);
+        exports.push(ws_export);
     }
 
     let register = format_ident!("noro_register");

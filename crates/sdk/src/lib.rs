@@ -76,6 +76,7 @@ pub mod agent;
 pub mod bank;
 pub mod bots;
 pub mod builds;
+pub mod cache;
 pub mod cases;
 pub mod db;
 pub mod dm;
@@ -90,6 +91,7 @@ pub mod identities;
 pub mod instance;
 pub mod launcher;
 pub mod log;
+pub mod modules;
 pub mod news;
 pub mod permissions;
 pub mod players;
@@ -101,6 +103,7 @@ pub mod servers;
 pub mod sessions;
 pub mod store;
 pub mod telemetry;
+pub mod testing;
 pub mod tickets;
 pub mod web_ws;
 
@@ -163,12 +166,14 @@ pub mod prelude {
         Account, ActorRef, Build, BuildFile, EventCtx, GameServer, IntoPlayerRef, Origin, Player,
         PlayerRef, Punishment, Role, Server,
     };
-    pub use crate::extract::{AuthUser, FromRequest, OptionalUser, QueryParams, RawParams};
+    pub use crate::extract::{
+        AuthUser, FromRequest, FromWebMessage, OptionalUser, QueryParams, RawParams,
+    };
     pub use crate::{
-        access, agent, bail, bank, bots, builds, cases, db, dm, ensure, events, extract, files,
-        fluent, http, hub, identities, instance, launcher, log, news, noro, now, permissions,
-        players, punish, query, restarts, roles, roster, servers, sessions, store, telemetry,
-        tickets, web_ws, Result,
+        access, agent, bail, bank, bots, builds, cache, cases, db, dm, ensure, events, extract,
+        files, fluent, http, hub, identities, instance, launcher, log, modules, news, noro, now,
+        permissions, players, punish, query, restarts, roles, roster, servers, sessions, store,
+        telemetry, testing, tickets, web_ws, Result,
     };
     // Методы на сущностях приходят трейтами: `Player` определён в
     // `noro-module-abi`, и добавить ему обычные методы из SDK нельзя. В

@@ -90,6 +90,9 @@ after the table.
 | `dm` | `read` | `dm::threads`, `dm::history`, `dm::presence` |
 | | `send` | `dm::send` |
 | `bots` | `create` | `bots::ensure`, `bots::list` |
+| `cache` | `read` | `cache::get`, `cache::get_or` |
+| | `write` | `cache::set`, `cache::delete` |
+| `modules` | `call` | `modules::call` |
 | `store` | `true` | the whole key-value store |
 | `db` | `true` | `db::query`, `execute`, `one`, `scalar`, plus your migrations |
 | `http` | a host allow-list | `http::send`, `http::get_json` |

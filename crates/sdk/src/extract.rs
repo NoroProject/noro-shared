@@ -1,8 +1,10 @@
-//! Request extractors for declarative `#[route]` handlers.
+//! Request and WebSocket frame extractors for declarative `#[route]` and `#[ws_action]` handlers.
+//! Exceeds 150 lines because it consolidates both HTTP and WebSocket frame extractors and their tests in one place.
 
 use std::ops::Deref;
 
 use noro_module_abi::error::ModuleError;
+use noro_module_abi::events::WebMessage;
 use noro_module_abi::http::HttpRequest;
 use serde::de::DeserializeOwned;
 use uuid::Uuid;
@@ -10,6 +12,11 @@ use uuid::Uuid;
 /// Types that can be extracted from an incoming [`HttpRequest`].
 pub trait FromRequest: Sized {
     fn from_request(req: &HttpRequest) -> Result<Self, ModuleError>;
+}
+
+/// Types that can be extracted from an incoming WebSocket message ([`WebMessage`]).
+pub trait FromWebMessage: Sized {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError>;
 }
 
 impl FromRequest for HttpRequest {
@@ -103,6 +110,78 @@ impl FromRequest for RawParams {
     }
 }
 
+impl FromWebMessage for WebMessage {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        Ok(msg.clone())
+    }
+}
+
+impl FromWebMessage for noro_module_abi::player::Player {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        Ok(msg.player.clone())
+    }
+}
+
+impl FromWebMessage for AuthUser {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        Ok(AuthUser(msg.player.id))
+    }
+}
+
+impl FromWebMessage for OptionalUser {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        Ok(OptionalUser(Some(msg.player.id)))
+    }
+}
+
+impl<T: DeserializeOwned> FromWebMessage for Json<T> {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        let val = if let Some(p) = msg.payload.get("payload") {
+            p
+        } else if let Some(d) = msg.payload.get("data") {
+            d
+        } else {
+            &msg.payload
+        };
+        serde_json::from_value(val.clone())
+            .map(Json)
+            .map_err(|e| ModuleError::invalid(format!("invalid JSON payload: {e}")))
+    }
+}
+
+impl<T: DeserializeOwned> FromWebMessage for extism_pdk::Json<T> {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        let val = if let Some(p) = msg.payload.get("payload") {
+            p
+        } else if let Some(d) = msg.payload.get("data") {
+            d
+        } else {
+            &msg.payload
+        };
+        serde_json::from_value(val.clone())
+            .map(extism_pdk::Json)
+            .map_err(|e| ModuleError::invalid(format!("invalid JSON payload: {e}")))
+    }
+}
+
+impl FromWebMessage for RawParams {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        Ok(RawParams(msg.payload.clone()))
+    }
+}
+
+impl FromWebMessage for serde_json::Value {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        Ok(msg.payload.clone())
+    }
+}
+
+impl FromWebMessage for noro_module_abi::context::EventCtx {
+    fn from_web_message(msg: &WebMessage) -> Result<Self, ModuleError> {
+        Ok(msg.ctx.clone())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -145,5 +224,21 @@ mod tests {
 
         let query: QueryParams<Payload> = QueryParams::from_request(&req).unwrap();
         assert_eq!(query.count, 42);
+    }
+
+    #[test]
+    fn web_message_extractors() {
+        let msg =
+            crate::testing::mock_web_message("Steve", &json!({ "action": "bid", "count": 55 }));
+
+        let user: AuthUser = AuthUser::from_web_message(&msg).unwrap();
+        assert_eq!(*user, msg.player.id);
+
+        let parsed_player: noro_module_abi::player::Player =
+            noro_module_abi::player::Player::from_web_message(&msg).unwrap();
+        assert_eq!(parsed_player.name.as_deref(), Some("Steve"));
+
+        let body: Json<Payload> = Json::from_web_message(&msg).unwrap();
+        assert_eq!(body.count, 55);
     }
 }
