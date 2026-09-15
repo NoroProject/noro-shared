@@ -96,10 +96,19 @@ fn intervals_are_parsed() {
 
 #[test]
 fn only_the_major_of_the_abi_has_to_match() {
+    // Мастер новее требуемого — модуль работает.
     assert!(api_compatible("1.0", "1.4"));
-    assert!(api_compatible("1.7", "1.0"));
+    assert!(api_compatible("1.4", "1.4"));
+    // Модуль новее мастера — нет: он зовёт то, чего здесь ещё не написали.
+    assert!(
+        !api_compatible("1.7", "1.0"),
+        "модуль из будущего поставился бы и упал на первом вызове"
+    );
     assert!(!api_compatible("2.0", "1.0"));
     assert!(!api_compatible("", "1.0"));
+    assert!(!api_compatible("abc", "1.0"));
+    // Минор необязателен: «1» — это «1.0».
+    assert!(api_compatible("1", "1.2"));
 }
 
 /// An empty capability set is closed entirely: a forgotten line in the

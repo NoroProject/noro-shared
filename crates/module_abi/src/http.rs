@@ -48,3 +48,65 @@ impl HttpRequest {
         })
     }
 }
+
+/// A response from a module endpoint.
+///
+/// If returned from a route handler, the master unpacks status, headers, and body.
+/// If a handler returns plain data, the master defaults to 200 OK application/json.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HttpResponse {
+    #[serde(default = "default_marker")]
+    pub __noro_http_response: bool,
+    pub status: u16,
+    #[serde(default)]
+    pub headers: Vec<(String, String)>,
+    #[serde(default)]
+    pub body: Value,
+}
+
+fn default_marker() -> bool {
+    true
+}
+
+impl HttpResponse {
+    pub fn new(status: u16, body: impl Serialize) -> Self {
+        let body = serde_json::to_value(body).unwrap_or(Value::Null);
+        Self {
+            __noro_http_response: true,
+            status,
+            headers: Vec::new(),
+            body,
+        }
+    }
+
+    pub fn ok(body: impl Serialize) -> Self {
+        Self::new(200, body)
+    }
+
+    pub fn not_found(body: impl Serialize) -> Self {
+        Self::new(404, body)
+    }
+
+    pub fn bad_request(body: impl Serialize) -> Self {
+        Self::new(400, body)
+    }
+
+    pub fn unauthorized(body: impl Serialize) -> Self {
+        Self::new(401, body)
+    }
+
+    pub fn forbidden(body: impl Serialize) -> Self {
+        Self::new(403, body)
+    }
+
+    pub fn redirect(location: impl Into<String>) -> Self {
+        let mut r = Self::new(302, Value::Null);
+        r.headers.push(("Location".to_string(), location.into()));
+        r
+    }
+
+    pub fn with_header(mut self, name: impl Into<String>, value: impl Into<String>) -> Self {
+        self.headers.push((name.into(), value.into()));
+        self
+    }
+}

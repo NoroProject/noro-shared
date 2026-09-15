@@ -193,6 +193,21 @@ impl Launcher {
     }
 }
 
+/// Their browser website tab.
+#[derive(Debug, Clone, Copy)]
+pub struct WebWs(pub(crate) Uuid);
+
+impl WebWs {
+    /// Whether they have a website tab open. See [`crate::web_ws::is_online`].
+    pub fn online(&self) -> Result<bool, ModuleError> {
+        crate::web_ws::is_online(self.0)
+    }
+    /// Sends a frame to their open website tab. See [`crate::web_ws::send`].
+    pub fn send(&self, payload: impl serde::Serialize) -> Result<bool, ModuleError> {
+        crate::web_ws::send(self.0, payload)
+    }
+}
+
 /// How they sign in, and where they are signed in.
 #[derive(Debug, Clone, Copy)]
 pub struct Logins(pub(crate) Uuid);

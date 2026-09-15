@@ -784,6 +784,15 @@ pub struct LauncherFrame {
     pub payload: serde_json::Value,
 }
 
+/// A frame for a player's open website tab.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WebFrame {
+    /// Whose browser tab. Omitted for a frame to everyone connected.
+    #[serde(default)]
+    pub player: Option<PlayerRef>,
+    pub payload: serde_json::Value,
+}
+
 /// Naming one file inside a build.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BuildFileRef {

@@ -393,6 +393,19 @@ export interface NoroContext {
         path: string,
         options?: { perPage?: number; params?: () => Record<string, string | undefined> },
     ): NoroPagedList<T>
+
+    /**
+     * Realtime WebSocket connection between this player's web tab and your module.
+     */
+    ws: NoroModuleWs
+}
+
+/** Realtime WebSocket messaging for modules. */
+export interface NoroModuleWs {
+    /** Send an action frame from the player's web tab to your module on the master. */
+    send(payload: unknown): void
+    /** Subscribe to frames pushed by your module to this player's tab. Returns unsubscribe fn. */
+    on<T = unknown>(handler: (payload: T) => void): () => void
 }
 
 /** A paginated list, ready to bind. */
@@ -414,3 +427,9 @@ export interface NoroPagedList<T> {
  * The mini-app's context. Called in `setup`, like any Vue composable.
  */
 export declare function useNoro(): NoroContext
+
+/**
+ * Realtime WebSocket connection to your module. Shortcut for `useNoro().ws`.
+ */
+export declare function useModuleWs(): NoroModuleWs
+

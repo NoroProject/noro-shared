@@ -121,20 +121,12 @@ impl Conversations {
     }
 
     /// Writes to someone **as this player**. See [`send`].
-    pub fn send_to(
-        &self,
-        peer: impl IntoPlayerRef,
-        body: &str,
-    ) -> Result<uuid::Uuid, ModuleError> {
+    pub fn send_to(&self, peer: impl IntoPlayerRef, body: &str) -> Result<uuid::Uuid, ModuleError> {
         send(self.0, peer, body)
     }
 
     /// Writes **to this player**, signed with whoever is named.
-    pub fn from(
-        &self,
-        sender: impl IntoPlayerRef,
-        body: &str,
-    ) -> Result<uuid::Uuid, ModuleError> {
+    pub fn from(&self, sender: impl IntoPlayerRef, body: &str) -> Result<uuid::Uuid, ModuleError> {
         send(sender, self.0, body)
     }
 }

@@ -97,9 +97,34 @@ pub fn parse_every(s: &str) -> Option<u64> {
 }
 
 /// Whether a module is compatible with this ABI version. The major is compared.
+/// Совместима ли требуемая версия ABI с той, что даёт мастер.
+///
+/// Мажор — совпадение: на нём ломается форма данных. Минор — «не новее»: минор
+/// растёт, когда появляются новые host-функции, и модуль, собранный под 1.7,
+/// на мастере с 1.0 просто не найдёт половину того, что зовёт.
+///
+/// Раньше сверялся только мажор, и такой модуль ставился без единого возражения,
+/// а падал на первом же вызове с «function not found» — ровно тем способом,
+/// которого этот механизм и должен избегать.
 pub fn api_compatible(required: &str, current: &str) -> bool {
-    let major = |v: &str| v.split('.').next().unwrap_or("").to_string();
-    !major(required).is_empty() && major(required) == major(current)
+    let Some((want_major, want_minor)) = parts(required) else {
+        return false;
+    };
+    let Some((have_major, have_minor)) = parts(current) else {
+        return false;
+    };
+    want_major == have_major && want_minor <= have_minor
+}
+
+/// `1.7` → `(1, 7)`. Минор необязателен: `1` читается как `1.0`.
+fn parts(version: &str) -> Option<(u32, u32)> {
+    let mut it = version.trim().split('.');
+    let major = it.next()?.parse().ok()?;
+    let minor = match it.next() {
+        Some(m) => m.parse().ok()?,
+        None => 0,
+    };
+    Some((major, minor))
 }
 
 #[cfg(test)]

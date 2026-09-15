@@ -75,3 +75,40 @@ pub fn scalar<T: serde::de::DeserializeOwned>(q: Query) -> Result<Option<T>, Mod
         .map(Some)
         .map_err(|e| ModuleError::invalid(format!("value did not parse: {e}")))
 }
+
+/// Runs a query and parses each row into `T`.
+///
+/// Requires `db = true`.
+pub fn query_as<T: serde::de::DeserializeOwned>(q: Query) -> Result<Vec<T>, ModuleError> {
+    let rows = query(q)?;
+    rows.into_iter()
+        .map(|row| {
+            serde_json::from_value(serde_json::Value::Object(row))
+                .map_err(|e| ModuleError::invalid(format!("row did not parse: {e}")))
+        })
+        .collect()
+}
+
+/// The first row parsed into `T`, or `None`.
+///
+/// Requires `db = true`.
+pub fn one_as<T: serde::de::DeserializeOwned>(q: Query) -> Result<Option<T>, ModuleError> {
+    let Some(row) = one(q)? else {
+        return Ok(None);
+    };
+    serde_json::from_value(serde_json::Value::Object(row))
+        .map(Some)
+        .map_err(|e| ModuleError::invalid(format!("row did not parse: {e}")))
+}
+
+/// Convenience macro to build a `Query` with bound parameters.
+#[macro_export]
+macro_rules! query {
+    ($sql:expr $(, $param:expr)* $(,)?) => {{
+        let mut q = $crate::db::Query::new($sql);
+        $(
+            q = q.bind($param);
+        )*
+        q
+    }};
+}

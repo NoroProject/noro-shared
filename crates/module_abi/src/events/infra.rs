@@ -134,7 +134,17 @@ pub struct LauncherMessage {
     pub payload: serde_json::Value,
 }
 
+/// A frame sent by a player from their open website tab.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WebMessage {
+    pub ctx: EventCtx,
+    /// Who sent it. Always an authenticated player.
+    pub player: Player,
+    pub payload: serde_json::Value,
+}
+
 impl_event!(LauncherMessage, super::EV_LAUNCHER_MESSAGE, Post);
+impl_event!(WebMessage, super::EV_WEB_MESSAGE, Post);
 impl_event!(ServerCreated, super::EV_SERVER_CREATED, Post);
 impl_event!(ServerUpdated, super::EV_SERVER_UPDATED, Post);
 impl_event!(ServerDeleted, super::EV_SERVER_DELETED, Post);

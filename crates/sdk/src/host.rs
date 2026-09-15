@@ -77,6 +77,9 @@ extern "ExtismHost" {
     fn launcher_send(input: String) -> String;
     fn launcher_online(input: String) -> String;
     fn launcher_count(input: String) -> String;
+    fn web_ws_send(input: String) -> String;
+    fn web_ws_online(input: String) -> String;
+    fn web_ws_count(input: String) -> String;
     fn hub_file_petition(input: String) -> String;
     fn build_files(input: String) -> String;
     fn build_file_read(input: String) -> String;
@@ -481,6 +484,21 @@ pub(crate) fn launcher_count_call<A: Serialize, R: DeserializeOwned>(
     arg: A,
 ) -> Result<R, ModuleError> {
     call!(launcher_count, arg)
+}
+pub(crate) fn web_ws_send_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(web_ws_send, arg)
+}
+pub(crate) fn web_ws_online_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(web_ws_online, arg)
+}
+pub(crate) fn web_ws_count_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(web_ws_count, arg)
 }
 pub(crate) fn hub_file_petition_call<A: Serialize, R: DeserializeOwned>(
     arg: A,

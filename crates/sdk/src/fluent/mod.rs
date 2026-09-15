@@ -75,6 +75,8 @@ pub trait PlayerActions {
     fn in_game(&self) -> player::InGame;
     /// Their launcher. See [`player::Launcher`].
     fn launcher(&self) -> player::Launcher;
+    /// Their website browser tab. See [`player::WebWs`].
+    fn web_ws(&self) -> player::WebWs;
     /// How they sign in and where they are signed in. See [`player::Logins`].
     fn logins(&self) -> player::Logins;
 
@@ -120,6 +122,9 @@ impl PlayerActions for Player {
     }
     fn launcher(&self) -> player::Launcher {
         player::Launcher(self.id)
+    }
+    fn web_ws(&self) -> player::WebWs {
+        player::WebWs(self.id)
     }
     fn logins(&self) -> player::Logins {
         player::Logins(self.id)

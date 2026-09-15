@@ -20,7 +20,14 @@ use uuid::Uuid;
 #[serde(tag = "t", content = "d")]
 pub enum PlayerWsClientMsg {
     /// The same session token the REST endpoints take.
-    Authenticate { access_token: String },
+    Authenticate {
+        access_token: String,
+    },
+    /// Frame from the player's web tab targeted to a module on the master.
+    ModuleMessage {
+        module: String,
+        payload: serde_json::Value,
+    },
     Ping,
 }
 
@@ -33,7 +40,9 @@ pub enum PlayerWsClientMsg {
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Presence {
     /// In game, on a particular game server.
-    InGame { game_server_id: Uuid },
+    InGame {
+        game_server_id: Uuid,
+    },
     /// A browser tab is open.
     OnSite,
     /// The launcher is running, the game is not.
@@ -74,14 +83,28 @@ pub struct DirectMessage {
 pub enum PlayerWsMsg {
     /// Authenticated. The unread count comes with it so the badge is right
     /// before the first fetch finishes.
-    AuthOk { unread: i64 },
+    AuthOk {
+        unread: i64,
+    },
     AuthFail,
     /// Somebody wrote to you.
-    DmReceived { message: DirectMessage },
+    DmReceived {
+        message: DirectMessage,
+    },
     /// The other side read what you had sent them.
-    DmRead { thread_id: Uuid },
+    DmRead {
+        thread_id: Uuid,
+    },
     /// Somebody you can see changed where they are.
-    PresenceChanged { user_id: Uuid, presence: Presence },
+    PresenceChanged {
+        user_id: Uuid,
+        presence: Presence,
+    },
+    /// Frame from an installed module to the player's web tab.
+    ModuleMessage {
+        module: String,
+        payload: serde_json::Value,
+    },
     Pong,
 }
 

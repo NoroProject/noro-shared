@@ -101,6 +101,7 @@ pub mod sessions;
 pub mod store;
 pub mod telemetry;
 pub mod tickets;
+pub mod web_ws;
 
 pub use noro_module_abi as abi;
 
@@ -119,27 +120,53 @@ pub use noro_sdk_macros as noro;
 /// How a call ended. There is one error for the whole SDK — [`abi::error::ModuleError`].
 pub type Result<T> = core::result::Result<T, abi::error::ModuleError>;
 
+/// Exits the function with an error if the condition is false.
+#[macro_export]
+macro_rules! ensure {
+    ($cond:expr, $err:expr) => {
+        if !($cond) {
+            return Err($err.into());
+        }
+    };
+    ($cond:expr, $($arg:tt)+) => {
+        if !($cond) {
+            return Err($crate::abi::error::ModuleError::invalid(format!($($arg)+)).into());
+        }
+    };
+}
+
+/// Exits the function immediately with an error.
+#[macro_export]
+macro_rules! bail {
+    ($err:expr) => {
+        return Err($err.into());
+    };
+    ($($arg:tt)+) => {
+        return Err($crate::abi::error::ModuleError::invalid(format!($($arg)+)).into());
+    };
+}
+
 /// Everything an ordinary module needs, in one `use`.
 pub mod prelude {
     pub use crate::abi::error::{ErrorKind, ModuleError};
     pub use crate::abi::events::*;
+    pub use crate::abi::http::{HttpRequest, HttpResponse};
     pub use crate::abi::http_out::{HttpCall, HttpReply};
     pub use crate::abi::manifest::{Priority, SettingKind};
     pub use crate::abi::ops::{
-        FineDraft, IntoRoleRef, PunishKind, RoleDraft, RoleRef, ScheduleDraft,
+        FineDraft, IntoRoleRef, PunishKind, RoleDraft, RoleRef, ScheduleDraft, WebFrame,
     };
     pub use crate::abi::sql::Query;
-    pub use crate::abi::HttpRequest;
     pub use crate::abi::Registration;
     pub use crate::abi::{
         Account, ActorRef, Build, BuildFile, EventCtx, GameServer, IntoPlayerRef, Origin, Player,
         PlayerRef, Punishment, Role, Server,
     };
     pub use crate::{
-        access, agent, bank, bots, builds, cases, db, dm, events, files, fluent, http, hub,
-        identities,
-        instance, launcher, log, news, noro, now, permissions, players, punish, restarts, roles,
-        roster, servers, sessions, store, telemetry, tickets, Result,
+        access, agent, bail, bank, bots, builds, cases, db, dm, ensure, events, files, fluent,
+        http, hub, identities, instance, launcher, log, news, noro, now, permissions, players,
+        punish, query, restarts, roles, roster, servers, sessions, store, telemetry, tickets,
+        web_ws, Result,
     };
     // Методы на сущностях приходят трейтами: `Player` определён в
     // `noro-module-abi`, и добавить ему обычные методы из SDK нельзя. В
