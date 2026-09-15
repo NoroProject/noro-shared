@@ -43,17 +43,17 @@ pub fn process_rpc(
     let export = quote! {
         #[::noro_sdk::extism_pdk::plugin_fn]
         pub fn #export_name(
-            ::noro_sdk::extism_pdk::Json(payload): ::noro_sdk::extism_pdk::Json<::serde_json::Value>,
-        ) -> ::noro_sdk::extism_pdk::FnResult<::noro_sdk::extism_pdk::Json<::serde_json::Value>> {
+            ::noro_sdk::extism_pdk::Json(payload): ::noro_sdk::extism_pdk::Json<::noro_sdk::serde_json::Value>,
+        ) -> ::noro_sdk::extism_pdk::FnResult<::noro_sdk::extism_pdk::Json<::noro_sdk::serde_json::Value>> {
             let request = ::noro_sdk::abi::http::HttpRequest {
                 method: "RPC".to_string(),
                 path: #rpc_name.to_string(),
-                query: ::serde_json::json!({}),
+                query: ::noro_sdk::serde_json::json!({}),
                 body: Some(payload),
                 user: None,
             };
             let res = <#self_ty>::#name(#(#call_args),*)?;
-            let val = ::serde_json::to_value(res)?;
+            let val = ::noro_sdk::serde_json::to_value(res)?;
             Ok(::noro_sdk::extism_pdk::Json(val))
         }
     };
