@@ -73,6 +73,8 @@ http = ["discord.com"]
 | | `post` | `hub::post` |
 | `towns` | `read` | `hub::towns`, `hub::town` |
 | | `manage` | `hub::found_town` |
+| `web_ws` | `read` | `web_ws::is_online`, `web_ws::connected` |
+| | `notify` | `web_ws::send`, `web_ws::broadcast`, `player.push_web_event` |
 | `market` | `read` | `hub::market`, `hub::lot` |
 | | `sell` | `hub::list_lot` |
 | `court` | `read` | `hub::court`, `hub::court_case` |

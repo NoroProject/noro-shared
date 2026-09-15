@@ -79,6 +79,24 @@ fn claim(AuthUser(user): AuthUser, Json(body): Json<ClaimReq>) -> Result<Receipt
 - `RawParams(pub Value)` — даёт доступ к сырому объекту параметров query
 - `HttpRequest` — полный объект запроса
 
+## Пользовательские HTTP-статусы и заголовки (`HttpResponse`)
+
+По умолчанию возврат сериализуемой структуры отдаёт `200 OK` с `application/json`.
+Если нужно вернуть другой статус, перенаправление или свои заголовки, возвращайте `HttpResponse`:
+
+```rust
+#[route(POST, "/item")]
+fn create_item() -> Result<HttpResponse> {
+    Ok(HttpResponse::new(201, json!({ "created": true }))
+        .with_header("X-Custom-Header", "value"))
+}
+
+#[route(GET, "/legacy")]
+fn legacy() -> Result<HttpResponse> {
+    Ok(HttpResponse::redirect("/api/modules/shop/v2/items"))
+}
+```
+
 HTTP разбирает сам мастер: заголовков и кук здесь нет, а решение о допуске уже принято.
 
 ## Ошибки

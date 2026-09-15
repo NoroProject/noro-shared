@@ -79,6 +79,24 @@ Available extractors (in `noro_sdk::prelude::*`):
 - `RawParams(pub Value)` — provides raw query map
 - `HttpRequest` — receives the complete underlying request object
 
+## Custom Status Codes and Headers (`HttpResponse`)
+
+By default, returning a serializable type from a route handler sends `200 OK` with `application/json`.
+When you need custom HTTP status codes, redirects, or headers, return `HttpResponse`:
+
+```rust
+#[route(POST, "/item")]
+fn create_item() -> Result<HttpResponse> {
+    Ok(HttpResponse::new(201, json!({ "created": true }))
+        .with_header("X-Custom-Header", "value"))
+}
+
+#[route(GET, "/legacy")]
+fn legacy() -> Result<HttpResponse> {
+    Ok(HttpResponse::redirect("/api/modules/shop/v2/items"))
+}
+```
+
 The master parses the HTTP itself — there are no headers or cookies to handle here, and
 the access decision was already made.
 

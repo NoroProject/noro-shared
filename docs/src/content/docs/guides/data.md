@@ -89,15 +89,21 @@ CREATE TABLE orders (
 Then query them:
 
 ```rust
-db::execute(Query::new("INSERT INTO orders (player_id, total) VALUES ($1, $2)")
-    .bind(player.to_string())
-    .bind(500))?;
+db::execute(query!(
+    "INSERT INTO orders (player_id, total) VALUES ($1, $2)",
+    player.to_string(),
+    500
+))?;
 
-for row in db::query(Query::new("SELECT * FROM orders WHERE paid_at > $1").bind(since))? {
-    let total = row["total"].as_i64().unwrap_or(0);
-}
+// Strongly-typed row deserialization:
+let orders: Vec<Order> = db::query_as(query!(
+    "SELECT * FROM orders WHERE paid_at > $1",
+    since
+))?;
 
-let count: Option<i64> = db::scalar(Query::new("SELECT count(*) FROM orders"))?;
+// Fetch single row or scalar:
+let latest: Option<Order> = db::one_as(query!("SELECT * FROM orders ORDER BY id DESC LIMIT 1"))?;
+let count: Option<i64> = db::scalar(query!("SELECT count(*) FROM orders"))?;
 ```
 
 Rows come back as objects keyed by column name, not as positional arrays: a query that

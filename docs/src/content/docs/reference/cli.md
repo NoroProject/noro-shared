@@ -102,6 +102,21 @@ Rebuilds on every save, for the master's [development mode](../../guides/dev-mod
 failed build prints the error and keeps watching — you fix the typo and save again rather
 than restarting the loop.
 
+## `cargo noro add <subcommand>`
+
+Scaffolds module components in `src/lib.rs` and `migrations/`:
+
+| Command | What it creates |
+|---|---|
+| `cargo noro add event <name> [--priority P]` | Appends an event handler to `src/lib.rs`. |
+| `cargo noro add route <METHOD> <path>` | Appends an HTTP route handler (e.g. `POST /buy`) to `src/lib.rs`. |
+| `cargo noro add task <name> [every]` | Appends a scheduled task to `src/lib.rs` (interval or cron). |
+| `cargo noro add migration <name>` | Creates the next numbered SQL migration in `migrations/`. |
+
+## `cargo noro ui`
+
+Launches a local Vite development server (`http://localhost:5173`) with HMR and an integrated Noro test environment (`window.__noroUi`). Allows developing and previewing your Vue mini-app interface locally without running a master server.
+
 ## `cargo noro gen-types [-o FILE]`
 
 Generates TypeScript interface definitions from Rust structs in your module's crate (e.g. structures decorated with `Serialize` or `Deserialize`).

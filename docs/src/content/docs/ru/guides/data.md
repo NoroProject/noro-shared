@@ -88,15 +88,21 @@ CREATE TABLE orders (
 Дальше — запросы:
 
 ```rust
-db::execute(Query::new("INSERT INTO orders (player_id, total) VALUES ($1, $2)")
-    .bind(player.to_string())
-    .bind(500))?;
+db::execute(query!(
+    "INSERT INTO orders (player_id, total) VALUES ($1, $2)",
+    player.to_string(),
+    500
+))?;
 
-for row in db::query(Query::new("SELECT * FROM orders WHERE paid_at > $1").bind(since))? {
-    let total = row["total"].as_i64().unwrap_or(0);
-}
+// Строгая типизация строк таблицы:
+let orders: Vec<Order> = db::query_as(query!(
+    "SELECT * FROM orders WHERE paid_at > $1",
+    since
+))?;
 
-let count: Option<i64> = db::scalar(Query::new("SELECT count(*) FROM orders"))?;
+// Получение одной строки или скаляра:
+let latest: Option<Order> = db::one_as(query!("SELECT * FROM orders ORDER BY id DESC LIMIT 1"))?;
+let count: Option<i64> = db::scalar(query!("SELECT count(*) FROM orders"))?;
 ```
 
 Строки приходят объектами с именами колонок, а не позиционными массивами: запрос, у

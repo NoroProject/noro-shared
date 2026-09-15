@@ -94,7 +94,9 @@ cargo check --workspace
 cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
 cargo fmt --all
+cd docs && bun run build
 ```
 
 > [!IMPORTANT]
-> When modifying `schema` or `i18n`, verify that existing consumers (`noro-launcher` and `noro-server`) will compile cleanly before pushing.
+> - **Module Documentation:** Whenever modifying module crates (`module_abi`, `sdk`, `sdk_macros`, `cargo_noro`), you **must** update the corresponding documentation guides and references in `docs/src/content/docs/` in **both English and Russian (`ru/`)**.
+> - **Consumers check:** When modifying `schema` or `i18n`, verify that existing consumers (`noro-launcher` and `noro-server`) compile cleanly before pushing.
