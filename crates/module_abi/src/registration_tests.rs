@@ -160,3 +160,29 @@ fn a_core_event_is_still_checked() {
     };
     assert_eq!(made_up.violations().len(), 1);
 }
+
+#[test]
+fn rpc_routes_are_allowed() {
+    let r = Registration {
+        routes: vec![RouteReg {
+            method: "RPC".to_string(),
+            path: "get_points".to_string(),
+            handler: "rpc_get_points".to_string(),
+            auth: Auth::User,
+        }],
+        ..Default::default()
+    };
+    assert!(r.violations().is_empty());
+
+    let invalid = Registration {
+        routes: vec![RouteReg {
+            method: "RPC".to_string(),
+            path: "get/points".to_string(),
+            handler: "".to_string(),
+            auth: Auth::User,
+        }],
+        ..Default::default()
+    };
+    assert_eq!(invalid.violations().len(), 2);
+}
+

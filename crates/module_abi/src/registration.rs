@@ -102,6 +102,16 @@ impl Registration {
         }
 
         for r in &self.routes {
+            if r.method.eq_ignore_ascii_case("RPC") {
+                if r.path.is_empty() || r.path.contains('/') || r.path.contains("..") {
+                    out.push(format!("the rpc method name `{}` is not allowed", r.path));
+                }
+                if r.handler.is_empty() {
+                    out.push(format!("the rpc method `{}` has an empty handler", r.path));
+                }
+                continue;
+            }
+
             if !r.path.starts_with('/') || r.path.contains("..") {
                 out.push(format!("the endpoint path `{}` is not allowed", r.path));
             }
