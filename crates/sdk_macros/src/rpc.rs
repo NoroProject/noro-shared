@@ -35,7 +35,7 @@ pub fn process_rpc(
         reg.routes.push(::noro_sdk::abi::registration::RouteReg {
             method: "RPC".to_string(),
             path: #rpc_name.to_string(),
-            handler: #handler_str,
+            handler: #handler_str.to_string(),
             auth: ::noro_sdk::abi::manifest::Auth::User,
         });
     };
