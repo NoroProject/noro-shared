@@ -1,4 +1,4 @@
-use std::{fmt::format, str::FromStr};
+// Модуль наград за игровое время: начисление очков, роли, кэш, WebSocket и RPC.
 
 use noro_sdk::prelude::*;
 
@@ -6,6 +6,18 @@ const DEFAULT_PER_HOUR: i64 = 100;
 const DEFAULT_HOURS_FOR_ROLE: i64 = 10;
 
 pub struct PlaytimeRewards;
+
+#[derive(Serialize, Deserialize)]
+pub struct Points {
+    pub player: String,
+    pub points: i64,
+    pub seconds_played: i64,
+}
+
+#[derive(Deserialize)]
+pub struct GetPointsQuery {
+    pub player_id: Uuid,
+}
 
 #[noro::module]
 impl PlaytimeRewards {
@@ -55,24 +67,15 @@ impl PlaytimeRewards {
             ));
         }
         store::user(e.player.id).set("last_join", &noro_sdk::now().timestamp())?;
-        Ok(())
-    }
-
-    #[task("30s")]
-    fn execute() -> Result<()> {
-        let user_uuid = "95bf010b-8e9f-55d5-8f1c-766c624ab7e0";
-        let uuid = Uuid::from_str(user_uuid).unwrap();
-        let player = players::require(PlayerRef::mc_uuid(uuid))?;
-        let me = store::user(player.id);
-        me.incr("points", 1)?;
-        me.incr("seconds_played", 10)?;
-        log::info("test");
+        // Кэшируем онлайн-статус в памяти
+        cache::set(&format!("active:{}", e.player.id), &true, 300)?;
         Ok(())
     }
 
     #[event(priority = normal)]
     fn on_left(e: PlayerLeft) -> Result<()> {
         let seconds = e.session_secs.max(0);
+        let _ = cache::delete(&format!("active:{}", e.player.id));
         if seconds == 0 {
             return Ok(());
         }
@@ -119,6 +122,52 @@ impl PlaytimeRewards {
         Ok(())
     }
 
+    /// WebSocket действие: запрос бонуса из браузера
+    #[ws_action("claim_bonus")]
+    fn on_claim_bonus(player: Player) -> Result<()> {
+        let key = format!("bonus_cooldown:{}", player.id);
+        if cache::get::<bool>(&key)?.unwrap_or(false) {
+            web_ws::send(
+                player.id,
+                json!({
+                    "type": "bonus_status",
+                    "status": "cooldown",
+                    "message": "Бонус уже получен недавно"
+                }),
+            )?;
+            return Ok(());
+        }
+
+        // Начисляем бонусные 10 очков и ставим кулдаун на 60 сек в кэш
+        let me = store::user(player.id);
+        let points = me.incr("points", 10)?;
+        cache::set(&key, &true, 60)?;
+
+        web_ws::send(
+            player.id,
+            json!({
+                "type": "bonus_status",
+                "status": "claimed",
+                "added": 10,
+                "total_points": points
+            }),
+        )?;
+        Ok(())
+    }
+
+    /// RPC-метод для других модулей (например, магазина или боевого пропуска):
+    /// `modules::call::<Points>("playtime-rewards", "get_points", &GetPointsQuery { player_id })`
+    #[rpc("get_points")]
+    fn rpc_get_points(Json(query): Json<GetPointsQuery>) -> Result<Points> {
+        let me = store::user(query.player_id);
+        let player = players::require(query.player_id)?;
+        Ok(Points {
+            player: player.label(),
+            points: me.get("points")?.unwrap_or(0),
+            seconds_played: me.get("seconds_played")?.unwrap_or(0),
+        })
+    }
+
     #[route(POST, "/reset", auth = permission("noro.module.playtime-rewards.reset"))]
     fn route_reset(req: HttpRequest) -> Result<Points> {
         let user_id = req.require_user()?;
@@ -130,15 +179,6 @@ impl PlaytimeRewards {
             points: 0,
             seconds_played: me.get("seconds_played")?.unwrap_or(0),
         })
-    }
-
-    #[event("mod.shop.purchase")]
-    fn on_purchase(e: noro_sdk::serde_json::Value) -> Result<()> {
-        let Some(player) = e.get("player").and_then(|v| v.as_str()) else {
-            return Ok(());
-        };
-        log::info(format!("{player} что-то купил — начисляем бонус"));
-        Ok(())
     }
 
     #[route(GET, "/me")]
@@ -154,9 +194,21 @@ impl PlaytimeRewards {
     }
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Points {
-    pub player: String,
-    pub points: i64,
-    pub seconds_played: i64,
+#[cfg(test)]
+mod tests {
+    use noro_sdk::prelude::*;
+    use noro_sdk::testing::*;
+
+    #[test]
+    fn mock_web_message_has_valid_player() {
+        let msg = mock_web_message("Steve", &json!({ "action": "claim_bonus" }));
+        assert_eq!(msg.player.label(), "Steve");
+    }
+
+    #[test]
+    fn mock_request_has_correct_method() {
+        let req = mock_request("GET", "/me", None, Some(mock_player("Steve").id));
+        assert_eq!(req.method, "GET");
+        assert!(req.user.is_some());
+    }
 }

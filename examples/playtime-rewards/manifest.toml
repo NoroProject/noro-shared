@@ -16,15 +16,31 @@ description = "Считает наигранное время и начисля�
 players = ["read"]
 store = true
 roles = ["read", "grant"]
-
+cache = ["read", "write"]
+web_ws = ["read", "notify"]
+modules = ["call"]
 
 [[permissions]]
 node = "noro.module.playtime-rewards.reset"
 label = "mod-playtime-rewards-perm-reset"
 
+# Страница в кабинете игрока (в существующей группе "profile")
 [[apps]]
 placement = "cabinet"
 kind = "vue"
 entry = "app.js"
 title = "mod-playtime-rewards-title"
 icon = "i-lucide-gift"
+category = "profile"
+order = 50
+
+# Страница в панели управления (в существующей группе "players")
+[[apps]]
+id = "admin"
+placement = "admin"
+kind = "vue"
+entry = "app.js"
+title = "mod-playtime-rewards-title"
+icon = "i-lucide-gift"
+category = "players"
+order = 60
