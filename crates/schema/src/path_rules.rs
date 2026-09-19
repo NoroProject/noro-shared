@@ -64,7 +64,11 @@ pub fn rule_for<'a>(path: &str, rules: &'a [PathRule]) -> Option<&'a PathRule> {
 /// Три формы, все три уже встречаются в существующих сборках:
 /// `dir/` — каталог целиком, `name*` — префикс, `path` — точное совпадение.
 /// `**` внутри работает как «любой остаток»: `config/**` — всё под config.
-fn matches(path: &str, pattern: &str) -> bool {
+///
+/// Публичная, потому что тем же сопоставлением живут правила стороны файла
+/// сборки (`builds.side_rules`) и политика синка на ноде. Вторая реализация
+/// разошлась бы с этой на первом же нетривиальном шаблоне.
+pub fn matches(path: &str, pattern: &str) -> bool {
     if let Some(prefix) = pattern.strip_suffix("/**") {
         return path == prefix || path.starts_with(&format!("{prefix}/"));
     }

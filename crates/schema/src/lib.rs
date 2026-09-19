@@ -12,8 +12,11 @@ pub mod integrity;
 pub mod launcher;
 pub mod manifest_args;
 pub mod news;
+pub mod noded;
+pub mod notifications;
 pub mod optional;
 pub mod page;
+pub mod panel_perms;
 pub mod path_rules;
 pub mod permissions;
 pub mod player_ws;
@@ -41,6 +44,10 @@ pub use scopes::*;
 pub use server::*;
 pub use user::*;
 pub use ws_protocol::*;
+
+// `noded` and `panel_perms` are reached by path, not re-exported: their
+// `FileEntry`, `Op`, `Status` and short grant constants would collide with
+// `build`, `launcher` and `permissions` at the crate root.
 
 /// Namespace for the v5 UUIDs below. There is no stored mapping from external
 /// account to Minecraft UUID — it is derived every time, so this must not change.

@@ -42,6 +42,10 @@ after the table.
 | `gameservers` | `read` | `servers::game_servers`, `servers::game_server` |
 | | `maintenance` | `servers::set_maintenance` |
 | | `command` | `servers::command` |
+| `proxy` | `read` | `proxy::subservers` |
+| | `transfer` | `proxy::transfer`, `proxy::transfer_named` |
+| | `evacuate` | `proxy::evacuate` |
+| | `title` | `proxy::title` |
 | `punish` | `read` | `punish::active`, `punish::history` |
 | | `issue` | `punish::ban`, `mute`, `warn`, `server_ban`, `issue` |
 | | `revoke` | `punish::revoke` |

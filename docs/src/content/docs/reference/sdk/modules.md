@@ -7,4 +7,4 @@ Inter-module RPC calls.
 
 | Call | What it does | Needs |
 |---|---|---|
-| `call<R: DeserializeOwned, P: Serialize>(target: &str, method: &str, payload: &P) -> Result<R, ModuleError>` | Calls an RPC method exposed by another module. | — |
+| `call<R: DeserializeOwned, P: Serialize>(target: &str, method: &str, payload: &P) -> Result<R, ModuleError>` | Calls an RPC method exposed by another module. | `modules = ["call"]` |

@@ -1,13 +1,13 @@
 ---
 title: "testing"
-description: "Helpers for unit testing module functions without running the master server."
+description: "Помощники для юнит-тестирования функций модуля без запуска мастер-сервера."
 ---
 
-Helpers for unit testing module functions without running the master server.
+Помощники для юнит-тестирования функций модуля без запуска мастер-сервера.
 
 | Вызов | Что делает | Нужно |
 |---|---|---|
-| `mock_player(name: &str) -> Player` | Constructs a mock [`Player`] for tests. | — |
-| `mock_context() -> EventCtx` | Constructs a mock [`EventCtx`] originated from web or system. | — |
-| `mock_web_message<T: Serialize>(name: &str, payload: &T) -> WebMessage` | Constructs a mock [`WebMessage`] with serialized payload. | — |
-| `mock_request(method: &str, path: &str, body: Option<serde_json::Value>, user: Option<Uuid>) -> HttpRequest` | Constructs a mock [`HttpRequest`]. | — |
+| `mock_player(name: &str) -> Player` | Создаёт тестового игрока [`Player`]. | — |
+| `mock_context() -> EventCtx` | Создаёт тестовый контекст события [`EventCtx`] (источник Web или System). | — |
+| `mock_web_message<T: Serialize>(name: &str, payload: &T) -> WebMessage` | Создаёт тестовое сообщение [`WebMessage`] с сериализованной полезной нагрузкой. | — |
+| `mock_request(method: &str, path: &str, body: Option<serde_json::Value>, user: Option<Uuid>) -> HttpRequest` | Создаёт тестовый HTTP-запрос [`HttpRequest`]. | — |

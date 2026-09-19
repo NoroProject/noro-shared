@@ -143,6 +143,10 @@ extern "ExtismHost" {
     fn cache_set(input: String) -> String;
     fn cache_delete(input: String) -> String;
     fn module_call(input: String) -> String;
+    fn proxy_transfer(input: String) -> String;
+    fn proxy_evacuate(input: String) -> String;
+    fn proxy_title(input: String) -> String;
+    fn proxy_subservers(input: String) -> String;
     fn host_now(input: String) -> String;
     fn log(input: String);
 }
@@ -871,4 +875,28 @@ pub(crate) fn module_call_call<A: Serialize, R: DeserializeOwned>(
     arg: A,
 ) -> Result<R, ModuleError> {
     call!(module_call, arg)
+}
+
+pub(crate) fn proxy_transfer_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(proxy_transfer, arg)
+}
+
+pub(crate) fn proxy_evacuate_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(proxy_evacuate, arg)
+}
+
+pub(crate) fn proxy_title_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(proxy_title, arg)
+}
+
+pub(crate) fn proxy_subservers_call<A: Serialize, R: DeserializeOwned>(
+    arg: A,
+) -> Result<R, ModuleError> {
+    call!(proxy_subservers, arg)
 }

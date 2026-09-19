@@ -53,6 +53,15 @@ pub struct GameServerEntry {
     /// Точка входа (Velocity/BungeeCord). Игрок коннектится сюда, а онлайн
     /// считают бэкенды за ним — иначе он сложился бы дважды.
     pub proxy: bool,
+    /// Идентификатор прокси, к которому привязан сервер (если это бэкенд за прокси).
+    #[serde(default)]
+    pub proxy_id: Option<Uuid>,
+    /// Роль подсервера: game, limbo, lobby, fallback.
+    #[serde(default)]
+    pub proxy_role: Option<String>,
+    /// Является ли сервером входа по умолчанию для прокси.
+    #[serde(default)]
+    pub is_default: bool,
 }
 
 /// Версия сборки, доступная игроку для выбора в лаунчере.

@@ -18,6 +18,11 @@ impl FileSide {
     pub fn needed_on_client(&self) -> bool {
         matches!(self, FileSide::Both | FileSide::Client)
     }
+
+    /// Which files a hosted server gets when a build is rolled out to it.
+    pub fn needed_on_server(&self) -> bool {
+        matches!(self, FileSide::Both | FileSide::Server)
+    }
 }
 
 /// A file the launcher must have at exactly this SHA1.

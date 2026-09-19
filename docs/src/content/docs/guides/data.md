@@ -1,6 +1,6 @@
 ---
 title: Storing data
-description: The scoped key-value store, and the state of your own Postgres schema.
+description: The scoped key-value store, your own Postgres schema, and in-memory TTL caching.
 ---
 
 ## The key-value store
@@ -145,23 +145,6 @@ Editing a migration that has already been applied is how you stop a module from 
 Add another file instead. This is the same rule the master's own migrations follow, for
 the same reason.
 
-## Module Settings with `#[derive(Settings)]`
-
-When declaring settings for operators to configure in the admin panel, define a struct with `#[derive(Settings)]`:
-
-```rust
-#[derive(Settings, Serialize, Deserialize, Default)]
-pub struct ModuleConfig {
-    #[setting(label = "mod-rewards-interval", type = "number", min = 1, max = 3600)]
-    pub reward_interval_secs: i64,
-
-    #[setting(label = "mod-rewards-enabled", type = "toggle")]
-    pub enabled: bool,
-}
-```
-
-Call `ModuleConfig::load()?` in your handlers or scheduled tasks to load the operator's current values directly from the store.
-
 ## In-memory TTL Cache
 
 When you need temporary, volatile storage with automatic expiration (e.g. rate-limit tokens, session states, computed analytics), use `cache`:
@@ -186,68 +169,4 @@ Requires capability:
 ```toml
 [capabilities]
 cache = ["read", "write"]
-```
-
-## Inter-Module RPC (`#[rpc]` & `modules::call`)
-
-Modules can expose RPC methods and call other installed modules directly.
-
-### Exposing an RPC method
-
-Annotate a method with `#[rpc("method_name")]` (or bare `#[rpc]` to use the function's name):
-
-```rust
-#[derive(Serialize, Deserialize)]
-pub struct DiscountReq {
-    pub player_id: Uuid,
-    pub price: u64,
-}
-
-#[noro::module]
-impl ShopService {
-    #[rpc("calc_discount")]
-    fn calc_discount(Json(req): Json<DiscountReq>) -> Result<u64> {
-        let discount = req.price / 10;
-        Ok(req.price - discount)
-    }
-}
-```
-
-### Calling from another module
-
-Use `modules::call`:
-
-```rust
-let final_price: u64 = modules::call(
-    "shop_service",
-    "calc_discount",
-    &DiscountReq { player_id, price: 100 },
-)?;
-```
-
-Requires capability:
-```toml
-[capabilities]
-modules = ["call"]
-```
-
-## Testing with `noro_sdk::testing`
-
-Write unit tests for your event handlers, WebSocket actions, or HTTP endpoints without running the master server:
-
-```rust
-#[cfg(test)]
-mod tests {
-    use noro_sdk::testing::*;
-    use noro_sdk::prelude::*;
-
-    #[test]
-    fn test_my_handler() {
-        let msg = mock_web_message("Steve", &json!({ "action": "bid", "amount": 100 }));
-        assert_eq!(msg.player.label(), "Steve");
-
-        let req = mock_request("GET", "/status", None, Some(msg.player.id));
-        assert_eq!(req.method, "GET");
-    }
-}
 ```

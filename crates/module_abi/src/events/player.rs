@@ -203,10 +203,24 @@ pub struct WebMessage {
     pub payload: serde_json::Value,
 }
 
+/// A player switched subservers behind a Velocity proxy.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PlayerServerSwitch {
+    pub ctx: EventCtx,
+    pub player: Player,
+    #[serde(default)]
+    pub from_server_id: Option<Uuid>,
+    #[serde(default)]
+    pub from_server_name: Option<String>,
+    pub to_server_id: Uuid,
+    pub to_server_name: String,
+}
+
 impl_event!(PlayerPreChat, super::EV_PLAYER_PRE_CHAT, Pre);
 impl_event!(PlayerPreJoin, super::EV_PLAYER_PRE_JOIN, Pre);
 impl_event!(PlayerJoined, super::EV_PLAYER_JOINED, Post);
 impl_event!(PlayerLeft, super::EV_PLAYER_LEFT, Post);
+impl_event!(PlayerServerSwitch, super::EV_PLAYER_SERVER_SWITCH, Post);
 impl_event!(UserRegistered, super::EV_USER_REGISTERED, Post);
 impl_event!(UserPreLogin, super::EV_USER_PRE_LOGIN, Pre);
 impl_event!(UserLoggedIn, super::EV_USER_LOGGED_IN, Post);

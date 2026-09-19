@@ -1,10 +1,10 @@
 ---
 title: "modules"
-description: "Inter-module RPC calls."
+description: "Межмодульные вызовы RPC."
 ---
 
-Inter-module RPC calls.
+Межмодульные вызовы RPC.
 
 | Вызов | Что делает | Нужно |
 |---|---|---|
-| `call<R: DeserializeOwned, P: Serialize>(target: &str, method: &str, payload: &P) -> Result<R, ModuleError>` | Calls an RPC method exposed by another module. | — |
+| `call<R: DeserializeOwned, P: Serialize>(target: &str, method: &str, payload: &P) -> Result<R, ModuleError>` | Вызывает метод RPC другого установленного модуля. | `modules = ["call"]` |

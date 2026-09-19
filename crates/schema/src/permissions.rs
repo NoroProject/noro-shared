@@ -128,6 +128,25 @@ nodes! {
     PERM_WRAPPER_POWER        = "noro.admin.wrapper.power", "perm-group-machine", "perm-node-wrapper-power";
     PERM_WRAPPER_BACKUPS      = "noro.admin.wrapper.backups", "perm-group-machine", "perm-node-wrapper-backups";
 
+    // --- Хостинг: ноды и серверы панели ---------------------------------------
+    // Это права персонала на саму инфраструктуру. Права владельца на свой
+    // сервер живут отдельно (`panel_perms`) и в этот реестр не входят
+    // намеренно: вне одного сервера они не значат ничего, и галка в редакторе
+    // ролей обещала бы доступ, которого не даёт.
+    PERM_NODES_VIEW           = "noro.admin.nodes.view", "perm-group-hosting", "perm-node-nodes-view";
+    PERM_NODES_EDIT           = "noro.admin.nodes.edit", "perm-group-hosting", "perm-node-nodes-edit";
+    PERM_NODES_DELETE         = "noro.admin.nodes.delete", "perm-group-hosting", "perm-node-nodes-delete";
+    PERM_NODES_TOKEN          = "noro.admin.nodes.token", "perm-group-hosting", "perm-node-nodes-token";
+    PERM_ALLOCATIONS_EDIT     = "noro.admin.nodes.allocations", "perm-group-hosting", "perm-node-allocations-edit";
+    PERM_PANEL_VIEW           = "noro.admin.panel.view", "perm-group-hosting", "perm-node-panel-view";
+    PERM_PANEL_CREATE         = "noro.admin.panel.create", "perm-group-hosting", "perm-node-panel-create";
+    PERM_PANEL_EDIT           = "noro.admin.panel.edit", "perm-group-hosting", "perm-node-panel-edit";
+    PERM_PANEL_DELETE         = "noro.admin.panel.delete", "perm-group-hosting", "perm-node-panel-delete";
+    PERM_PANEL_SUSPEND        = "noro.admin.panel.suspend", "perm-group-hosting", "perm-node-panel-suspend";
+    PERM_PANEL_CONTROL        = "noro.admin.panel.control", "perm-group-hosting", "perm-node-panel-control";
+    PERM_DNS_VIEW             = "noro.admin.dns.view", "perm-group-hosting", "perm-node-dns-view";
+    PERM_DNS_EDIT             = "noro.admin.dns.edit", "perm-group-hosting", "perm-node-dns-edit";
+
     // --- Действия в игре ------------------------------------------------------
     PERM_GAME_KICK            = "noro.admin.game.kick", "perm-group-other", "perm-node-game-kick";
     PERM_GAME_TELL            = "noro.admin.game.tell", "perm-group-other", "perm-node-game-tell";

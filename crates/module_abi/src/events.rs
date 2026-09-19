@@ -242,6 +242,7 @@ events! {
     EV_USER_SKIN_CHANGED      = "user.skin_changed",        Post, "player",     "ev-user-skin-changed",      "UserSkinChanged";
     EV_IDENTITY_LINKED        = "user.identity_linked",     Post, "player",     "ev-identity-linked",        "IdentityLinked";
     EV_IDENTITY_UNLINKED      = "user.identity_unlinked",   Post, "player",     "ev-identity-unlinked",      "IdentityUnlinked";
+    EV_PLAYER_SERVER_SWITCH   = "player.server_switch",     Post, "player",     "ev-player-server-switch",   "PlayerServerSwitch";
 
     // --- Roles, permissions, access -------------------------------------------
     EV_ROLE_CREATED           = "role.created",             Post, "access",     "ev-role-created",           "RoleCreated";

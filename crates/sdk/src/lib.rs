@@ -95,6 +95,7 @@ pub mod modules;
 pub mod news;
 pub mod permissions;
 pub mod players;
+pub mod proxy;
 pub mod punish;
 pub mod restarts;
 pub mod roles;
@@ -172,8 +173,8 @@ pub mod prelude {
     pub use crate::{
         access, agent, bail, bank, bots, builds, cache, cases, db, dm, ensure, events, extract,
         files, fluent, http, hub, identities, instance, launcher, log, modules, news, noro, now,
-        permissions, players, punish, query, restarts, roles, roster, servers, sessions, store,
-        telemetry, testing, tickets, web_ws, Result,
+        permissions, players, proxy, punish, query, restarts, roles, roster, servers, sessions,
+        store, telemetry, testing, tickets, web_ws, Result,
     };
     // Методы на сущностях приходят трейтами: `Player` определён в
     // `noro-module-abi`, и добавить ему обычные методы из SDK нельзя. В

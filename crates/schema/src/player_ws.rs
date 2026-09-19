@@ -91,6 +91,20 @@ pub enum PlayerWsMsg {
     DmReceived {
         message: DirectMessage,
     },
+    /// A notification arrived. The unread count rides along so the bell is
+    /// right without a second request.
+    NotificationReceived {
+        notification: crate::notifications::Notification,
+        unread: i64,
+        /// Показать ли системную плашку браузера.
+        ///
+        /// Решает мастер, а не клиент: он один видит и вкладку, и лаунчер, и
+        /// потому может отдать право показа ровно одному из них. Иначе человек
+        /// с открытым сайтом и запущенным лаунчером получал бы две одинаковые
+        /// плашки на каждое срочное событие.
+        #[serde(default)]
+        os_toast: bool,
+    },
     /// The other side read what you had sent them.
     DmRead {
         thread_id: Uuid,

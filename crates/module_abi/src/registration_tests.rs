@@ -185,4 +185,3 @@ fn rpc_routes_are_allowed() {
     };
     assert_eq!(invalid.violations().len(), 2);
 }
-

@@ -1,6 +1,6 @@
 ---
 title: Хранение данных
-description: Ключ-значение по областям и своя схема Postgres.
+description: Ключ-значение по областям, своя схема Postgres и TTL-кеш в памяти.
 ---
 
 ## Ключ-значение
@@ -142,23 +142,6 @@ ERROR: permission denied for table users
 Правка уже накатанной миграции — это способ остановить загрузку модуля. Добавьте вместо неё
 новый файл. То же правило и по той же причине действует для миграций самого мастера.
 
-## Настройки модуля с `#[derive(Settings)]`
-
-Для удобного объявления и чтения настроек модуля, редактируемых оператором в панели управления:
-
-```rust
-#[derive(Settings, Serialize, Deserialize, Default)]
-pub struct ModuleConfig {
-    #[setting(label = "mod-rewards-interval", type = "number", min = 1, max = 3600)]
-    pub reward_interval_secs: i64,
-
-    #[setting(label = "mod-rewards-enabled", type = "toggle")]
-    pub enabled: bool,
-}
-```
-
-Вызов `ModuleConfig::load()?` в обработчиках событий, ручках или задачах загружает актуальные значения напрямую из хранилища.
-
 ## In-memory TTL-кеш
 
 Когда модулю требуется временное, энергозависимое хранилище с автоочисткой по истечении срока (токены подтверждения, состояние сессий, предварительно вычисленные результаты):
@@ -183,68 +166,4 @@ cache::delete("verify_token:12345")?;
 ```toml
 [capabilities]
 cache = ["read", "write"]
-```
-
-## Межмодульный RPC (`#[rpc]` и `modules::call`)
-
-Модули могут предоставлять API друг другу и вызывать функции соседних модулей.
-
-### Объявление RPC-метода
-
-Пометьте метод атрибутом `#[rpc("имя_метода")]` (или просто `#[rpc]` для имени функции):
-
-```rust
-#[derive(Serialize, Deserialize)]
-pub struct DiscountReq {
-    pub player_id: Uuid,
-    pub price: u64,
-}
-
-#[noro::module]
-impl ShopService {
-    #[rpc("calc_discount")]
-    fn calc_discount(Json(req): Json<DiscountReq>) -> Result<u64> {
-        let discount = req.price / 10;
-        Ok(req.price - discount)
-    }
-}
-```
-
-### Вызов из другого модуля
-
-Используйте `modules::call`:
-
-```rust
-let final_price: u64 = modules::call(
-    "shop_service",
-    "calc_discount",
-    &DiscountReq { player_id, price: 100 },
-)?;
-```
-
-Требует разрешения:
-```toml
-[capabilities]
-modules = ["call"]
-```
-
-## Модульное тестирование с `noro_sdk::testing`
-
-Пишите локальные юнит-тесты на обработчики событий, WebSocket-действия и HTTP-ручки без необходимости запускать процесс мастера:
-
-```rust
-#[cfg(test)]
-mod tests {
-    use noro_sdk::testing::*;
-    use noro_sdk::prelude::*;
-
-    #[test]
-    fn test_my_handler() {
-        let msg = mock_web_message("Steve", &json!({ "action": "bid", "amount": 100 }));
-        assert_eq!(msg.player.label(), "Steve");
-
-        let req = mock_request("GET", "/status", None, Some(msg.player.id));
-        assert_eq!(req.method, "GET");
-    }
-}
 ```

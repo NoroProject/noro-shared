@@ -85,9 +85,19 @@ export default defineConfig({
                             slug: 'guides/data',
                         },
                         {
+                            label: 'Module settings',
+                            translations: { ru: 'Настройки модуля' },
+                            slug: 'guides/settings',
+                        },
+                        {
                             label: 'Your own endpoints',
                             translations: { ru: 'Свои ручки' },
                             slug: 'guides/endpoints',
+                        },
+                        {
+                            label: 'Inter-module RPC',
+                            translations: { ru: 'Межмодульный RPC' },
+                            slug: 'guides/rpc',
                         },
                         {
                             label: 'Mini-apps',
@@ -108,6 +118,11 @@ export default defineConfig({
                             label: 'Scheduled work',
                             translations: { ru: 'Работа по расписанию' },
                             slug: 'guides/tasks',
+                        },
+                        {
+                            label: 'Testing',
+                            translations: { ru: 'Тестирование' },
+                            slug: 'guides/testing',
                         },
                         {
                             label: 'Development mode',

@@ -56,7 +56,7 @@ const unsubscribe = noro.ws.on<BonusStatusMessage>((msg) => {
 onUnmounted(() => unsubscribe())
 
 function claimBonus() {
-    noro.ws.send({ action: 'claim_bonus' })
+  noro.ws.send({ action: 'claim_bonus' })
 }
 
 /** Право модуля: кнопка сброса есть только у тех, кому можно. */

@@ -913,6 +913,52 @@ pub struct ModuleEvent {
     pub server_id: Option<Uuid>,
 }
 
+/// Moving a player to another subserver via Velocity proxy.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProxyTransfer {
+    pub player: PlayerRef,
+    #[serde(default)]
+    pub target_server_id: Option<Uuid>,
+    #[serde(default)]
+    pub target_server_name: Option<String>,
+    #[serde(default)]
+    pub reason: Option<String>,
+}
+
+/// Evacuating players from one subserver to another.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProxyEvacuate {
+    pub from_server_id: Uuid,
+    #[serde(default)]
+    pub to_server_id: Option<Uuid>,
+    #[serde(default)]
+    pub title: Option<String>,
+}
+
+/// Showing an in-game Title to a player via Velocity proxy.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProxyTitle {
+    #[serde(default)]
+    pub player: Option<PlayerRef>,
+    pub title: String,
+    #[serde(default)]
+    pub subtitle: Option<String>,
+    #[serde(default = "default_title_time")]
+    pub fade_in_ms: u32,
+    #[serde(default = "default_title_stay")]
+    pub stay_ms: u32,
+    #[serde(default = "default_title_time")]
+    pub fade_out_ms: u32,
+}
+
+fn default_title_time() -> u32 {
+    500
+}
+
+fn default_title_stay() -> u32 {
+    3000
+}
+
 #[cfg(test)]
 #[path = "ops_tests.rs"]
 mod tests;
