@@ -21,7 +21,7 @@ pub mod replies;
 
 pub use events::{NodeEvent, NodeStats, PowerState, ServerStats, SftpActionKind};
 pub use ops::{
-    AgentSpec, BackupUpload, CoreSource, InstallSpec, NodeOp, PortMapping, PortProtocol,
+    AgentSpec, BackupUpload, CoreSource, InstallSpec, Listing, NodeOp, PortMapping, PortProtocol,
     PowerAction, ServerSpec, SyncPolicy, TicketMode,
 };
 pub use replies::{

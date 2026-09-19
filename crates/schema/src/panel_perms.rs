@@ -71,6 +71,7 @@ panel_nodes! {
     BUILD_SYNC         = "build.sync", "panel-perm-group-server", "panel-perm-build-sync";
     SETTINGS_RENAME    = "settings.rename", "panel-perm-group-server", "panel-perm-settings-rename";
     SETTINGS_REINSTALL = "settings.reinstall", "panel-perm-group-server", "panel-perm-settings-reinstall";
+    SETTINGS_LISTING   = "settings.listing", "panel-perm-group-server", "panel-perm-settings-listing";
     ACTIVITY_READ      = "activity.read", "panel-perm-group-server", "panel-perm-activity-read";
 }
 
