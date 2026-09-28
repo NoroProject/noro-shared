@@ -72,6 +72,7 @@ panel_nodes! {
     SETTINGS_RENAME    = "settings.rename", "panel-perm-group-server", "panel-perm-settings-rename";
     SETTINGS_REINSTALL = "settings.reinstall", "panel-perm-group-server", "panel-perm-settings-reinstall";
     SETTINGS_LISTING   = "settings.listing", "panel-perm-group-server", "panel-perm-settings-listing";
+    SETTINGS_PROXY     = "settings.proxy", "panel-perm-group-server", "panel-perm-settings-proxy";
     ACTIVITY_READ      = "activity.read", "panel-perm-group-server", "panel-perm-activity-read";
 }
 
