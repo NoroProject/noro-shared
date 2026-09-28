@@ -200,8 +200,35 @@ pub struct BuildManifest {
     #[serde(default = "default_allow_optional_mod_suggestions")]
     pub allow_optional_mod_suggestions: bool,
 
+    /// May this player add mods of their own on top of the build.
+    ///
+    /// Decided by the operator per build, not by the player: a build where
+    /// everybody has to be running the same thing — a tournament, a story
+    /// server — can still want suggestions while refusing personal mods.
+    ///
+    /// Defaults to false, and an absent field means an older master that never
+    /// had the setting. Assuming the permissive answer there would hand out a
+    /// right the operator was never asked about.
+    #[serde(default)]
+    pub allow_personal_content: bool,
+
     #[serde(default)]
     pub recommended_client_settings: RecommendedClientSettings,
+
+    /// What this particular player added on top of the build. Their files are
+    /// already in `verified_files`, so the sync needs nothing extra; this list
+    /// is what lets the launcher name them and keep them out of the build's own
+    /// mod list.
+    ///
+    /// `skip_serializing_if` is load-bearing, not tidiness. A launcher built
+    /// before this field existed drops it when it re-serializes the manifest to
+    /// check the signature, and an empty vector serialized as `[]` would break
+    /// the signature for every such launcher at once. Omitted when empty, the
+    /// bytes are identical to what those builds already verify, and only a
+    /// player who installed something — which needs a launcher that has this
+    /// field — ever sees a manifest carrying it.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub personal_content: Vec<crate::personal::PersonalContent>,
 
     /// ed25519 over the manifest serialized with this field empty.
     #[serde(default, with = "serde_bytes_vec")]

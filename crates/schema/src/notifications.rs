@@ -174,6 +174,22 @@ pub struct Notification {
     /// Longer text, already translated. Markdown, rendered by the site.
     #[serde(default)]
     pub body: String,
+    /// The keys behind `title` and `body`, for a client carrying its own
+    /// catalogue.
+    ///
+    /// The master translates with the locale its own process runs in, which is
+    /// the right answer for the site — it fetches the catalogue from the master
+    /// anyway — and the wrong one for the launcher, which has the catalogue
+    /// compiled in and a language the player chose in its own settings. Sending
+    /// the key alongside the finished string lets that client translate it
+    /// again properly, and costs a client without a catalogue nothing.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub title_key: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub body_key: Option<String>,
+    /// Arguments for both keys.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub args: BTreeMap<String, String>,
     #[serde(default)]
     pub icon: Icon,
     #[serde(default)]
@@ -247,6 +263,9 @@ mod tests {
             level: Level::Urgent,
             title: "Server crashed".into(),
             body: "Out of memory".into(),
+            title_key: Some("panel-notify-crashed".into()),
+            body_key: None,
+            args: BTreeMap::from([("server".to_string(), "lobby".to_string())]),
             icon: Icon::Player {
                 user_id: Uuid::nil(),
             },
