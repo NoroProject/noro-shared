@@ -4041,6 +4041,9 @@ panel-settings-no-address = Пока не выдан
 panel-settings-ports = Порты
 panel-settings-primary-port = Основной
 panel-settings-limits-note = Лимиты задаёт персонал, выдавший сервер; отсюда их не изменить.
+panel-settings-sftp-user = Логин SFTP
+panel-settings-sftp-host = Хост SFTP
+panel-settings-sftp-hint = Авторизация по приватному SSH-ключу, добавленному в разделе «SSH-ключи».
 
 admin-ports-title = Пул портов
 admin-ports-free = Свободно { $count } из { $total }

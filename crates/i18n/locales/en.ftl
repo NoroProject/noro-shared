@@ -4037,6 +4037,9 @@ panel-settings-no-address = Not assigned yet
 panel-settings-ports = Ports
 panel-settings-primary-port = Main
 panel-settings-limits-note = Limits are set by the staff who gave you this server; they cannot be changed from here.
+panel-settings-sftp-user = SFTP username
+panel-settings-sftp-host = SFTP host
+panel-settings-sftp-hint = Connect using the private SSH key matching the public key added under "SSH keys".
 
 admin-ports-title = Port pool
 admin-ports-free = { $count } free of { $total }
