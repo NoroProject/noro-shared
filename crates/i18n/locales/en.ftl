@@ -1588,8 +1588,8 @@ admin-wrapper-opt-mc-version = Minecraft version, e.g. 1.21.1. Overrides detecti
 admin-wrapper-fb-fetch-pin = fetch and pin
 admin-wrapper-fb-detected = detected
 
-admin-agent-title = Agents
-admin-agent-lead = The wrapper installs these itself — download one only to place it by hand.
+admin-agent-title = Agents, Mods & Plugins
+admin-agent-lead = Server agents, NoroChat & NoroTab, client mods, and utilities. The wrapper installs required components automatically — download here to configure manually.
 admin-agent-not-built = Nothing built yet. Run ./gradlew collectAgents in agent/ and copy agent/build/agents/ into {NORO_DATA_DIR}/agents/.
 admin-agent-versions-count = { $count } versions
 
