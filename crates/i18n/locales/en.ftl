@@ -1823,10 +1823,19 @@ admin-tab-condition-delete = Delete condition
 admin-tab-condition-name = Identifier
 admin-tab-condition-name-hint = Used as %condition:<name>%
 admin-tab-condition-placeholder = Source placeholder
-admin-tab-condition-rules = Rules (e.g. >= 19.5 -> <green>%tps%</green>)
+admin-tab-condition-rules = Rules
 admin-tab-conditions-tps = TPS condition rules
 admin-tab-conditions-ping = Ping condition rules
 admin-tab-condition-empty = No conditional placeholders configured. Click "Add Condition" to create one.
+admin-tab-rule-add = Add Rule
+admin-tab-rule-delete = Delete rule
+admin-tab-rule-operator = Condition
+admin-tab-rule-value = Value
+admin-tab-rule-output = Output template (MiniMessage)
+admin-tab-rule-default = else (default)
+admin-tab-rule-raw-toggle = Edit as text
+admin-tab-rule-visual-toggle = Form editor
+admin-tab-rules-empty = No rules added. Click "Add Rule".
 
 admin-tab-intervals-title = Placeholder Refresh Intervals
 admin-tab-intervals-desc = Refresh rate in ticks (20 ticks = 1 second)

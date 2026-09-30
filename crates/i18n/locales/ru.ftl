@@ -1829,10 +1829,19 @@ admin-tab-condition-delete = Удалить условие
 admin-tab-condition-name = Идентификатор
 admin-tab-condition-name-hint = Используется как %condition:<имя>%
 admin-tab-condition-placeholder = Исходный плейсхолдер
-admin-tab-condition-rules = Правила (напр. >= 19.5 -> <green>%tps%</green>)
+admin-tab-condition-rules = Правила условий
 admin-tab-conditions-tps = Правила для TPS (%condition:tps_colored%)
 admin-tab-conditions-ping = Правила для пинга (%condition:ping_colored%)
 admin-tab-condition-empty = Нет настроенных условий. Нажмите «Добавить условие».
+admin-tab-rule-add = Добавить правило
+admin-tab-rule-delete = Удалить правило
+admin-tab-rule-operator = Условие
+admin-tab-rule-value = Значение
+admin-tab-rule-output = Шаблон вывода (MiniMessage)
+admin-tab-rule-default = иначе (по умолчанию)
+admin-tab-rule-raw-toggle = Текстовый вид
+admin-tab-rule-visual-toggle = Редактор формы
+admin-tab-rules-empty = Правила не добавлены. Нажмите «Добавить правило».
 
 admin-tab-intervals-title = Интервалы обновления плейсхолдеров
 admin-tab-intervals-desc = Частота обновления значений в тиках (20 тиков = 1 сек)
