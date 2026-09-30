@@ -1720,7 +1720,7 @@ admin-tab-nametag-title = Player Nametags (Above Head)
 admin-tab-nametag-prefix = Nametag Prefix
 admin-tab-nametag-suffix = Nametag Suffix
 admin-tab-nametag-actionbar = Right-Click Actionbar
-admin-tab-sorting-title = Role Sorting
+admin-tab-sorting-title = Player Sorting by Role
 admin-tab-sorting-roles = Priority Roles (comma-separated)
 
 admin-moderation-preview-select = Select template
@@ -1800,22 +1800,51 @@ admin-chat-cooldown-bypass = Cooldown bypass permission
 
 admin-tab-tab-header-footer = Header & Footer
 admin-tab-tab-player-nametag = Player & Nametag
-admin-tab-tab-animations-conditions = Animations & Conditions
+admin-tab-tab-animations-conditions = Animations & Dynamic
 admin-tab-tab-sorting-proxy = Sorting & Proxy
 admin-tab-per-server-title = Per-Server Overrides
 admin-tab-per-server-add = Add Server Override
 admin-tab-per-server-delete = Delete override
 admin-tab-server-name = Server Name
 admin-tab-default-template = Default Template
+
+admin-tab-animations-title = Animations (%animation:name%)
+admin-tab-anim-add = Add Animation
+admin-tab-anim-delete = Delete animation
+admin-tab-anim-name = Identifier
+admin-tab-anim-name-hint = Used as %animation:<name>%
+admin-tab-anim-interval = Interval (ticks)
+admin-tab-anim-frames = Animation frames (one line per frame)
+admin-tab-anim-empty = No animations configured. Click "Add Animation" to create one.
+
 admin-tab-conditions-title = Conditional Placeholders (%condition:name%)
+admin-tab-condition-add = Add Condition
+admin-tab-condition-delete = Delete condition
+admin-tab-condition-name = Identifier
+admin-tab-condition-name-hint = Used as %condition:<name>%
+admin-tab-condition-placeholder = Source placeholder
+admin-tab-condition-rules = Rules (e.g. >= 19.5 -> <green>%tps%</green>)
 admin-tab-conditions-tps = TPS condition rules
 admin-tab-conditions-ping = Ping condition rules
+admin-tab-condition-empty = No conditional placeholders configured. Click "Add Condition" to create one.
+
+admin-tab-intervals-title = Placeholder Refresh Intervals
+admin-tab-intervals-desc = Refresh rate in ticks (20 ticks = 1 second)
+admin-tab-interval-add = Add Interval
+admin-tab-interval-delete = Delete interval
+admin-tab-interval-placeholder = Placeholder
+admin-tab-interval-ticks = Ticks
+admin-tab-intervals-empty = No refresh intervals configured. Click "Add Interval" to add one.
 admin-tab-interval-tps = %tps% interval
 admin-tab-interval-ping = %player:ping% interval
 admin-tab-interval-online = %online% interval
 admin-tab-interval-time = %time% interval
-admin-tab-sorting-enabled = Enable role sorting
-admin-tab-sorting-hint = Comma-separated list of roles in order of priority
+
+admin-tab-sorting-desc = Tablist player sorting order
+admin-tab-sorting-enabled = Enable role sorting in tablist
+admin-tab-sorting-master-hint = Player order in the tablist is determined by the role weights (sort_order) configured in the Master admin panel. Players with higher roles are placed at the top of the tablist automatically.
+admin-tab-sorting-hint = Role priorities are configured in Master
+
 admin-tab-nametag-enabled = Enable player nametag (above head)
 admin-tab-player-enabled = Enable custom tablist player format
 
@@ -1823,13 +1852,9 @@ admin-tab-refresh-ticks = Refresh rate (ticks, 20 = 1 sec)
 admin-tab-nametag-visibility = Nametag visibility
 admin-tab-nametag-collision = Player collision
 admin-tab-actionbar-interact-toggle = Show info in Actionbar on right-click
-admin-tab-intervals-title = Placeholder refresh intervals (ticks)
 admin-tab-proxy-title = Proxy Settings (Velocity)
 admin-tab-isolate-servers = Isolate player list per server
 admin-tab-wrap-template = Wrap network template
-admin-tab-animations-title = Logo Animation (%animation:logo%)
-admin-tab-anim-interval = Frame change interval (ticks)
-admin-tab-anim-frames = Animation frames (one line per frame)
 
 panel-server-addons-title = Addons
 panel-server-addon-chat-hint = Install NoroChat with master default config

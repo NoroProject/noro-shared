@@ -1726,7 +1726,7 @@ admin-tab-nametag-title = Ники над головой (Nametag)
 admin-tab-nametag-prefix = Префикс над головой
 admin-tab-nametag-suffix = Суффикс над головой
 admin-tab-nametag-actionbar = Actionbar при клике ПКМ
-admin-tab-sorting-title = Сортировка ролей
+admin-tab-sorting-title = Сортировка игроков по ролям
 admin-tab-sorting-roles = Приоритеты ролей (через запятую)
 
 admin-moderation-preview-select = Выбор шаблона
@@ -1806,22 +1806,51 @@ admin-chat-cooldown-bypass = Право обхода кулдауна
 
 admin-tab-tab-header-footer = Шапка и подвал
 admin-tab-tab-player-nametag = Игрок и Nametag
-admin-tab-tab-animations-conditions = Анимации и условия
+admin-tab-tab-animations-conditions = Анимации и динамика
 admin-tab-tab-sorting-proxy = Сортировка и Прокси
 admin-tab-per-server-title = Настройки для отдельных серверов
 admin-tab-per-server-add = Добавить сервер
 admin-tab-per-server-delete = Удалить сервер
 admin-tab-server-name = Имя сервера
 admin-tab-default-template = Основной шаблон
+
+admin-tab-animations-title = Анимации (%animation:имя%)
+admin-tab-anim-add = Добавить анимацию
+admin-tab-anim-delete = Удалить анимацию
+admin-tab-anim-name = Идентификатор
+admin-tab-anim-name-hint = Используется как %animation:<имя>%
+admin-tab-anim-interval = Интервал (тики)
+admin-tab-anim-frames = Кадры анимации (по строке на кадр)
+admin-tab-anim-empty = Нет настроенных анимаций. Нажмите «Добавить анимацию».
+
 admin-tab-conditions-title = Условные плейсхолдеры (%condition:имя%)
+admin-tab-condition-add = Добавить условие
+admin-tab-condition-delete = Удалить условие
+admin-tab-condition-name = Идентификатор
+admin-tab-condition-name-hint = Используется как %condition:<имя>%
+admin-tab-condition-placeholder = Исходный плейсхолдер
+admin-tab-condition-rules = Правила (напр. >= 19.5 -> <green>%tps%</green>)
 admin-tab-conditions-tps = Правила для TPS (%condition:tps_colored%)
 admin-tab-conditions-ping = Правила для пинга (%condition:ping_colored%)
+admin-tab-condition-empty = Нет настроенных условий. Нажмите «Добавить условие».
+
+admin-tab-intervals-title = Интервалы обновления плейсхолдеров
+admin-tab-intervals-desc = Частота обновления значений в тиках (20 тиков = 1 сек)
+admin-tab-interval-add = Добавить интервал
+admin-tab-interval-delete = Удалить интервал
+admin-tab-interval-placeholder = Плейсхолдер
+admin-tab-interval-ticks = Тики
+admin-tab-intervals-empty = Нет настроенных интервалов. Нажмите «Добавить интервал».
 admin-tab-interval-tps = Интервал обновления %tps%
 admin-tab-interval-ping = Интервал обновления %player:ping%
 admin-tab-interval-online = Интервал обновления %online%
 admin-tab-interval-time = Интервал обновления %time%
-admin-tab-sorting-enabled = Включить сортировку ролей
-admin-tab-sorting-hint = Список ролей через запятую в порядке приоритета
+
+admin-tab-sorting-desc = Порядок игроков в списке таба
+admin-tab-sorting-enabled = Включить сортировку ролей в табе
+admin-tab-sorting-master-hint = Приоритет сортировки игроков автоматически определяется весом ролей (sort_order), настроенным в панели Мастера. Игроки со старшими ролями отображаются вверху таб-листа.
+admin-tab-sorting-hint = Приоритеты ролей задаются в Мастере
+
 admin-tab-nametag-enabled = Включить отображение ника над головой
 admin-tab-player-enabled = Включить форматирование имени игрока в табе
 
@@ -1829,13 +1858,9 @@ admin-tab-refresh-ticks = Интервал обновления (в тиках, 
 admin-tab-nametag-visibility = Видимость ника над головой
 admin-tab-nametag-collision = Коллизия игроков (толкание)
 admin-tab-actionbar-interact-toggle = Выводить инфо в Actionbar при клике ПКМ
-admin-tab-intervals-title = Интервалы обновления плейсхолдеров (тики)
 admin-tab-proxy-title = Настройки прокси (Velocity)
 admin-tab-isolate-servers = Изолировать таб-лист по серверам
 admin-tab-wrap-template = Оборачивать сетевой шаблон
-admin-tab-animations-title = Анимация логотипа (%animation:logo%)
-admin-tab-anim-interval = Интервал смены кадров (тики)
-admin-tab-anim-frames = Кадры анимации (по строке на кадр)
 
 panel-server-addons-title = Дополнения
 panel-server-addon-chat-hint = Установить NoroChat со стандартным конфигом мастера
