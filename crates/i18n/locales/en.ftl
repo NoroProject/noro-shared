@@ -1673,6 +1673,41 @@ admin-moderation-maintenance-hint = Shown while the server is under maintenance;
 admin-moderation-var-rule-title = Title of the rule
 admin-moderation-var-rule-link = Clickable rule code
 
+admin-moderation-tab-punishments = Punishments
+admin-moderation-tab-chat = Chat (NoroChat)
+admin-moderation-tab-tab = Tab (NoroTab)
+admin-moderation-preview-title = In-Game Preview
+admin-moderation-preview-disconnect = Disconnect Screen
+admin-moderation-preview-chat = Game Chat
+admin-moderation-preview-tab = Player List (TAB)
+admin-moderation-sync-servers = Sync to servers
+admin-moderation-sync-modal-title = Sync Appearance to Servers
+admin-moderation-sync-modal-desc = Write current NoroChat and NoroTab configurations to all ready servers and reload them.
+admin-moderation-sync-success = Configurations successfully synced
+admin-moderation-sync-total = Total servers: { $total }
+admin-moderation-sync-updated = Updated files: { $updated }
+admin-moderation-sync-reloaded = Reloaded servers: { $reloaded }
+admin-moderation-raw-toggle = Raw YAML
+
+admin-chat-channels-title = Chat Channels
+admin-chat-global-format = Global Chat Format (!)
+admin-chat-local-format = Local Chat Format
+admin-chat-local-radius = Local Chat Radius (blocks)
+admin-chat-staff-format = Staff Chat Format (##)
+admin-chat-display-name = Display Name Format
+admin-chat-palette-title = Tags & Placeholders Palette
+
+admin-tab-header-title = Header
+admin-tab-footer-title = Footer
+admin-tab-player-format = Player Line Format
+admin-tab-header-hint = Separate lines with newlines
+admin-tab-footer-hint = Displayed below the player list
+admin-tab-vars-title = Available Placeholders
+
+panel-server-addons-title = Addons
+panel-server-addon-chat-hint = Install NoroChat with master default config
+panel-server-addon-tab-hint = Install NoroTab with master default config
+
 ## Optional mods: why a mod cannot be turned on
 optional-conflicts-with = Incompatible with { $mod }. Turn that one off first.
 optional-needs-first = Turn on { $mod } first: this mod does not work without it.

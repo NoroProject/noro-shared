@@ -1679,6 +1679,41 @@ admin-moderation-maintenance-hint = Видят все, кроме обладат
 admin-moderation-var-rule-title = Название правила
 admin-moderation-var-rule-link = Кликабельный код правила
 
+admin-moderation-tab-punishments = Наказания
+admin-moderation-tab-chat = Чат (NoroChat)
+admin-moderation-tab-tab = Таб (NoroTab)
+admin-moderation-preview-title = Превью в игре
+admin-moderation-preview-disconnect = Экран отключения
+admin-moderation-preview-chat = Игровой чат
+admin-moderation-preview-tab = Список игроков (TAB)
+admin-moderation-sync-servers = Синхронизировать на серверы
+admin-moderation-sync-modal-title = Синхронизация оформления на серверы
+admin-moderation-sync-modal-desc = Записать актуальные конфигурации NoroChat и NoroTab на все готовые серверы и перезагрузить их.
+admin-moderation-sync-success = Конфигурации успешно синхронизированы
+admin-moderation-sync-total = Всего серверов: { $total }
+admin-moderation-sync-updated = Обновлено файлов: { $updated }
+admin-moderation-sync-reloaded = Перезагружено серверов: { $reloaded }
+admin-moderation-raw-toggle = Исходный YAML
+
+admin-chat-channels-title = Каналы чата
+admin-chat-global-format = Формат глобального чата (!)
+admin-chat-local-format = Формат локального чата
+admin-chat-local-radius = Радиус локального чата (блоков)
+admin-chat-staff-format = Формат чата персонала (##)
+admin-chat-display-name = Формат отображаемого имени
+admin-chat-palette-title = Палитра тегов и подстановок
+
+admin-tab-header-title = Шапка (Header)
+admin-tab-footer-title = Подвал (Footer)
+admin-tab-player-format = Формат строки игрока
+admin-tab-header-hint = Каждая строка разделяется переносом
+admin-tab-footer-hint = Отображается под списком игроков
+admin-tab-vars-title = Доступные плейсхолдеры
+
+panel-server-addons-title = Дополнения
+panel-server-addon-chat-hint = Установить NoroChat со стандартным конфигом мастера
+panel-server-addon-tab-hint = Установить NoroTab со стандартным конфигом мастера
+
 ## Опциональные моды: отказ при включении
 optional-conflicts-with = Не совместим с модом { $mod }. Выключите его, если хотите включить этот.
 optional-needs-first = Сначала включите { $mod }: без него этот мод не работает.
