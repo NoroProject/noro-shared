@@ -927,7 +927,7 @@ nav-admin-blocklist = Чёрный список
 nav-admin-news = Новости
 nav-admin-rules = Правила
 nav-admin-automod = Фильтры чата
-nav-admin-moderation = Тексты наказаний
+nav-admin-moderation = Шаблоны
 nav-admin-translations = Переводы
 nav-admin-bots = Боты
 admin-bots-lead = Аккаунты, за которыми не люди
@@ -1632,9 +1632,9 @@ admin-agent-versions-count = { $count } версий
 
 
 
-## Тексты наказаний
-admin-moderation-title = Тексты наказаний
-admin-moderation-subtitle = Что видит игрок при бане, муте и предупреждении
+## Шаблоны
+admin-moderation-title = Шаблоны
+admin-moderation-subtitle = Внутриигровое оформление: наказания, чат и таб-лист
 admin-moderation-reset = Вернуть встроенный
 admin-moderation-vars-title = Подстановки
 admin-moderation-vars-lead = Всё остальное остаётся в тексте как есть. Цвета пишутся через &, например &c.

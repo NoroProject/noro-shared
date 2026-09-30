@@ -922,7 +922,7 @@ nav-admin-blocklist = Blocklist
 nav-admin-news = News
 nav-admin-rules = Rules
 nav-admin-automod = AutoMod filters
-nav-admin-moderation = Punishment texts
+nav-admin-moderation = Templates
 nav-admin-translations = Translations
 nav-admin-bots = Bots
 admin-bots-lead = Accounts that are not people
@@ -1626,9 +1626,9 @@ admin-agent-versions-count = { $count } versions
 
 
 
-## Punishment texts
-admin-moderation-title = Punishment texts
-admin-moderation-subtitle = What a player sees when banned, muted or warned
+## Templates
+admin-moderation-title = Templates
+admin-moderation-subtitle = In-game presentation: punishments, chat and tab list
 admin-moderation-reset = Reset to default
 admin-moderation-vars-title = Placeholders
 admin-moderation-vars-lead = Anything else stays in the text as typed. Colours are written with &, like &c.
