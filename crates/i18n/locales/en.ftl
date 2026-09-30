@@ -1703,6 +1703,17 @@ admin-tab-player-format = Player Line Format
 admin-tab-header-hint = Separate lines with newlines
 admin-tab-footer-hint = Displayed below the player list
 admin-tab-vars-title = Available Placeholders
+admin-tab-header-footer-title = Header & Footer
+admin-tab-header-lines = Header Lines
+admin-tab-footer-lines = Footer Lines
+admin-tab-player-format-title = Tablist Players
+admin-tab-player-format-label = Player Name Format
+admin-tab-nametag-title = Player Nametags (Above Head)
+admin-tab-nametag-prefix = Nametag Prefix
+admin-tab-nametag-suffix = Nametag Suffix
+admin-tab-nametag-actionbar = Right-Click Actionbar
+admin-tab-sorting-title = Role Sorting
+admin-tab-sorting-roles = Priority Roles (comma-separated)
 
 panel-server-addons-title = Addons
 panel-server-addon-chat-hint = Install NoroChat with master default config

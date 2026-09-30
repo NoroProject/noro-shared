@@ -1709,6 +1709,17 @@ admin-tab-player-format = Формат строки игрока
 admin-tab-header-hint = Каждая строка разделяется переносом
 admin-tab-footer-hint = Отображается под списком игроков
 admin-tab-vars-title = Доступные плейсхолдеры
+admin-tab-header-footer-title = Шапка и подвал
+admin-tab-header-lines = Строки шапки
+admin-tab-footer-lines = Строки подвала
+admin-tab-player-format-title = Игроки в табе
+admin-tab-player-format-label = Формат имени игрока
+admin-tab-nametag-title = Ники над головой (Nametag)
+admin-tab-nametag-prefix = Префикс над головой
+admin-tab-nametag-suffix = Суффикс над головой
+admin-tab-nametag-actionbar = Actionbar при клике ПКМ
+admin-tab-sorting-title = Сортировка ролей
+admin-tab-sorting-roles = Приоритеты ролей (через запятую)
 
 panel-server-addons-title = Дополнения
 panel-server-addon-chat-hint = Установить NoroChat со стандартным конфигом мастера
