@@ -71,6 +71,9 @@ pub enum NodeEvent {
         uptime_secs: u64,
         #[serde(default)]
         exit_code: Option<i32>,
+        /// Сервер был остановлен вручную (Stop / Kill из панели), а не упал сам.
+        #[serde(default)]
+        stopped_by_user: bool,
     },
     /// Batched on a short window: a boot-time stack trace is hundreds of lines,
     /// and one frame per line is hundreds of frames.
