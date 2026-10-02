@@ -1278,6 +1278,8 @@ admin-import-subtitle = Modrinth и CurseForge
 admin-import-format = Формат сборки
 admin-import-drop = Нажмите или перетащите файл сборки
 admin-import-process = Обработать сборку
+admin-import-uploading = Загрузка архива
+admin-import-processing = Обработка архива
 
 ## Админка: Ручная загрузка файлов
 admin-manual-title = Ручная загрузка

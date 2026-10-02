@@ -1273,6 +1273,8 @@ admin-import-subtitle = Modrinth & CurseForge
 admin-import-format = Pack Format
 admin-import-drop = Click or Drop Pack File
 admin-import-process = Process Pack
+admin-import-uploading = Uploading archive
+admin-import-processing = Processing archive
 
 ## Admin: Manual upload
 admin-manual-title = Manual Upload
