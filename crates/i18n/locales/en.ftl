@@ -4505,6 +4505,7 @@ admin-build-stage-assets = Assets
 admin-build-stage-java = Java runtime
 admin-build-stage-loader = Mod loader
 admin-build-stage-manifest = Manifest and signature
+admin-build-stage-prewarm = Warming CDN cache and signature
 admin-build-stage-done = done
 admin-node-secret-once = Copy the secret now — it is shown once and never again.
 admin-node-secret-hidden = The secret is not stored in readable form. Reissue it if it was lost.

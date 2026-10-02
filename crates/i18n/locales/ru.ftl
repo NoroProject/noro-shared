@@ -4511,6 +4511,7 @@ admin-build-stage-assets = Ассеты
 admin-build-stage-java = Java-рантайм
 admin-build-stage-loader = Загрузчик модов
 admin-build-stage-manifest = Манифест и подпись
+admin-build-stage-prewarm = Прогрев CDN-кеша и подпись
 admin-build-stage-done = готово
 admin-node-secret-once = Скопируйте секрет сейчас — он показывается один раз.
 admin-node-secret-hidden = Секрет не хранится в читаемом виде. Если он потерян — перевыпустите.
