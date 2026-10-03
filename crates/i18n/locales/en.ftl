@@ -5348,3 +5348,26 @@ console-clear-confirm = CLEAR?
 
 launcher-notifications-more = Show older
 content-working = Working…
+
+# Ticket states the launcher shows, and the Discord status it sets.
+
+## Launcher: ticket states
+
+tickets-status-open = open
+tickets-status-closed = closed
+
+## Launcher: Discord Rich Presence
+
+rpc-in-launcher = In the NORO launcher
+rpc-server = Server: { $name }
+rpc-picking-server = Picking a server
+rpc-starting = Starting { $name }
+rpc-loading = Loading resources…
+rpc-main-menu = In the main menu
+rpc-playing = Playing on { $name }
+rpc-online = Online: { $current }/{ $max }
+rpc-on-server = On the server
+
+## Launcher: update notice
+
+update-pill = Update { $version } available
