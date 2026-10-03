@@ -90,4 +90,8 @@ pub struct InstallResult {
     /// different name than the core that was downloaded (NeoForge args file).
     pub jar: String,
     pub bytes: u64,
+    /// The node laid down the server pack itself. A node that predates packs
+    /// in the install says nothing, and the master has to lay it down after.
+    #[serde(default)]
+    pub server_pack: bool,
 }

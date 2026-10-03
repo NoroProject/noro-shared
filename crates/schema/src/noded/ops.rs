@@ -151,6 +151,22 @@ pub struct InstallSpec {
     /// Seeded into `server.properties` before the first start.
     #[serde(default)]
     pub properties: BTreeMap<String, String>,
+    /// Laid down before the core. A pack that already holds a runnable server
+    /// (GTNH ships Forge, its libraries and lwjgl3ify's launcher) needs neither
+    /// the core nor its installer, and a pack that doesn't still gives the
+    /// installer its libraries instead of a download.
+    #[serde(default)]
+    pub server_pack: Option<PackSource>,
+}
+
+/// A server pack in the master's store.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PackSource {
+    pub url: String,
+    pub sha1: String,
+    /// What the archive is saved as in the server root while it is unpacked.
+    /// The extension picks the format.
+    pub file: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -173,6 +189,13 @@ pub enum NodeOp {
     Install {
         server: uuid::Uuid,
         install: Box<InstallSpec>,
+    },
+    /// A new version of the server pack over a stopped server. The pack owns
+    /// only the files it brought: the world, the player lists and anything
+    /// installed beside the pack stay.
+    ServerPackApply {
+        server: uuid::Uuid,
+        pack: PackSource,
     },
 
     // --- power and console -------------------------------------------------
@@ -363,7 +386,7 @@ impl NodeOp {
     /// `stop` waits for a save — one shared timeout would cut both in half.
     pub fn timeout(&self) -> Duration {
         match self {
-            NodeOp::Install { .. } => Duration::from_secs(1800),
+            NodeOp::Install { .. } | NodeOp::ServerPackApply { .. } => Duration::from_secs(1800),
             NodeOp::BuildSync { .. }
             | NodeOp::ServerCloneFiles { .. }
             | NodeOp::BackupCreate { .. }
@@ -385,6 +408,7 @@ impl NodeOp {
             | NodeOp::ServerUpdate { server, .. }
             | NodeOp::ServerDelete { server, .. }
             | NodeOp::Install { server, .. }
+            | NodeOp::ServerPackApply { server, .. }
             | NodeOp::Power { server, .. }
             | NodeOp::Command { server, .. }
             | NodeOp::ConsoleAttach { server }

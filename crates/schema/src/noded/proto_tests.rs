@@ -150,6 +150,7 @@ fn slow_operations_get_room() {
                 agent: None,
             },
             properties: Default::default(),
+            server_pack: None,
         }),
     };
 
@@ -162,4 +163,25 @@ fn slow_operations_get_room() {
         .timeout()
             < power(uuid::Uuid::nil()).timeout()
     );
+}
+
+/// The two sides of a server pack in the install roll out at different times:
+/// a master's install without one and a node's reply without the flag both
+/// have to keep reading.
+#[test]
+fn installs_from_before_server_packs_still_read() {
+    let spec: InstallSpec = serde_json::from_value(json!({
+        "core": { "url": "https://example.invalid/forge-installer.jar", "installer": true },
+        "spec": {
+            "image": "eclipse-temurin:17-jre", "memory_mb": 6144, "disk_mb": 20480,
+            "cpu_percent": 200, "pids_limit": 512, "jvm_args": [], "jar": "server.jar",
+            "server_args": [], "ports": [], "env": {}
+        }
+    }))
+    .unwrap();
+    assert!(spec.server_pack.is_none());
+
+    let reply: InstallResult =
+        serde_json::from_value(json!({ "jar": "forge-universal.jar", "bytes": 1 })).unwrap();
+    assert!(!reply.server_pack);
 }
