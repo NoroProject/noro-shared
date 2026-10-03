@@ -145,6 +145,8 @@ login-web-hint = Откроется сайт — там можно войти л
 ## Панель игры
 game-build = СБОРКА
 game-build-preview = ПРЕВЬЮ
+game-build-current = ТЕКУЩАЯ
+game-build-pick = ВЕРСИЯ СБОРКИ
 game-start = ЗАПУСТИТЬ
 game-install = УСТАНОВИТЬ
 game-update = ОБНОВИТЬ

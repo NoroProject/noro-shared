@@ -143,6 +143,8 @@ login-web-hint = Opens the website — sign in there with any linked platform
 ## Game bar
 game-build = BUILD
 game-build-preview = PREVIEW
+game-build-current = CURRENT
+game-build-pick = BUILD VERSION
 game-start = START GAME
 game-install = INSTALL
 game-update = UPDATE
