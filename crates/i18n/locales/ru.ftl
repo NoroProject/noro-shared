@@ -5322,3 +5322,34 @@ boot-error-unavailable = Сервер обновлений сейчас не м�
 boot-error-corrupt = Загрузка повреждена или не прошла проверку. Попробуйте снова
 boot-error-disk = Не удалось сохранить лаунчер. Проверьте место на диске и антивирус
 boot-error-start = Лаунчер скачан, но не запускается. Проверьте антивирус
+
+# Hover hints for icon-only buttons, the console's save and clear, older
+# notifications and the content browser's busy state.
+
+## Launcher: hover hints
+
+hint-collapse-sidebar = Свернуть боковую панель
+hint-expand-sidebar = Развернуть боковую панель
+hint-messages = Сообщения
+hint-account = Аккаунт
+hint-news = Новости
+hint-settings = Настройки
+hint-notifications = Уведомления
+hint-read-all = Отметить все прочитанными
+hint-console = Консоль игры
+hint-minimize = Свернуть
+hint-close = Закрыть
+hint-content-off = Выключить
+hint-content-on = Включить
+
+## Launcher: game console
+
+console-save = СОХРАНИТЬ
+console-saved = СОХРАНЕНО
+console-save-failed = НЕ УДАЛОСЬ СОХРАНИТЬ
+console-clear-confirm = ОЧИСТИТЬ?
+
+## Launcher: notifications and content
+
+launcher-notifications-more = Показать старые
+content-working = Выполняется…
