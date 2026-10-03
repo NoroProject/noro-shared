@@ -5367,3 +5367,7 @@ rpc-main-menu = In the main menu
 rpc-playing = Playing on { $name }
 rpc-online = Online: { $current }/{ $max }
 rpc-on-server = On the server
+
+## Launcher: update notice
+
+update-pill = Update { $version } available
