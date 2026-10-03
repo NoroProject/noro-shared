@@ -111,3 +111,31 @@ fn the_global_api_actually_switches_language() {
     set_locale(Locale::En);
     assert_eq!(t("game-no-servers"), "No servers");
 }
+
+#[test]
+fn every_builtin_message_formats_in_both_languages() {
+    // A message that parses but can't be formatted — a typo in a selector, a
+    // missing default variant — shows up as its raw key in the UI. Formatting
+    // each one with typical arguments catches that here instead.
+    let mut args = FluentArgs::new();
+    for name in ["count", "locked", "total", "done", "size"] {
+        args.set(name, 3);
+    }
+    for locale in Locale::ALL {
+        let catalog = Catalog::builtin(locale);
+        let broken: Vec<&str> = keys_of(locale.builtin_ftl())
+            .into_iter()
+            .filter(|k| catalog.get(k, Some(&args)).is_none())
+            .collect();
+        assert!(broken.is_empty(), "{locale:?}: {broken:?}");
+    }
+}
+
+#[test]
+fn launcher_counters_agree_in_russian() {
+    let ru = Catalog::builtin(Locale::Ru);
+    assert_eq!(count_of(&ru, "console-copied", 1), "СКОПИРОВАНА 1 СТРОКА");
+    assert_eq!(count_of(&ru, "console-copied", 3), "СКОПИРОВАНО 3 СТРОКИ");
+    assert_eq!(count_of(&ru, "console-copied", 12), "СКОПИРОВАНО 12 СТРОК");
+    assert!(count_of(&ru, "sync-live-updated", 21).starts_with("Обновлён 21 пак."));
+}
