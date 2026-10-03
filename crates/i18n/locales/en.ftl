@@ -5204,3 +5204,116 @@ server-roles-title = Role visibility
 server-roles-lead = Select roles that can see and join this limited server.
 server-online = online
 server-mods-sha1 = SHA1:
+
+# Added with the launcher audit: atomic writes, cancellable sync, the close
+# prompt, the console rewrite and the bootstrapper error screen.
+
+## Launcher: notices
+
+notif-impersonate-ended = The player's session ended; you are back in your own account.
+notif-mod-suggestion-sent = Mod request sent to the staff
+notif-mod-suggestion-failed = Could not send the mod request: { $reason }
+notif-remote-action-busy = The game is running; the admin's request will be possible after you close it
+notif-manifest-timeout = The server did not send the build in time. Try again in a minute
+offline-banner = No connection to the Noro servers. Reconnecting…
+error-network = Connection problem: { $reason }
+notif-cape-update-failed = Could not change the cape: { $reason }
+
+## Launcher: game console
+
+console-to-bottom = TO THE END
+console-copied = { $count ->
+        [one] COPIED { $count } LINE
+       *[other] COPIED { $count } LINES
+    }
+console-find = FIND COPIED TEXT
+console-find-query = FIND: { $query }
+console-clipboard-empty = COPY THE TEXT TO FIND FIRST
+console-reset = RESET
+console-clear = CLEAR
+console-cleared = { $count ->
+        [one] CLEARED { $count } LINE
+       *[other] CLEARED { $count } LINES
+    }
+
+## Launcher: sync and launch
+
+sync-short-checking = Checking
+sync-short-libraries = Libraries
+sync-short-assets = Assets
+sync-short-mods = Mods
+sync-short-cleaning = Cleaning
+sync-megabytes = { $done } / { $total } MB
+sync-rate = { $speed } MB/s · { $eta } left
+sync-downloading = Downloading...
+sync-launching = Starting the game...
+sync-cancelling = Cancelling...
+sync-live-updated = { $count ->
+        [one] { $count } pack updated. Press F3+T in game to apply
+       *[other] { $count } packs updated. Press F3+T in game to apply
+    }
+sync-live-partial = { $count ->
+        [one] { $count } pack updated, { $locked } more will arrive on the next launch
+       *[other] { $count } packs updated, { $locked } more will arrive on the next launch
+    }
+sync-error-disk-full = Not enough disk space. Free some space and try again
+sync-error-permission = The launcher can't write to its folder. Check the antivirus and folder permissions
+sync-error-network = Connection problem while downloading. Check the internet and try again
+sync-error-signature = The build failed its signature check. Try again later or contact the staff
+sync-error-corrupt = A downloaded file was damaged. Try again
+sync-error-authlib = Could not prepare sign-in for the game. Check the internet and try again
+sync-error-launch = The game failed to start. Details are in the console
+sync-error-signed-out = Sign in to play
+sync-error-unknown = Something went wrong. Details are in the console
+game-online-count = { $count } online
+game-stop-confirm = CLICK AGAIN TO STOP
+
+## Launcher: closing the window
+
+close-prompt-title = THE GAME IS STILL RUNNING
+close-prompt-game = Closing the launcher will stop the game. Minimize it instead to keep playing.
+close-prompt-download = A download is in progress. Closing the launcher will stop it.
+close-prompt-minimize = Minimize
+close-prompt-quit = Close anyway
+
+## Launcher: admin requests
+
+remote-action-kill_game = Stop the game
+remote-action-desc-verify_integrity = The admin asks to check your game files.
+remote-action-desc-clear_asset_cache = The admin asks to clear the asset cache to fix possible glitches.
+remote-action-desc-reinstall_build = The admin asks to reinstall the current build from scratch.
+remote-action-desc-restart_launcher = The admin asks to restart the launcher.
+remote-action-desc-kill_game = The admin asks to force-close the running game.
+remote-action-requested-by = Requested by { $name }
+
+## Launcher: settings
+
+settings-memory-min = MIN
+settings-memory-max = MAX
+settings-jvm-not-set = not set
+settings-memory-too-much = That is more than three quarters of this computer's { $total } GB. The system may slow down
+settings-discord-rpc = DISCORD STATUS
+settings-discord-rpc-hint = Show friends on Discord which server you play on.
+
+## Launcher: misc
+
+server-unnamed = Server
+common-seconds = { $count } s
+common-kilobytes = { $size } KB
+profile-skin-pick-title = Choose a skin
+content-no-results = Nothing found
+common-click-again = Click again to confirm
+
+## Bootstrapper
+
+boot-checking = Checking for updates…
+boot-downloading = Downloading { $version }
+boot-downloading-size = Downloading { $version } · { $size } MB
+boot-starting = Starting…
+boot-retry = RETRY
+boot-close = CLOSE
+boot-error-network = Can't reach the update server. Check your connection
+boot-error-unavailable = The update server has no launcher for this system right now. Try again later
+boot-error-corrupt = The download was damaged or failed verification. Try again
+boot-error-disk = Couldn't save the launcher. Check free space and the antivirus
+boot-error-start = The launcher was downloaded but won't start. Check the antivirus
