@@ -5317,3 +5317,34 @@ boot-error-unavailable = The update server has no launcher for this system right
 boot-error-corrupt = The download was damaged or failed verification. Try again
 boot-error-disk = Couldn't save the launcher. Check free space and the antivirus
 boot-error-start = The launcher was downloaded but won't start. Check the antivirus
+
+# Hover hints for icon-only buttons, the console's save and clear, older
+# notifications and the content browser's busy state.
+
+## Launcher: hover hints
+
+hint-collapse-sidebar = Collapse the sidebar
+hint-expand-sidebar = Expand the sidebar
+hint-messages = Messages
+hint-account = Account
+hint-news = News
+hint-settings = Settings
+hint-notifications = Notifications
+hint-read-all = Mark all as read
+hint-console = Game console
+hint-minimize = Minimize
+hint-close = Close
+hint-content-off = Turn off
+hint-content-on = Turn on
+
+## Launcher: game console
+
+console-save = SAVE
+console-saved = SAVED
+console-save-failed = COULD NOT SAVE
+console-clear-confirm = CLEAR?
+
+## Launcher: notifications and content
+
+launcher-notifications-more = Show older
+content-working = Working…
