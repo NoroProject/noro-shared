@@ -5205,3 +5205,120 @@ server-roles-title = Видимость по ролям
 server-roles-lead = Выберите роли, которые видят этот закрытый сервер и могут на него зайти.
 server-online = в сети
 server-mods-sha1 = SHA1:
+
+# Added with the launcher audit: atomic writes, cancellable sync, the close
+# prompt, the console rewrite and the bootstrapper error screen.
+
+## Launcher: notices
+
+notif-impersonate-ended = Сессия игрока закончилась — вы снова в своём аккаунте.
+notif-mod-suggestion-sent = Запрос мода отправлен администрации
+notif-mod-suggestion-failed = Не удалось отправить запрос мода: { $reason }
+notif-remote-action-busy = Игра запущена — запрос администратора можно выполнить после её закрытия
+notif-manifest-timeout = Сервер не прислал сборку вовремя. Попробуйте через минуту
+offline-banner = Нет связи с серверами Noro. Переподключаемся…
+error-network = Проблема с соединением: { $reason }
+notif-cape-update-failed = Не удалось сменить плащ: { $reason }
+
+## Launcher: game console
+
+console-to-bottom = В КОНЕЦ
+console-copied = { $count ->
+        [one] СКОПИРОВАНА { $count } СТРОКА
+        [few] СКОПИРОВАНО { $count } СТРОКИ
+       *[many] СКОПИРОВАНО { $count } СТРОК
+    }
+console-find = ИСКАТЬ СКОПИРОВАННОЕ
+console-find-query = ПОИСК: { $query }
+console-clipboard-empty = СНАЧАЛА СКОПИРУЙТЕ ТЕКСТ ДЛЯ ПОИСКА
+console-reset = СБРОС
+console-clear = ОЧИСТИТЬ
+console-cleared = { $count ->
+        [one] ОЧИЩЕНА { $count } СТРОКА
+        [few] ОЧИЩЕНО { $count } СТРОКИ
+       *[many] ОЧИЩЕНО { $count } СТРОК
+    }
+
+## Launcher: sync and launch
+
+sync-short-checking = Проверка
+sync-short-libraries = Библиотеки
+sync-short-assets = Ресурсы
+sync-short-mods = Моды
+sync-short-cleaning = Очистка
+sync-megabytes = { $done } / { $total } МБ
+sync-rate = { $speed } МБ/с · осталось { $eta }
+sync-downloading = Загрузка...
+sync-launching = Запуск игры...
+sync-cancelling = Отмена...
+sync-live-updated = { $count ->
+        [one] Обновлён { $count } пак. Нажмите F3+T в игре, чтобы применить
+        [few] Обновлено { $count } пака. Нажмите F3+T в игре, чтобы применить
+       *[many] Обновлено { $count } паков. Нажмите F3+T в игре, чтобы применить
+    }
+sync-live-partial = { $count ->
+        [one] Обновлён { $count } пак, ещё { $locked } — при следующем запуске
+        [few] Обновлено { $count } пака, ещё { $locked } — при следующем запуске
+       *[many] Обновлено { $count } паков, ещё { $locked } — при следующем запуске
+    }
+sync-error-disk-full = Не хватает места на диске. Освободите место и попробуйте снова
+sync-error-permission = Лаунчер не может писать в свою папку. Проверьте антивирус и права на папку
+sync-error-network = Проблема с соединением во время загрузки. Проверьте интернет и попробуйте снова
+sync-error-signature = Сборка не прошла проверку подписи. Попробуйте позже или напишите администрации
+sync-error-corrupt = Скачанный файл повреждён. Попробуйте снова
+sync-error-authlib = Не удалось подготовить вход в игру. Проверьте интернет и попробуйте снова
+sync-error-launch = Игра не запустилась. Подробности — в консоли
+sync-error-signed-out = Войдите, чтобы играть
+sync-error-unknown = Что-то пошло не так. Подробности — в консоли
+game-online-count = { $count } онлайн
+game-stop-confirm = НАЖМИТЕ ЕЩЁ РАЗ
+
+## Launcher: closing the window
+
+close-prompt-title = ИГРА ЕЩЁ ЗАПУЩЕНА
+close-prompt-game = Если закрыть лаунчер, игра остановится. Сверните его, чтобы продолжить играть.
+close-prompt-download = Идёт загрузка. Если закрыть лаунчер, она прервётся.
+close-prompt-minimize = Свернуть
+close-prompt-quit = Всё равно закрыть
+
+## Launcher: admin requests
+
+remote-action-kill_game = Остановить игру
+remote-action-desc-verify_integrity = Администратор просит проверить файлы игры.
+remote-action-desc-clear_asset_cache = Администратор просит очистить кеш ресурсов, чтобы убрать возможные сбои.
+remote-action-desc-reinstall_build = Администратор просит переустановить сборку с нуля.
+remote-action-desc-restart_launcher = Администратор просит перезапустить лаунчер.
+remote-action-desc-kill_game = Администратор просит принудительно закрыть запущенную игру.
+remote-action-requested-by = Запрос от { $name }
+
+## Launcher: settings
+
+settings-memory-min = МИН
+settings-memory-max = МАКС
+settings-jvm-not-set = не заданы
+settings-memory-too-much = Это больше трёх четвертей из { $total } ГБ этого компьютера. Система может начать тормозить
+settings-discord-rpc = СТАТУС В DISCORD
+settings-discord-rpc-hint = Показывать друзьям в Discord, на каком сервере вы играете.
+
+## Launcher: misc
+
+server-unnamed = Сервер
+common-seconds = { $count } с
+common-kilobytes = { $size } КБ
+profile-skin-pick-title = Выберите скин
+content-no-results = Ничего не найдено
+common-click-again = Нажмите ещё раз для подтверждения
+
+## Bootstrapper
+
+boot-checking = Проверка обновлений…
+boot-downloading = Загрузка { $version }
+boot-downloading-size = Загрузка { $version } · { $size } МБ
+boot-starting = Запуск…
+boot-retry = ПОВТОРИТЬ
+boot-close = ЗАКРЫТЬ
+boot-error-network = Не удаётся связаться с сервером обновлений. Проверьте подключение
+boot-error-unavailable = Сервер обновлений сейчас не может выдать лаунчер для этой системы. Попробуйте позже
+boot-error-corrupt = Загрузка повреждена или не прошла проверку. Попробуйте снова
+boot-error-disk = Не удалось сохранить лаунчер. Проверьте место на диске и антивирус
+boot-error-start = Лаунчер скачан, но не запускается. Проверьте антивирус
