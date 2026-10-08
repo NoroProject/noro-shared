@@ -1597,7 +1597,7 @@ admin-set-hint-logo_url = Подставляется сам, когда загр
 admin-wrapper-title = ОБЁРТКА СЕРВЕРА
 admin-wrapper-lead = Инсталлятор агентов и супервизор для игровых серверов
 admin-wrapper-setup-intro = ServerWrapper устанавливает нужный агент для вашего сервера, подготавливает authlib-injector и сохраняет сервер видимым в лаунчере во время загрузки. Это инсталлятор и супервизор — разграничение прав остаётся на мастере.
-admin-wrapper-setup-not-built = Ещё не собрано — запустите ./gradlew collectAgents в папке agent/ и скопируйте agent/build/agents/ в {NORO_DATA_DIR}/agents/.
+admin-wrapper-setup-not-built = Ещё не собрано — запустите ./gradlew collectAgents в папке agent/ и скопируйте agent/build/agents/ в $NORO_DATA_DIR/agents/.
 admin-wrapper-setup-step2-desc = Секрет агента генерируется для каждого игрового сервера в админке сборки, в разделе Игровые сервера. Он хранится только здесь — wrapper передаёт его процессу сервера через переменную окружения.
 admin-wrapper-setup-step2-min = Это минимум. NeoForge и Forge запускаются из файла аргументов, а не из jar — передавайте его с префиксом @, например server-jar=@libraries/net/neoforged/neoforge/21.1.248/unix_args.txt, и сохраните их файл JVM как jvm-args=@user_jvm_args.txt. Все остальные опции описаны ниже.
 admin-wrapper-setup-step3-desc = Wrapper определяет платформу и версию Minecraft, устанавливает подходящий агент, проверяет его подпись и запускает сервер.
@@ -1618,7 +1618,7 @@ admin-wrapper-fb-detected = определяется
 
 admin-agent-title = Агенты, моды и плагины
 admin-agent-lead = Серверные агенты, NoroChat и NoroTab, клиентские моды и утилиты. Wrapper устанавливает нужное автоматически — скачивайте, если настраиваете вручную.
-admin-agent-not-built = Ничего ещё не собрано. Запустите ./gradlew collectAgents в папке agent/ и скопируйте agent/build/agents/ в {NORO_DATA_DIR}/agents/.
+admin-agent-not-built = Ничего ещё не собрано. Запустите ./gradlew collectAgents в папке agent/ и скопируйте agent/build/agents/ в $NORO_DATA_DIR/agents/.
 admin-agent-versions-count = { $count } версий
 
 
@@ -2997,7 +2997,7 @@ perm-node-tickets-view = Читать обращения игроков
 tickets-empty-text = Разговор начнётся с первого сообщения.
 tickets-filter-active = В работе
 tickets-reply-placeholder = Напишите ответ. Enter отправит, Shift+Enter перенесёт строку.
-tickets-status-answered = ответили
+tickets-status-answered = Ответили
 admin-case-ticket-hint = Это не срез чата выше: здесь вы говорите с игроком, и ответ дойдёт до него в игре и в кабинете.
 admin-role-badge-text-color = Цвет букв на плашке
 admin-role-badge-text-color-auto = Вернуть автовыбор
@@ -5363,3 +5363,14 @@ console-clear-confirm = ОЧИСТИТЬ?
 
 launcher-notifications-more = Показать старые
 content-working = Выполняется…
+tickets-status-open = Открыто
+tickets-status-closed = Закрыто
+admin-backup-schedule-active = Работает
+admin-backup-schedule-disabled = Выключено
+state-forbidden-title = Нет доступа
+state-forbidden-text = У вашей учётной записи нет права на этот раздел. Если он нужен — обратитесь к администрации.
+state-notfound-title = Ничего не нашлось
+state-notfound-text = Возможно, это удалили или ссылка неверная.
+state-error-title = Не удалось загрузить
+state-error-text = Что-то пошло не так на нашей стороне. Попробуйте через минуту.
+state-retry = Повторить

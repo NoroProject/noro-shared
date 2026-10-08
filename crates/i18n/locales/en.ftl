@@ -1591,7 +1591,7 @@ admin-set-hint-logo_url = Filled in automatically when you upload a file.
 admin-wrapper-title = SERVER WRAPPER
 admin-wrapper-lead = Agent installer and supervisor for game servers
 admin-wrapper-setup-intro = ServerWrapper installs the right agent for your server, wires up authlib-injector, and keeps the server visible in the launcher while it boots. It is an installer and a supervisor — access control itself stays on the master.
-admin-wrapper-setup-not-built = Not built yet — run ./gradlew collectAgents in agent/ and copy agent/build/agents/ into {NORO_DATA_DIR}/agents/.
+admin-wrapper-setup-not-built = Not built yet — run ./gradlew collectAgents in agent/ and copy agent/build/agents/ into $NORO_DATA_DIR/agents/.
 admin-wrapper-setup-step2-desc = The agent secret is issued per game server in the build admin panel, section Game servers. It lives here and nowhere else — the wrapper passes it to the server process itself.
 admin-wrapper-setup-step2-min = That is the minimum. NeoForge and Forge start from an args file, not a jar — pass it with a leading @, for example server-jar=@libraries/net/neoforged/neoforge/21.1.248/unix_args.txt, and keep their own JVM file as jvm-args=@user_jvm_args.txt. Every other option is listed below.
 admin-wrapper-setup-step3-desc = The wrapper detects the platform and Minecraft version, installs the matching agent, verifies its signature, and launches the server.
@@ -1612,7 +1612,7 @@ admin-wrapper-fb-detected = detected
 
 admin-agent-title = Agents, Mods & Plugins
 admin-agent-lead = Server agents, NoroChat & NoroTab, client mods, and utilities. The wrapper installs required components automatically — download here to configure manually.
-admin-agent-not-built = Nothing built yet. Run ./gradlew collectAgents in agent/ and copy agent/build/agents/ into {NORO_DATA_DIR}/agents/.
+admin-agent-not-built = Nothing built yet. Run ./gradlew collectAgents in agent/ and copy agent/build/agents/ into $NORO_DATA_DIR/agents/.
 admin-agent-versions-count = { $count } versions
 
 
@@ -2991,7 +2991,7 @@ perm-node-tickets-view = Read player tickets
 tickets-empty-text = The first message starts the conversation.
 tickets-filter-active = In work
 tickets-reply-placeholder = Write a reply. Enter sends, Shift+Enter breaks the line.
-tickets-status-answered = answered
+tickets-status-answered = Answered
 admin-case-ticket-hint = Not the chat excerpt above: here you talk to the player, and the reply reaches them in game and in their cabinet.
 admin-role-badge-text-color = Letters on the badge
 admin-role-badge-text-color-auto = Back to automatic
@@ -5358,3 +5358,14 @@ console-clear-confirm = CLEAR?
 
 launcher-notifications-more = Show older
 content-working = Working…
+tickets-status-open = Open
+tickets-status-closed = Closed
+admin-backup-schedule-active = Active
+admin-backup-schedule-disabled = Disabled
+state-forbidden-title = No access
+state-forbidden-text = Your account doesn't have the right to open this section. If you need it, ask the staff.
+state-notfound-title = Nothing here
+state-notfound-text = It may have been deleted, or the link is wrong.
+state-error-title = Couldn't load
+state-error-text = Something went wrong on our side. Try again in a minute.
+state-retry = Try again
