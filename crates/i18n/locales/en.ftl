@@ -149,6 +149,7 @@ game-start = START GAME
 game-install = INSTALL
 game-update = UPDATE
 game-stop = STOP
+game-stopping = STOPPING
 game-preparing = PREPARING
 game-locked = LOCKED
 game-vip-only = FRIEND ONLY

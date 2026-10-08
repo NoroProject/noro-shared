@@ -151,6 +151,7 @@ game-start = ЗАПУСТИТЬ
 game-install = УСТАНОВИТЬ
 game-update = ОБНОВИТЬ
 game-stop = ОСТАНОВИТЬ
+game-stopping = ОСТАНОВКА
 game-preparing = ПОДГОТОВКА
 game-locked = НЕТ ДОСТУПА
 game-vip-only = ТОЛЬКО ДЛЯ ДРУЗЕЙ
