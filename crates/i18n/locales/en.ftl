@@ -5718,3 +5718,4 @@ panel-listing-mood-offline-hint = Shown while the server is stopped.
 panel-listing-discard = Discard
 panel-listing-advanced = Advanced
 panel-motd-insert-placeholder = Insert a value
+hub-members-all-roles = All roles

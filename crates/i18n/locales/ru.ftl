@@ -5723,3 +5723,4 @@ panel-listing-mood-offline-hint = Видят, пока сервер выключ
 panel-listing-discard = Отменить
 panel-listing-advanced = Дополнительно
 panel-motd-insert-placeholder = Вставить значение
+hub-members-all-roles = Все роли
