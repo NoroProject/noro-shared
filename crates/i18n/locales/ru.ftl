@@ -5672,3 +5672,6 @@ audit-target-town = Город
 audit-target-tx = Операция
 admin-audit-journal = Журнал
 cabinet-edit-profile = Сменить ник
+cabinet-support-draft = Черновик
+cabinet-support-subject-ph = Тема — можно не писать, возьмём первую строку
+cabinet-support-discard = Удалить черновик

@@ -5667,3 +5667,6 @@ audit-target-town = Town
 audit-target-tx = Transaction
 admin-audit-journal = Log
 cabinet-edit-profile = Change nickname
+cabinet-support-draft = Draft
+cabinet-support-subject-ph = Subject — or leave it, the first line will do
+cabinet-support-discard = Discard the draft
