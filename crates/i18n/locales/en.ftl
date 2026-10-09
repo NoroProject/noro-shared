@@ -5807,3 +5807,4 @@ hub-restricted-post = A moderator has forbidden you to post here.
 hub-restricted-comment = A moderator has forbidden you to comment here.
 hub-restricted-petition = A moderator has forbidden you to file petitions here.
 hub-restricted-court = A moderator has forbidden you to file lawsuits here.
+admin-sanc-note-in = Note · { $locale }

@@ -5812,3 +5812,4 @@ hub-restricted-post = Модерация запретила вам писать 
 hub-restricted-comment = Модерация запретила вам комментировать здесь.
 hub-restricted-petition = Модерация запретила вам подавать петиции здесь.
 hub-restricted-court = Модерация запретила вам подавать иски здесь.
+admin-sanc-note-in = Пометка · { $locale }
