@@ -242,6 +242,12 @@ pub enum NodeOp {
         from: String,
         to: String,
     },
+    /// Copy a file or a whole directory inside the server directory.
+    FsCopy {
+        server: uuid::Uuid,
+        from: String,
+        to: String,
+    },
     /// Fetch a file by URL into the server directory, verifying the hash.
     FsPull {
         server: uuid::Uuid,
@@ -392,7 +398,8 @@ impl NodeOp {
             | NodeOp::BackupCreate { .. }
             | NodeOp::BackupRestore { .. }
             | NodeOp::FsUnarchive { .. }
-            | NodeOp::FsArchive { .. } => Duration::from_secs(900),
+            | NodeOp::FsArchive { .. }
+            | NodeOp::FsCopy { .. } => Duration::from_secs(900),
             NodeOp::ImagePull { .. } | NodeOp::ServerCreate { .. } => Duration::from_secs(600),
             NodeOp::Power { .. } | NodeOp::ServerDelete { .. } => Duration::from_secs(180),
             NodeOp::FsPull { .. } => Duration::from_secs(300),
@@ -419,6 +426,7 @@ impl NodeOp {
             | NodeOp::FsDelete { server, .. }
             | NodeOp::FsMkdir { server, .. }
             | NodeOp::FsRename { server, .. }
+            | NodeOp::FsCopy { server, .. }
             | NodeOp::FsPull { server, .. }
             | NodeOp::FsArchive { server, .. }
             | NodeOp::FsUnarchive { server, .. }
