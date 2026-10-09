@@ -5765,3 +5765,7 @@ fines-pay-with = Paid from the card selected on the left: { $card }
 fines-pick-card = Select a card on the left to pay from
 fines-pay-amount = Pay { $amount }
 bank-action-more-short = More
+hub-market-safe-purchase = Safe purchase
+hub-market-reviews-count = { $count } reviews
+hub-market-reviews-none = No reviews yet
+hub-market-reviews-hint = Buyers can review the seller once the deal is closed.

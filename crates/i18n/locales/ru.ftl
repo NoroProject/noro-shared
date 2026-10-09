@@ -5770,3 +5770,7 @@ fines-pay-with = Оплата с карты, выбранной слева: { $c
 fines-pick-card = Выберите слева карту для оплаты
 fines-pay-amount = Оплатить { $amount }
 bank-action-more-short = Ещё
+hub-market-safe-purchase = Безопасная покупка
+hub-market-reviews-count = отзывов: { $count }
+hub-market-reviews-none = Отзывов пока нет
+hub-market-reviews-hint = Покупатели оценивают продавца, когда сделка закрыта.
