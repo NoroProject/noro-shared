@@ -5833,3 +5833,24 @@ admin-agents-source-pull = Pull from GitHub
 admin-agents-sync-done = Release { $tag }: files downloaded: { $count }
 admin-hub-set-town-citizenships = Towns per player
 web-download-signed-short = signed
+
+# Ticket states the launcher shows, and the Discord status it sets.
+
+## Launcher: ticket states
+
+
+## Launcher: Discord Rich Presence
+
+rpc-in-launcher = In the NORO launcher
+rpc-server = Server: { $name }
+rpc-picking-server = Picking a server
+rpc-starting = Starting { $name }
+rpc-loading = Loading resources…
+rpc-main-menu = In the main menu
+rpc-playing = Playing on { $name }
+rpc-online = Online: { $current }/{ $max }
+rpc-on-server = On the server
+
+## Launcher: update notice
+
+update-pill = Update { $version } available

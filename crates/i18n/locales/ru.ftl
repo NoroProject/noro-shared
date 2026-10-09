@@ -5838,3 +5838,24 @@ admin-agents-source-pull = Подтянуть из GitHub
 admin-agents-sync-done = Релиз { $tag }: скачано файлов: { $count }
 admin-hub-set-town-citizenships = Городов на игрока
 web-download-signed-short = подписан
+
+# Ticket states the launcher shows, and the Discord status it sets.
+
+## Launcher: ticket states
+
+
+## Launcher: Discord Rich Presence
+
+rpc-in-launcher = В лаунчере NORO
+rpc-server = Сервер: { $name }
+rpc-picking-server = Выбирает сервер
+rpc-starting = Запускает { $name }
+rpc-loading = Загружает ресурсы…
+rpc-main-menu = В главном меню
+rpc-playing = Играет на { $name }
+rpc-online = Онлайн: { $current }/{ $max }
+rpc-on-server = На сервере
+
+## Launcher: update notice
+
+update-pill = Доступно обновление { $version }
