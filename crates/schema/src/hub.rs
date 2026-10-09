@@ -303,6 +303,12 @@ pub struct TownSettings {
     /// Считается из `player_sessions`; второго счётчика времени в проекте нет
     /// и заводить его ради городов нельзя — он разойдётся с первым.
     pub min_playtime_hours: i32,
+    /// Во скольких городах игрок может быть гражданином одновременно.
+    ///
+    /// Один — классика: город это дом. Больше — для серверов, где игрок
+    /// держит дом в одном городе и лавку в другом. Мэром при этом можно быть
+    /// где угодно: должность — внутри города, а не поверх гражданства.
+    pub max_citizenships: i32,
 }
 
 impl Default for TownSettings {
@@ -319,6 +325,7 @@ impl Default for TownSettings {
             allow_exclaves: false,
             mayor_can_rename: false,
             min_playtime_hours: 0,
+            max_citizenships: 1,
         }
     }
 }
@@ -725,6 +732,9 @@ impl HubSettings {
         }
         if !(0..=64).contains(&self.towns.min_gap_chunks) {
             bad.push("towns.min_gap_chunks");
+        }
+        if !(1..=10).contains(&self.towns.max_citizenships) {
+            bad.push("towns.max_citizenships");
         }
         if !(0..=10_000).contains(&self.towns.min_playtime_hours) {
             bad.push("towns.min_playtime_hours");
