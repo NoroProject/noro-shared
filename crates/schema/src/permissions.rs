@@ -426,6 +426,30 @@ pub fn perm_hub_market(server_id: &str, action: &str) -> String {
     format!("noro.hub.{server_id}.market.{action}")
 }
 
+/// Ограничения, которые модерация подсайта накладывает на игрока.
+///
+/// Отдельными узлами, а не одним «модерировать»: запретить комментировать —
+/// мера на день за грубость, запретить подавать иски — уже решение о доступе к
+/// суду, и доверяют их разным людям. Узел вида — право накладывать и снимать
+/// именно это ограничение.
+pub const RESTRICT_COMMENT: &str = "comment";
+pub const RESTRICT_POST: &str = "post";
+pub const RESTRICT_PETITION: &str = "petition";
+pub const RESTRICT_COURT: &str = "court";
+
+pub const RESTRICT_KINDS: &[&str] = &[
+    RESTRICT_COMMENT,
+    RESTRICT_POST,
+    RESTRICT_PETITION,
+    RESTRICT_COURT,
+];
+
+/// Право накладывать и снимать одно ограничение. Ветка выдаётся и целиком:
+/// `noro.hub.<server>.restrict.*`.
+pub fn perm_hub_restrict(server_id: &str, kind: &str) -> String {
+    format!("noro.hub.{server_id}.restrict.{kind}")
+}
+
 /// Право минюста на одно действие над городами сервера.
 ///
 /// Это власть сервера над списком городов, а не власть внутри города: мэра и
