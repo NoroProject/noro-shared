@@ -1612,7 +1612,7 @@ admin-wrapper-fb-detected = detected
 
 admin-agent-title = Agents, Mods & Plugins
 admin-agent-lead = Server agents, NoroChat & NoroTab, client mods, and utilities. The wrapper installs required components automatically — download here to configure manually.
-admin-agent-not-built = Nothing built yet. Run ./gradlew collectAgents in agent/ and copy agent/build/agents/ into $NORO_DATA_DIR/agents/.
+admin-agent-not-built = No agents yet. Set the agents repository above and pull a release, or copy agent/build/agents/ into $NORO_DATA_DIR/agents/.
 admin-agent-versions-count = { $count } versions
 
 
@@ -5822,3 +5822,12 @@ admin-gs-tab-files = Files
 admin-gs-tab-mods = Mods
 admin-gs-tab-backups = Backups
 admin-gs-tab-restarts = Restarts
+admin-set-label-agents_repo = Agents repository
+admin-set-hint-agents_repo = owner/name on GitHub. Its releases supply the agent jars and the wrapper.
+audit-action-agents-sync = Agents pulled from GitHub
+admin-agents-source-title = Where agents come from
+admin-agents-source-hint = A GitHub repository release instead of copying jars into the data folder by hand. Only files the master recognises as agents are downloaded.
+admin-agents-source-tag = Release tag
+admin-agents-source-tag-latest = latest
+admin-agents-source-pull = Pull from GitHub
+admin-agents-sync-done = Release { $tag }: files downloaded: { $count }
