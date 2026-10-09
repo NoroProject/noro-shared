@@ -5832,3 +5832,4 @@ admin-agents-source-tag-latest = latest
 admin-agents-source-pull = Pull from GitHub
 admin-agents-sync-done = Release { $tag }: files downloaded: { $count }
 admin-hub-set-town-citizenships = Towns per player
+web-download-signed-short = signed

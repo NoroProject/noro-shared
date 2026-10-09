@@ -5837,3 +5837,4 @@ admin-agents-source-tag-latest = последний
 admin-agents-source-pull = Подтянуть из GitHub
 admin-agents-sync-done = Релиз { $tag }: скачано файлов: { $count }
 admin-hub-set-town-citizenships = Городов на игрока
+web-download-signed-short = подписан
