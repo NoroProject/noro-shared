@@ -5774,3 +5774,5 @@ hub-market-safe-purchase = Безопасная покупка
 hub-market-reviews-count = отзывов: { $count }
 hub-market-reviews-none = Отзывов пока нет
 hub-market-reviews-hint = Покупатели оценивают продавца, когда сделка закрыта.
+hub-market-item-gone = Лот снят
+hub-market-order-line = { $packs } × { $price } = { $total }

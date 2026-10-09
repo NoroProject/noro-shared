@@ -5769,3 +5769,5 @@ hub-market-safe-purchase = Safe purchase
 hub-market-reviews-count = { $count } reviews
 hub-market-reviews-none = No reviews yet
 hub-market-reviews-hint = Buyers can review the seller once the deal is closed.
+hub-market-item-gone = Lot removed
+hub-market-order-line = { $packs } × { $price } = { $total }
