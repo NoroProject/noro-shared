@@ -5666,3 +5666,4 @@ audit-target-report = Report
 audit-target-town = Town
 audit-target-tx = Transaction
 admin-audit-journal = Log
+cabinet-edit-profile = Change nickname

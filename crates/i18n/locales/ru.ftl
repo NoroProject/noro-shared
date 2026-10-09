@@ -5671,3 +5671,4 @@ audit-target-report = Жалоба
 audit-target-town = Город
 audit-target-tx = Операция
 admin-audit-journal = Журнал
+cabinet-edit-profile = Сменить ник

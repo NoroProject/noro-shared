@@ -114,6 +114,9 @@ pub enum PlayerWsMsg {
         user_id: Uuid,
         presence: Presence,
     },
+    /// Your punishments changed: one was issued or lifted. The page lists them
+    /// itself; the frame only says it's time to re-read.
+    PunishmentsChanged,
     /// Frame from an installed module to the player's web tab.
     ModuleMessage {
         module: String,
