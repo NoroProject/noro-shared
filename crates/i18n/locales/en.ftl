@@ -5773,3 +5773,7 @@ hub-market-item-gone = Lot removed
 hub-market-order-line = { $packs } × { $price } = { $total }
 towns-land-summary = { $chunks } chunks · about { $blocks } blocks of land
 towns-land-details = Limits and disputes
+petition-comments = Discussion
+petition-comments-count = { $count } comments
+petition-comments-empty = Nobody has said anything yet
+petition-comment-placeholder = Why are you for or against?

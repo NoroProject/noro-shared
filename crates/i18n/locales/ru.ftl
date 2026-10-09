@@ -5778,3 +5778,7 @@ hub-market-item-gone = Лот снят
 hub-market-order-line = { $packs } × { $price } = { $total }
 towns-land-summary = Чанков: { $chunks } · около { $blocks } блоков земли
 towns-land-details = Лимиты и споры
+petition-comments = Обсуждение
+petition-comments-count = реплик: { $count }
+petition-comments-empty = Пока никто ничего не сказал
+petition-comment-placeholder = Почему вы за или против?
