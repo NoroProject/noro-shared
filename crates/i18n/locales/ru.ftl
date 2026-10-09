@@ -5813,3 +5813,6 @@ hub-restricted-comment = Модерация запретила вам комме
 hub-restricted-petition = Модерация запретила вам подавать петиции здесь.
 hub-restricted-court = Модерация запретила вам подавать иски здесь.
 admin-sanc-note-in = Пометка · { $locale }
+hub-market-payout-primary = Основная карта · { $card }
+hub-market-payout-primary-none = Ваша основная карта
+hub-market-payout-change = Изменить

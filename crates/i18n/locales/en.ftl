@@ -5808,3 +5808,6 @@ hub-restricted-comment = A moderator has forbidden you to comment here.
 hub-restricted-petition = A moderator has forbidden you to file petitions here.
 hub-restricted-court = A moderator has forbidden you to file lawsuits here.
 admin-sanc-note-in = Note · { $locale }
+hub-market-payout-primary = Primary card · { $card }
+hub-market-payout-primary-none = Your primary card
+hub-market-payout-change = Change
