@@ -5776,3 +5776,5 @@ hub-market-reviews-none = Отзывов пока нет
 hub-market-reviews-hint = Покупатели оценивают продавца, когда сделка закрыта.
 hub-market-item-gone = Лот снят
 hub-market-order-line = { $packs } × { $price } = { $total }
+towns-land-summary = Чанков: { $chunks } · около { $blocks } блоков земли
+towns-land-details = Лимиты и споры

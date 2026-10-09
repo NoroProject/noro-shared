@@ -5771,3 +5771,5 @@ hub-market-reviews-none = No reviews yet
 hub-market-reviews-hint = Buyers can review the seller once the deal is closed.
 hub-market-item-gone = Lot removed
 hub-market-order-line = { $packs } × { $price } = { $total }
+towns-land-summary = { $chunks } chunks · about { $blocks } blocks of land
+towns-land-details = Limits and disputes
