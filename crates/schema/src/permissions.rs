@@ -151,6 +151,9 @@ nodes! {
     PERM_GAME_KICK            = "noro.admin.game.kick", "perm-group-other", "perm-node-game-kick";
     PERM_GAME_TELL            = "noro.admin.game.tell", "perm-group-other", "perm-node-game-tell";
     PERM_GAME_ANNOUNCE        = "noro.admin.game.announce", "perm-group-other", "perm-node-game-announce";
+    PERM_CLUSTER_FIND         = "noro.admin.cluster.find", "perm-group-other", "perm-node-cluster-find";
+    PERM_CLUSTER_TRANSFER     = "noro.admin.cluster.transfer", "perm-group-other", "perm-node-cluster-transfer";
+    PERM_CLUSTER_TP           = "noro.admin.cluster.tp", "perm-group-other", "perm-node-cluster-tp";
 
     // --- Контент --------------------------------------------------------------
     PERM_NEWS_VIEW            = "noro.admin.news.view", "perm-group-content", "perm-node-news-view";
