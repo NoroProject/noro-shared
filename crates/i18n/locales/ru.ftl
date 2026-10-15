@@ -4754,6 +4754,7 @@ err-panel-transfer-expired = Ссылка на файл больше не дей
 err-panel-node-busy = На этом сервере уже идёт другая долгая операция
 err-panel-disk-full = На сервере кончилось место
 err-panel-memory-over-node = Это больше памяти, чем осталось на ноде
+err-panel-in-proxy-network = Сервер входит в сеть прокси: сначала отвяжите его от прокси
 err-internal-error = Что-то сломалось у нас
 
 admin-dns-reserved-title = Зарезервированные адреса
@@ -5575,6 +5576,7 @@ audit-action-panel-server-power = Питание сервера хостинга
 audit-action-panel-server-bulk = Массовое действие над серверами
 audit-action-panel-server-clone = Сервер хостинга склонирован
 audit-action-panel-server-migrate = Сервер перенесён на другую ноду
+audit-action-panel-server-attach = Сервер панели привязан к сборке
 audit-action-panel-template-save = Шаблон сервера сохранён
 audit-action-panel-template-delete = Шаблон сервера удалён
 audit-action-panel-server-allocation-assign = Порт выдан серверу

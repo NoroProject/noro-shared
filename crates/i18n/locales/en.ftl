@@ -4754,6 +4754,7 @@ err-panel-transfer-expired = This transfer link has expired
 err-panel-node-busy = Another long operation is already running on this server
 err-panel-disk-full = The server is out of disk space
 err-panel-memory-over-node = That is more memory than the node has left
+err-panel-in-proxy-network = The server is part of a proxy network: detach it from the proxy first
 err-internal-error = Something broke on our side
 
 admin-dns-reserved-title = Reserved Addresses
@@ -5569,6 +5570,7 @@ audit-action-panel-server-power = Panel server power action
 audit-action-panel-server-bulk = Bulk action on hosted servers
 audit-action-panel-server-clone = Hosted server cloned
 audit-action-panel-server-migrate = Hosted server migrated to another node
+audit-action-panel-server-attach = Hosted server attached to a build
 audit-action-panel-template-save = Server template saved
 audit-action-panel-template-delete = Server template deleted
 audit-action-panel-server-allocation-assign = Port assigned to hosted server
