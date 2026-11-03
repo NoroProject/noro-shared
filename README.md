@@ -2,6 +2,8 @@
 
 Shared protocols, data models, internationalization, and Minecraft utilities for Noro — plus everything needed to write a **module**.
 
+Documentation: **[https://noro.rest/docs](https://noro.rest/docs)**
+
 ## Crates
 
 | Crate | What it is |
