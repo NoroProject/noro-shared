@@ -1515,6 +1515,7 @@ admin-fm-items = элементов
 # Счётчик рядом с числом: «3 правила синхронизации».
 admin-sync-rules-btn = правила синхронизации
 admin-fm-folder = Папка
+admin-fm-file = Файл
 admin-fm-empty = Пустая папка
 admin-fm-sync-synced = Синхронизируется — версия сервера всегда главная
 admin-fm-sync-ignored = Игнорируется — никогда не скачивается и не удаляется
@@ -5755,6 +5756,12 @@ settings-discord-rpc-hint = Показывать друзьям в Discord, на
 ## Launcher: misc
 
 server-unnamed = Сервер
+game-server-unnamed = Игровой сервер
+common-guest = Гость
+mc-back-to-server-list = Назад к списку серверов
+admin-gs-page-subtitle = Управление сервером
+admin-image-picker-label = Превью
+admin-gs-load-failed = Не удалось загрузить игровые серверы.
 common-seconds = { $count } с
 common-kilobytes = { $size } КБ
 profile-skin-pick-title = Выберите скин

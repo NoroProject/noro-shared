@@ -1506,6 +1506,7 @@ admin-fm-items = items
 # Счётчик рядом с числом: «3 sync rules».
 admin-sync-rules-btn = sync rules
 admin-fm-folder = Folder
+admin-fm-file = File
 admin-fm-empty = Empty folder
 admin-fm-sync-synced = Synced — server version always wins
 admin-fm-sync-ignored = Ignored — never downloaded or removed
@@ -5744,6 +5745,12 @@ settings-discord-rpc-hint = Show friends on Discord which server you play on.
 ## Launcher: misc
 
 server-unnamed = Server
+game-server-unnamed = Game server
+common-guest = Guest
+mc-back-to-server-list = Back to Server List
+admin-gs-page-subtitle = Control surface
+admin-image-picker-label = Preview image
+admin-gs-load-failed = Could not load game servers.
 common-seconds = { $count } s
 common-kilobytes = { $size } KB
 profile-skin-pick-title = Choose a skin
