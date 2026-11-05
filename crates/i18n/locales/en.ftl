@@ -5715,6 +5715,7 @@ audit-action-admin-token-create = Admin token created
 audit-action-admin-token-delete = Admin token deleted
 audit-action-blocklist-add = Blocklist rule added
 audit-action-blocklist-remove = Blocklist rule removed
+audit-action-chat-filter-update = Chat filter changed
 audit-action-backup-restore = Master restored from an archive
 audit-action-module-install = Module installed
 audit-action-module-update = Module updated

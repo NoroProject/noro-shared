@@ -5721,6 +5721,7 @@ audit-action-admin-token-create = Токен админки создан
 audit-action-admin-token-delete = Токен админки удалён
 audit-action-blocklist-add = Правило чёрного списка добавлено
 audit-action-blocklist-remove = Правило чёрного списка удалено
+audit-action-chat-filter-update = Фильтр чата изменён
 audit-action-backup-restore = Мастер восстановлен из архива
 audit-action-module-install = Модуль установлен
 audit-action-module-update = Модуль обновлён
