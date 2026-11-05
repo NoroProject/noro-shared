@@ -62,6 +62,13 @@ pub struct GameServerEntry {
     /// Является ли сервером входа по умолчанию для прокси.
     #[serde(default)]
     pub is_default: bool,
+    /// Имя, под которым игра показывает сервер вместо `mc_host` (`aoa.noro`).
+    /// Резолвит его authlib-injector внутри JVM игры по таблице от лаунчера,
+    /// поэтому реальный адрес остаётся здесь же. `None` — админ выключил
+    /// псевдоним (прокси или защита маршрутизирует по имени) или мастер
+    /// старше этого поля.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub alias: Option<String>,
 }
 
 /// Версия сборки, доступная игроку для выбора в лаунчере.
@@ -91,6 +98,9 @@ pub struct ServerEntry {
     pub mc_host: Option<String>,
     #[serde(default)]
     pub mc_port: Option<u16>,
+    /// Псевдоним точки входа — см. `GameServerEntry::alias`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mc_alias: Option<String>,
     pub modloader: Modloader,
     pub mc_version: String,
     /// id опубликованной сборки, если есть.
