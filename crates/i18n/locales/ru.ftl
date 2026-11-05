@@ -5247,6 +5247,19 @@ admin-node-diag-sleeping = Спит
 admin-node-diag-restarts = Перезапусков: { $count }
 admin-node-diag-no-console = Нет консоли
 admin-node-diag-no-servers = В памяти демона нет серверов
+admin-node-diag-isolation = Изоляция сети
+admin-node-diag-isolation-on = Включена
+admin-node-diag-isolation-off = Выключена
+admin-node-diag-isolation-failed = Не действует
+admin-node-diag-isolation-groups = { $count ->
+        [one] { $count } группа прокси
+        [few] { $count } группы прокси
+       *[many] { $count } групп прокси
+    }
+admin-node-diag-quota = Квота диска
+admin-node-diag-quota-project = Файловая система
+admin-node-diag-quota-project-hint = Ядро не даёт писать сверх лимита
+admin-node-diag-quota-walk = Обход каталога
 
 nav-cabinet-notifications = Уведомления
 nav-admin-notifications = Уведомления

@@ -5242,6 +5242,18 @@ admin-node-diag-sleeping = Sleeping
 admin-node-diag-restarts = Restarts: { $count }
 admin-node-diag-no-console = No console
 admin-node-diag-no-servers = The daemon holds no servers in memory
+admin-node-diag-isolation = Network isolation
+admin-node-diag-isolation-on = Enforced
+admin-node-diag-isolation-off = Off
+admin-node-diag-isolation-failed = Not enforced
+admin-node-diag-isolation-groups = { $count ->
+        [one] { $count } proxy group
+       *[other] { $count } proxy groups
+    }
+admin-node-diag-quota = Disk quota
+admin-node-diag-quota-project = Filesystem
+admin-node-diag-quota-project-hint = The kernel refuses writes past the limit
+admin-node-diag-quota-walk = Directory walk
 
 nav-cabinet-notifications = Notifications
 nav-admin-notifications = Notifications
