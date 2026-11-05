@@ -1395,6 +1395,14 @@ admin-dash-quick-actions = Quick actions
 admin-dash-create-client = Create client
 admin-dash-publish-news = Publish news
 admin-dash-deploy-launcher = Deploy launcher
+admin-queues-title = Waiting for staff
+admin-queues-lead = Open queues you have access to. Refreshes every minute.
+admin-queues-tickets = Tickets awaiting a reply
+admin-queues-cases = Open cases
+admin-queues-reports = Unresolved reports
+admin-queues-apps = Apps awaiting review
+admin-queues-mod-suggestions = Mod suggestions
+admin-queues-integrity = Integrity flags to review
 
 ## Admin: Build section tabs
 admin-tab-profile = Profile

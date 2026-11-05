@@ -1404,6 +1404,14 @@ admin-dash-quick-actions = Быстрые действия
 admin-dash-create-client = Создать клиент
 admin-dash-publish-news = Опубликовать новость
 admin-dash-deploy-launcher = Развернуть лаунчер
+admin-queues-title = Ждёт персонал
+admin-queues-lead = Открытые очереди, к которым у вас есть доступ. Обновляется раз в минуту.
+admin-queues-tickets = Обращения без ответа
+admin-queues-cases = Открытые дела
+admin-queues-reports = Нерешённые жалобы
+admin-queues-apps = Приложения на проверке
+admin-queues-mod-suggestions = Предложения модов
+admin-queues-integrity = Отметки целостности на проверку
 
 ## Админка: Вкладки раздела сборки
 admin-tab-profile = Профиль
