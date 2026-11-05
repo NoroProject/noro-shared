@@ -672,6 +672,8 @@ login-no-methods = No sign-in method is configured on this instance yet. An oper
 login-passkey = SIGN IN WITH PASSKEY
 login-recovery-toggle = Use a recovery code
 login-username-placeholder = Username
+login-recovery-code = Recovery code
+login-profile-failed = Signed in, but your profile did not load. Try again in a moment.
 login-submit = SIGN IN
 login-recovery-hint = Each code works once.
 

@@ -678,6 +678,8 @@ login-no-methods = На этом инстансе ещё не настроен �
 login-passkey = ВОЙТИ ЧЕРЕЗ PASSKEY
 login-recovery-toggle = Использовать код восстановления
 login-username-placeholder = Имя пользователя
+login-recovery-code = Код восстановления
+login-profile-failed = Вход выполнен, но профиль не загрузился. Попробуйте ещё раз чуть позже.
 login-submit = ВОЙТИ
 login-recovery-hint = Каждый код работает один раз.
 
