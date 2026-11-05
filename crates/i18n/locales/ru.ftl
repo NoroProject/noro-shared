@@ -3525,6 +3525,7 @@ admin-hub-set-town-exclaves-hint = Выключено — новый чанк о
 
 nav-hub-map = Карта
 map-empty = Пока ничего не нарисовано: агент рисует карту там, где ходят игроки
+map-cursor-chunk = чанк { $cx }, { $cz }
 map-towns = Города на карте
 map-pick = Занимать кликом
 map-picking-on = Кликните по чанку

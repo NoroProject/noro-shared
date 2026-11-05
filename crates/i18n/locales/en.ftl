@@ -3514,6 +3514,7 @@ admin-hub-set-town-exclaves-hint = Off, a new chunk must touch the town's own la
 
 nav-hub-map = Map
 map-empty = Nothing is drawn yet: the agent renders the map as players explore it
+map-cursor-chunk = chunk { $cx }, { $cz }
 map-towns = Towns on the map
 map-pick = Claim by clicking
 map-picking-on = Click a chunk
