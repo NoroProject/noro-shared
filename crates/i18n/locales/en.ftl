@@ -3326,6 +3326,7 @@ nav-group-moderation = Moderation
 nav-group-overview = Home
 tickets-closed-note = The conversation is closed. Write a new ticket if something is left unsaid.
 tickets-empty-title = Nothing said yet
+tickets-load-older = Show earlier messages
 banker-pick-card = Pick a card to work with
 banker-desk = Cash desk
 banker-recent = Recent operations

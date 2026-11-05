@@ -3337,6 +3337,7 @@ nav-group-moderation = Модерация
 nav-group-overview = Главное
 tickets-closed-note = Разговор закрыт. Если осталось недосказанное — заведите новое обращение.
 tickets-empty-title = Пока ничего не сказано
+tickets-load-older = Показать более ранние сообщения
 banker-pick-card = Выберите карточку для работы
 banker-desk = Касса
 banker-recent = Последние операции
