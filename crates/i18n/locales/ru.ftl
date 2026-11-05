@@ -665,6 +665,8 @@ cabinet-messages-unblock = Разблокировать
 cabinet-messages-blocked-done = Заблокирован
 cabinet-messages-unblocked-done = Разблокирован
 cabinet-messages-from-site = Сайт
+cabinet-messages-disabled-title = Мессенджер выключен
+cabinet-messages-disabled-text = Администратор выключил личные сообщения на этом инстансе.
 cabinet-messages-from-module = Модуль «{ $module }»
 cabinet-messages-copy = Скопировать текст
 cabinet-messages-copied = Скопировано
@@ -3468,6 +3470,7 @@ admin-hub-set-fine-max = Предел штрафа
 
 game-fine-issued = Вам выписан штраф { $amount }: { $reason }.
 game-fine-issued-due = Вам выписан штраф { $amount }: { $reason }. Оплатить до { $date }.
+game-dm-messenger-disabled = Личные сообщения между серверами выключены.
 
 ## Города подсайта
 
@@ -4178,6 +4181,11 @@ admin-hosting-enable = Включить панель
 admin-hosting-enable-hint = Добавляет разделы нод и серверов панели и открывает /panel владельцам серверов.
 admin-hosting-next-step = Следующий шаг — завести ноду: на машине, где будут серверы, нужна одна команда установки.
 admin-hosting-off-note = При выключенной панели её маршруты отвечают «не настроено», а страниц нет. Уже работающие контейнеры не останавливаются.
+admin-messenger-title = Мессенджер
+admin-messenger-lead = Личные сообщения между игроками на сайте, в лаунчере и в игре
+admin-messenger-enable = Включить мессенджер
+admin-messenger-enable-hint = Выключенный мессенджер пропадает с сайта, из лаунчера и из игровой панели, а /msg перестаёт ходить между серверами. Ничего не удаляется: включите обратно — и переписки вернутся.
+admin-messenger-keeps-note = Чёрный список, закрытая личка и /ignore продолжают работать: ими пользуется и игровой чат.
 
 admin-hosting-observability-title = Наблюдаемость и мониторинг
 admin-hosting-observability-lead = Prometheus-метрики и исходящие веб-хуки событий
@@ -5123,6 +5131,7 @@ err-dm-empty = Сообщение пустое
 err-dm-self = Себе написать нельзя
 err-dm-refused = Сообщение не доставлено
 err-dm-closed = Игрок закрыл личные сообщения
+err-messenger-disabled = Личные сообщения на этом инстансе выключены
 err-node-offline = Нода не на связи
 err-node-maintenance = Нода на обслуживании — до его окончания сервер не запустить
 err-panel-managed = Этим сервером управляет панель — операция живёт на его странице в панели

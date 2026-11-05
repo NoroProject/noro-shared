@@ -658,6 +658,8 @@ cabinet-messages-unblock = Unblock
 cabinet-messages-blocked-done = Blocked
 cabinet-messages-unblocked-done = Unblocked
 cabinet-messages-from-site = Site
+cabinet-messages-disabled-title = The messenger is turned off
+cabinet-messages-disabled-text = The administrator has turned direct messages off on this instance.
 cabinet-messages-from-module = Module «{ $module }»
 cabinet-messages-copy = Copy text
 cabinet-messages-copied = Copied
@@ -3457,6 +3459,7 @@ admin-hub-set-fine-max = Maximum fine
 
 game-fine-issued = You have been fined { $amount }: { $reason }.
 game-fine-issued-due = You have been fined { $amount }: { $reason }. Pay before { $date }.
+game-dm-messenger-disabled = Direct messages across the network are turned off.
 
 ## Города подсайта
 
@@ -4169,6 +4172,11 @@ admin-hosting-enable = Turn the panel on
 admin-hosting-enable-hint = Adds the nodes and hosted servers sections, and opens /panel to server owners.
 admin-hosting-next-step = Add a node next: it needs one install command on the machine that will run the servers.
 admin-hosting-off-note = With the panel off its routes answer "not configured" and its pages do not exist. Servers already running in containers are not stopped.
+admin-messenger-title = Messenger
+admin-messenger-lead = Direct messages between players on the site, in the launcher and in game
+admin-messenger-enable = Turn the messenger on
+admin-messenger-enable-hint = When off, conversations disappear from the site, the launcher and the in-game panel, and /msg stops crossing servers. Nothing is deleted: turning it back on brings the history back.
+admin-messenger-keeps-note = Block lists, closed messages and /ignore keep working: the game chat uses them too.
 
 admin-hosting-observability-title = Observability & Monitoring
 admin-hosting-observability-lead = Prometheus metrics and outgoing event webhooks
@@ -5118,6 +5126,7 @@ err-dm-empty = The message is empty
 err-dm-self = You cannot write to yourself
 err-dm-refused = The message was not delivered
 err-dm-closed = This player has closed direct messages
+err-messenger-disabled = Direct messages are turned off on this instance
 err-node-offline = The node is not connected
 err-node-maintenance = The node is in maintenance — the server cannot be started until it ends
 err-panel-managed = This server is run by the panel — the operation lives on its panel page
