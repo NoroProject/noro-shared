@@ -2495,6 +2495,7 @@ admin-storages-subtitle = Настройка внешних S3, WebDAV или л
 admin-storages-add = Добавить хранилище
 admin-storages-edit = Редактировать хранилище
 admin-storages-delete = Удалить
+admin-storages-delete-confirm = Удалить хранилище «{ $name }»?
 admin-storages-name = Название хранилища
 admin-storages-type = Тип хранилища
 admin-storages-type-s3 = Amazon S3 / S3-совместимое (MinIO, R2, Wasabi)

@@ -2484,6 +2484,7 @@ admin-storages-subtitle = Configure remote object storage, WebDAV, or local dire
 admin-storages-add = Add storage
 admin-storages-edit = Edit storage
 admin-storages-delete = Delete
+admin-storages-delete-confirm = Delete the storage «{ $name }»?
 admin-storages-name = Storage Name
 admin-storages-type = Storage Type
 admin-storages-type-s3 = Amazon S3 / S3-compatible (MinIO, R2, Wasabi)
