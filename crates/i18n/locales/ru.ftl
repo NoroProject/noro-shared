@@ -5957,6 +5957,7 @@ petition-comments-count = реплик: { $count }
 petition-comments-empty = Пока никто ничего не сказал
 petition-comment-placeholder = Почему вы за или против?
 err-hub-restricted = Модерация этого подсайта запретила вам это действие
+err-ticket-limit = У вас уже три открытых обращения. Напишите в одно из них или дождитесь, пока одно закроют.
 hub-event-restriction-imposed = ограничил игрока
 hub-event-restriction-lifted = снял ограничение
 hub-restrict-title = Ограничения

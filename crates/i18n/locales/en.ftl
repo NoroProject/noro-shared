@@ -5951,6 +5951,7 @@ petition-comments-count = { $count } comments
 petition-comments-empty = Nobody has said anything yet
 petition-comment-placeholder = Why are you for or against?
 err-hub-restricted = A moderator has restricted this for you on this hub
+err-ticket-limit = You already have three open requests. Reply in one of them, or wait until one is closed.
 hub-event-restriction-imposed = restricted a player
 hub-event-restriction-lifted = lifted a restriction
 hub-restrict-title = Restrictions
