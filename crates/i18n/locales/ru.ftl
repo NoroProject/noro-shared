@@ -6097,3 +6097,13 @@ cabinet-sessions-ended-others = { $count ->
     [few] Завершено { $count } сессии
    *[other] Завершено { $count } сессий
 }
+
+## Notifications: new sign-in
+
+notify-cat-security = Безопасность аккаунта
+notify-sign-in-site = Новый вход на сайте
+notify-sign-in-launcher = Новый вход в лаунчере
+notify-sign-in-passkey = Новый вход по ключу доступа
+notify-sign-in-recovery = Новый вход по коду восстановления
+notify-sign-in-app = { $app } получило доступ к аккаунту
+notify-sign-in-body = Если это были не вы, завершите эту сессию в Настройках → Безопасность.

@@ -6089,3 +6089,13 @@ cabinet-sessions-ended-others = { $count ->
     [one] { $count } session ended
    *[other] { $count } sessions ended
 }
+
+## Notifications: new sign-in
+
+notify-cat-security = Account security
+notify-sign-in-site = New sign-in on the website
+notify-sign-in-launcher = New sign-in in the launcher
+notify-sign-in-passkey = New sign-in with a passkey
+notify-sign-in-recovery = New sign-in with a recovery code
+notify-sign-in-app = { $app } got access to your account
+notify-sign-in-body = If it wasn't you, end that session in Settings → Security.

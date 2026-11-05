@@ -34,8 +34,10 @@ pub mod categories {
     pub const HOSTING: &str = "hosting";
     /// News, a launcher release, a build update, maintenance.
     pub const PROJECT: &str = "project";
+    /// Your account itself: a new sign-in.
+    pub const SECURITY: &str = "security";
 
-    pub const BUILT_IN: &[&str] = &[MESSAGES, MODERATION, HOSTING, PROJECT];
+    pub const BUILT_IN: &[&str] = &[MESSAGES, MODERATION, HOSTING, PROJECT, SECURITY];
 
     /// Category of a module's own notifications.
     pub fn of_module(id: &str) -> String {
