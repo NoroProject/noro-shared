@@ -6297,6 +6297,21 @@ cabinet-sessions-ended-others = { $count ->
    *[other] { $count } sessions ended
 }
 
+## Cabinet: sign-in history
+
+cabinet-logins-title = Sign-in history
+cabinet-logins-lead = The last 30 sign-ins to your account. The address is cut short on purpose: enough to recognise your network, not to find your home.
+cabinet-logins-none = No sign-ins recorded yet.
+cabinet-logins-method-platform = Signed in with { $platform }
+cabinet-logins-method-passkey = Signed in with a passkey
+cabinet-logins-method-recovery-code = Signed in with a recovery code
+cabinet-logins-method-launcher = Signed in to the launcher
+cabinet-logins-method-site = Signed in on the website
+cabinet-logins-method-app = { $name } got access
+cabinet-logins-failed = Failed attempt
+cabinet-logins-unknown-client = Unknown device
+cabinet-logins-unknown-ip = address unknown
+
 ## Notifications: new sign-in
 
 notify-cat-security = Account security

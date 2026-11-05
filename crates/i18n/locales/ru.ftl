@@ -6311,6 +6311,21 @@ cabinet-sessions-ended-others = { $count ->
    *[other] Завершено { $count } сессий
 }
 
+## Cabinet: sign-in history
+
+cabinet-logins-title = История входов
+cabinet-logins-lead = Последние 30 входов в аккаунт. Адрес нарочно обрезан: по нему можно узнать свою сеть, но не найти дом.
+cabinet-logins-none = Входов пока не записано.
+cabinet-logins-method-platform = Вход через { $platform }
+cabinet-logins-method-passkey = Вход по ключу доступа
+cabinet-logins-method-recovery-code = Вход по коду восстановления
+cabinet-logins-method-launcher = Вход в лаунчер
+cabinet-logins-method-site = Вход на сайте
+cabinet-logins-method-app = { $name } получило доступ
+cabinet-logins-failed = Неудачная попытка
+cabinet-logins-unknown-client = Неизвестное устройство
+cabinet-logins-unknown-ip = адрес неизвестен
+
 ## Notifications: new sign-in
 
 notify-cat-security = Безопасность аккаунта
