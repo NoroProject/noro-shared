@@ -2244,6 +2244,12 @@ spotlight-action-logout = Выйти
 ## Поиск и фильтры списка пользователей
 admin-users-search-label = Поиск игрока / UUID / платформа
 admin-users-search-placeholder = Поиск по нику, платформе или UUID...
+admin-users-identity-find = Найти по ID платформы
+admin-users-identity-lead = Поиск игрока по ID аккаунта, через который он входит, — по числу из Discord или Telegram, а не по нику.
+admin-users-identity-provider = Платформа
+admin-users-identity-id = ID аккаунта на платформе
+admin-users-identity-search = Найти
+admin-users-identity-not-found = Никто здесь не входит через этот аккаунт.
 admin-users-status-label = Статус
 admin-users-status-all = Все статусы
 admin-users-status-active-only = Только активные

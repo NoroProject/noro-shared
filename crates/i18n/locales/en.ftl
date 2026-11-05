@@ -2234,6 +2234,12 @@ spotlight-action-logout = Sign out
 ## Search & Filters for User List
 admin-users-search-label = Search User / UUID / platform
 admin-users-search-placeholder = Filter by username, platform handle, or UUID...
+admin-users-identity-find = Find by platform ID
+admin-users-identity-lead = Look a player up by the ID of the account they sign in with — the number you see in Discord or Telegram, not their username.
+admin-users-identity-provider = Platform
+admin-users-identity-id = Account ID on the platform
+admin-users-identity-search = Find
+admin-users-identity-not-found = Nobody here signs in with that account.
 admin-users-status-label = Status
 admin-users-status-all = All Statuses
 admin-users-status-active-only = Active Only
