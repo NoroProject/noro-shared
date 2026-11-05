@@ -93,6 +93,7 @@ nodes! {
     PERM_CASES_INVENTORY      = "noro.mod.cases.inventory", "perm-group-moderation", "perm-node-cases-inventory";
     PERM_CASES_WATCH          = "noro.mod.cases.watch", "perm-group-moderation", "perm-node-cases-watch";
     PERM_CASES_CLIENT         = "noro.mod.cases.client", "perm-group-moderation", "perm-node-cases-client";
+    PERM_WHOIS                = "noro.mod.whois", "perm-group-moderation", "perm-node-whois";
     PERM_TICKETS_VIEW         = "noro.mod.tickets.view", "perm-group-moderation", "perm-node-tickets-view";
     PERM_TICKETS_REPLY        = "noro.mod.tickets.reply", "perm-group-moderation", "perm-node-tickets-reply";
     PERM_TICKETS_CLOSE        = "noro.mod.tickets.close", "perm-group-moderation", "perm-node-tickets-close";

@@ -2697,6 +2697,7 @@ perm-node-cases-chat = Просмотр среза чата в деле
 perm-node-cases-inventory = Просмотр инвентаря игрока
 perm-node-cases-watch = Слежка за игроком
 perm-node-cases-client = Проверка лаунчера игрока
+perm-node-whois = Сведения об игроке через /whois
 perm-node-rules-view = Просмотр свода правил
 perm-node-rules-edit = Создание и редактирование правил
 perm-node-rules-delete = Удаление правил и разделов

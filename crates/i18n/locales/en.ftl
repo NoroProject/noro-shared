@@ -2686,6 +2686,7 @@ perm-node-cases-chat = View the chat excerpt in a case
 perm-node-cases-inventory = Inspect a player's inventory
 perm-node-cases-watch = Spectate a player
 perm-node-cases-client = Check a player's launcher
+perm-node-whois = Player details with /whois
 perm-node-rules-view = View the rulebook
 perm-node-rules-edit = Create and edit rules
 perm-node-rules-delete = Delete rules and sections
