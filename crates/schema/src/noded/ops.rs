@@ -345,6 +345,12 @@ pub enum NodeOp {
         /// Where to push it after packing. Absent means it stays on the node.
         #[serde(default)]
         upload: Option<Box<BackupUpload>>,
+        /// MiB that all of this server's archives on the node may take, the new
+        /// one included; 0 means no limit. Apart from the server's disk quota:
+        /// archives live outside the server directory, where the server cannot
+        /// reach them, and a full world must not lose its restore points.
+        #[serde(default)]
+        quota_mb: u64,
     },
     BackupRestore {
         server: uuid::Uuid,
@@ -360,6 +366,17 @@ pub enum NodeOp {
         server: uuid::Uuid,
         backup: uuid::Uuid,
         ttl_secs: u64,
+    },
+
+    // --- crashes -----------------------------------------------------------
+    /// What the node kept from the last crashes: the console tail and the
+    /// `crash-reports/` file of each. Answers with [`super::CrashReports`] —
+    /// the list, and the one asked for in full (the newest when `crash` is
+    /// absent).
+    CrashReport {
+        server: uuid::Uuid,
+        #[serde(default)]
+        crash: Option<String>,
     },
 
     // --- node itself -------------------------------------------------------
@@ -401,7 +418,12 @@ impl NodeOp {
             | NodeOp::FsArchive { .. }
             | NodeOp::FsCopy { .. } => Duration::from_secs(900),
             NodeOp::ImagePull { .. } | NodeOp::ServerCreate { .. } => Duration::from_secs(600),
-            NodeOp::Power { .. } | NodeOp::ServerDelete { .. } => Duration::from_secs(180),
+            // A rebuild stops a running server first, and the node gives the
+            // stop a minute to save the world — thirty seconds cut it short
+            // while the node went on and finished the rebuild anyway.
+            NodeOp::Power { .. } | NodeOp::ServerDelete { .. } | NodeOp::ServerUpdate { .. } => {
+                Duration::from_secs(180)
+            }
             NodeOp::FsPull { .. } => Duration::from_secs(300),
             _ => Duration::from_secs(30),
         }
@@ -438,7 +460,8 @@ impl NodeOp {
             | NodeOp::BackupCreate { server, .. }
             | NodeOp::BackupRestore { server, .. }
             | NodeOp::BackupDelete { server, .. }
-            | NodeOp::BackupTicket { server, .. } => Some(*server),
+            | NodeOp::BackupTicket { server, .. }
+            | NodeOp::CrashReport { server, .. } => Some(*server),
             NodeOp::NodeInfo | NodeOp::ImagePull { .. } | NodeOp::SftpReload => None,
         }
     }

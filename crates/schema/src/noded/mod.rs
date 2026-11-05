@@ -19,13 +19,18 @@ pub mod events;
 pub mod ops;
 pub mod replies;
 
-pub use events::{NodeEvent, NodeStats, PowerState, ServerStats, SftpActionKind};
+pub use events::{
+    NodeEvent, NodeStats, PowerState, PressureKind, ServerStats, SftpActionKind,
+    PRESSURE_CLEAR_PERCENT, PRESSURE_WARN_PERCENT,
+};
 pub use ops::{
     AgentSpec, BackupUpload, CoreSource, InstallSpec, Listing, NodeOp, PackSource, PortMapping,
     PortProtocol, PowerAction, ServerSpec, SyncPolicy, TicketMode,
 };
 pub use replies::{
-    BackupInfo, DirEntry, DirListing, FileContent, InstallResult, SyncReport, TicketGrant,
+    BackupInfo, CrashFile, CrashReport, CrashReports, CrashSummary, DirEntry, DirListing,
+    FileContent, InstallResult, MasterLink, NodeDiag, ServerDiag, SftpDiag, SyncReport,
+    TicketGrant,
 };
 
 use serde::{Deserialize, Serialize};

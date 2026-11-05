@@ -185,3 +185,123 @@ fn installs_from_before_server_packs_still_read() {
         serde_json::from_value(json!({ "jar": "forge-universal.jar", "bytes": 1 })).unwrap();
     assert!(!reply.server_pack);
 }
+
+/// A master from before backup quotas sends no `quota_mb`, and the node must
+/// read that as "no limit" rather than refuse every backup.
+#[test]
+fn a_backup_without_a_quota_has_no_limit() {
+    let op: NodeOp = serde_json::from_value(json!({
+        "op": "backup_create",
+        "args": {
+            "server": "00000000-0000-0000-0000-000000000000",
+            "backup": "00000000-0000-0000-0000-000000000000",
+            "name": "nightly"
+        }
+    }))
+    .unwrap();
+    match op {
+        NodeOp::BackupCreate { quota_mb, .. } => assert_eq!(quota_mb, 0),
+        other => panic!("expected a backup, got {other:?}"),
+    }
+}
+
+/// The rebuild waits for a stop that may take a minute; the master giving up
+/// first leaves the panel saying "failed" about a rebuild that went through.
+#[test]
+fn a_rebuild_outlives_the_stop_inside_it() {
+    let update = NodeOp::ServerUpdate {
+        server: uuid::Uuid::nil(),
+        spec: Box::new(ServerSpec {
+            image: "eclipse-temurin:21-jre".into(),
+            memory_mb: 4096,
+            swap_mb: None,
+            disk_mb: 10240,
+            cpu_percent: 0,
+            pids_limit: 0,
+            jvm_args: vec![],
+            jar: "server.jar".into(),
+            server_args: vec![],
+            ports: vec![],
+            env: Default::default(),
+            authlib_url: None,
+            agent: None,
+        }),
+    };
+    assert!(update.timeout() >= std::time::Duration::from_secs(120));
+}
+
+#[test]
+fn a_pressure_event_names_its_server_only_when_it_has_one() {
+    let frame = FromNode::Event {
+        event: NodeEvent::DiskPressure {
+            kind: PressureKind::NodeDisk,
+            server: None,
+            used_mb: 9300,
+            limit_mb: 10000,
+            active: true,
+        },
+    };
+    let value = serde_json::to_value(&frame).unwrap();
+    assert_eq!(value["event"], "disk_pressure");
+    assert_eq!(value["kind"], "node_disk");
+
+    let back: FromNode = serde_json::from_value(json!({
+        "type": "event", "event": "disk_pressure", "kind": "server_disk",
+        "server": "00000000-0000-0000-0000-000000000000",
+        "used_mb": 1, "limit_mb": 2, "active": false
+    }))
+    .unwrap();
+    assert!(matches!(
+        back,
+        FromNode::Event {
+            event: NodeEvent::DiskPressure {
+                kind: PressureKind::ServerDisk,
+                server: Some(_),
+                active: false,
+                ..
+            }
+        }
+    ));
+}
+
+/// The summary is flattened into the full report, so one id reads the same in
+/// the list and in the report beside it.
+#[test]
+fn a_crash_report_carries_its_summary_inline() {
+    let reports = CrashReports {
+        crashes: vec![CrashSummary {
+            id: "1700000000000".into(),
+            at: 1_700_000_000,
+            state: PowerState::OomKilled,
+            exit_code: Some(137),
+        }],
+        report: Some(CrashReport {
+            summary: CrashSummary {
+                id: "1700000000000".into(),
+                at: 1_700_000_000,
+                state: PowerState::OomKilled,
+                exit_code: Some(137),
+            },
+            console: vec!["java.lang.OutOfMemoryError".into()],
+            crash_file: None,
+        }),
+    };
+    let value = serde_json::to_value(&reports).unwrap();
+    assert_eq!(value["report"]["id"], "1700000000000");
+    assert_eq!(value["report"]["state"], "oom_killed");
+    let back: CrashReports = serde_json::from_value(value).unwrap();
+    assert_eq!(back.report.unwrap().console.len(), 1);
+}
+
+#[test]
+fn node_diagnostics_read_without_servers() {
+    let diag: NodeDiag = serde_json::from_value(json!({
+        "version": "0.9.0", "uptime_secs": 5,
+        "master": { "connected": true, "last_contact": 1700000000, "disconnects": 0 },
+        "events_queued": 0, "console_lines_dropped": 0,
+        "sftp": { "enabled": false }
+    }))
+    .unwrap();
+    assert!(diag.master.connected);
+    assert!(diag.servers.is_empty());
+}
