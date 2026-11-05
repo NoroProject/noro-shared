@@ -193,6 +193,12 @@ pub enum ServerWsMsg {
     PermissionsUpdated {
         user: UserProfile,
     },
+    /// What the instance has switched on. Sent right after `AuthOk` and again
+    /// whenever an admin flips a switch, so a section disappears without a
+    /// restart. A launcher that never gets it keeps everything on.
+    InstanceFeatures {
+        features: crate::InstanceFeatures,
+    },
     /// Карточка дела изменилась. Данных нет намеренно: кто смотрит на дело,
     /// тот сходит за карточкой сам — иначе кадр пришлось бы держать в согласии
     /// с формой ответа `/api/admin/cases/{id}`, а она меняется чаще протокола.
