@@ -621,7 +621,7 @@ oauth-allow = Authorize
 
 ## Skin and Capes Manager
 skin-title = Skins & Capes
-skin-subtitle = Modrinth & Pandora style skin manager
+skin-subtitle = Choose how your character looks in game
 skin-3d-character = 3D Character
 skin-custom-badge = Custom Skin
 skin-default-badge = Default
@@ -640,10 +640,30 @@ skin-official-skins = Official Minecraft skins
 skin-mojang-desc = Standard Mojang characters
 skin-available-capes = Your available capes
 skin-pick-cape-desc = Pick a cape for your character
-skin-capes-count = { $count } capes
+skin-capes-count = { $count ->
+        [one] { $count } cape
+       *[other] { $count } capes
+    }
 skin-no-cape = No cape
 skin-no-capes-title = No capes available
 skin-no-capes-desc = You have no capes yet. Ask an administrator to grant you cape access.
+skin-import-label = Copy a skin from a player
+skin-import-placeholder = Minecraft username
+skin-import-action = Import
+skin-imported = Skin copied from { $name }
+skin-only-png = Only PNG files are supported.
+skin-too-large = The file is { $size } KB — skins must be { $max } KB or smaller.
+skin-updated = Skin updated
+skin-equipped-name = Now wearing { $name }
+skin-apply-failed = Could not change the skin
+skin-reset-done = Skin reset to default
+skin-reset-failed = Could not reset the skin
+skin-cape-on = Cape equipped
+skin-cape-off = Cape removed
+skin-cape-failed = Could not change the cape
+skin-rename = Rename
+skin-delete-title = Delete this skin?
+skin-delete-text = “{ $name }” is removed from your saved skins. What you are wearing does not change.
 
 ## Login page
 login-secure-login = Secure login

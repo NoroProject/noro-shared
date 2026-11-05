@@ -626,7 +626,7 @@ oauth-allow = Разрешить
 
 ## Менеджер скинов и плащей
 skin-title = Скины и плащи
-skin-subtitle = Менеджер скинов в стиле Modrinth & Pandora
+skin-subtitle = Выберите, как ваш персонаж выглядит в игре
 skin-3d-character = 3D Персонаж
 skin-custom-badge = Свой скин
 skin-default-badge = По умолчанию
@@ -645,10 +645,31 @@ skin-official-skins = Официальные скины Minecraft
 skin-mojang-desc = Стандартные персонажи Mojang
 skin-available-capes = Доступные плащи
 skin-pick-cape-desc = Выберите плащ для вашего персонажа
-skin-capes-count = { $count } плащей
+skin-capes-count = { $count ->
+        [one] { $count } плащ
+        [few] { $count } плаща
+       *[many] { $count } плащей
+    }
 skin-no-cape = Без плаща
 skin-no-capes-title = Нет доступных плащей
 skin-no-capes-desc = У вас пока нет доступных плащей. Запросите доступ у администрации.
+skin-import-label = Скопировать скин игрока
+skin-import-placeholder = Ник в Minecraft
+skin-import-action = Скопировать
+skin-imported = Скин скопирован у { $name }
+skin-only-png = Поддерживаются только файлы PNG.
+skin-too-large = Файл весит { $size } КБ — скин должен быть не больше { $max } КБ.
+skin-updated = Скин обновлён
+skin-equipped-name = Надет скин { $name }
+skin-apply-failed = Не удалось сменить скин
+skin-reset-done = Скин сброшен на стандартный
+skin-reset-failed = Не удалось сбросить скин
+skin-cape-on = Плащ надет
+skin-cape-off = Плащ снят
+skin-cape-failed = Не удалось сменить плащ
+skin-rename = Переименовать
+skin-delete-title = Удалить скин?
+skin-delete-text = «{ $name }» пропадёт из сохранённых скинов. Надетый скин не изменится.
 
 ## Страница входа
 login-secure-login = Безопасная авторизация
