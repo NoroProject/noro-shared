@@ -6604,3 +6604,24 @@ settings-hide-while-playing-hint = Сворачивать лаунчер при 
 
 game-playtime-minutes = НАИГРАНО { $minutes } МИН
 game-playtime-hours = НАИГРАНО { $hours } Ч
+
+## Streamer mode: launcher
+
+settings-streamer = РЕЖИМ СТРИМЕРА
+settings-streamer-hint = Прячет привязанные платформы, личные сообщения и адреса серверов, а в консоли скрывает IP-адреса и имя пользователя системы. { $keys } переключает его на любой странице.
+settings-streamer-auto = ВКЛЮЧАТЬ ДЛЯ ПРОГРАММ ТРАНСЛЯЦИИ
+settings-streamer-auto-hint = Включать режим стримера, пока запущены OBS, Streamlabs или XSplit, и выключать, когда они закроются.
+streamer-pill = РЕЖИМ СТРИМЕРА
+streamer-auto-on = Режим стримера включён: запущена программа трансляции.
+streamer-hidden = Скрыто
+streamer-hidden-message = Новое сообщение
+streamer-hidden-notification = Новое уведомление
+streamer-hidden-body = Скрыто, пока включён режим стримера.
+
+## Streamer mode: site
+
+streamer-mode = Режим стримера
+streamer-mode-hint = Размывает почту, IP-адреса, токены, привязанные платформы и коды восстановления на этом устройстве. Нажмите на размытое значение, чтобы показать его. { $keys } переключает режим на любой странице.
+streamer-mode-enabled = Режим стримера включён
+streamer-mode-disabled = Режим стримера выключен
+streamer-reveal = Скрыто в режиме стримера. Нажмите, чтобы показать.

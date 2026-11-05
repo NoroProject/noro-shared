@@ -6588,3 +6588,24 @@ settings-hide-while-playing-hint = Minimise the launcher when the game starts an
 
 game-playtime-minutes = PLAYED { $minutes } MIN
 game-playtime-hours = PLAYED { $hours } H
+
+## Streamer mode: launcher
+
+settings-streamer = STREAMER MODE
+settings-streamer-hint = Hides linked platforms, private messages and server addresses, and masks IP addresses and your system user name in the console. { $keys } switches it from any page.
+settings-streamer-auto = TURN ON FOR STREAMING APPS
+settings-streamer-auto-hint = Switch streamer mode on while OBS, Streamlabs or XSplit is running and back off when it closes.
+streamer-pill = STREAMER MODE
+streamer-auto-on = Streamer mode is on: a streaming app is running.
+streamer-hidden = Hidden
+streamer-hidden-message = New message
+streamer-hidden-notification = New notification
+streamer-hidden-body = Hidden while streamer mode is on.
+
+## Streamer mode: site
+
+streamer-mode = Streamer mode
+streamer-mode-hint = Blurs e-mail addresses, IP addresses, tokens, linked platforms and recovery codes on this device. Click a blurred value to show it. { $keys } switches it from any page.
+streamer-mode-enabled = Streamer mode is on
+streamer-mode-disabled = Streamer mode is off
+streamer-reveal = Hidden in streamer mode. Click to show.
