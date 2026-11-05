@@ -5816,6 +5816,7 @@ audit-action-game-server-maintenance = Техработы на всех серв
 audit-action-user-ban = Бан
 audit-action-user-unban = Разбан
 audit-action-user-export = Выгрузка данных
+audit-action-user-self-export = Выгрузка своих данных
 audit-action-user-role-add = Роль выдана
 audit-action-user-role-remove = Роль снята
 audit-action-user-permission-add = Право выдано
@@ -6310,6 +6311,20 @@ cabinet-sessions-ended-others = { $count ->
     [few] Завершено { $count } сессии
    *[other] Завершено { $count } сессий
 }
+
+## Cabinet: export of own data
+
+cabinet-export-title = Ваши данные
+cabinet-export-lead = Всё, что мы храним о вашем аккаунте, одним архивом — скачать можно раз в сутки.
+cabinet-export-row = Скачать мои данные
+cabinet-export-hint = ZIP с профилем, входами, сессиями, наказаниями, обращениями в поддержку, вашими сообщениями, логами лаунчера, наигранным временем, счетами и сделками, личным контентом и настройками. Имён персонала и слов других игроков в нём нет.
+cabinet-export-button = Скачать
+cabinet-export-next = Снова доступно { $at }
+cabinet-export-done = Архив скачан
+export-readme-title = Ваши данные с { $instance } — { $user }, { $at }
+export-readme-intro = В архиве то, что мы храним о вашем аккаунте: профиль, входы и сессии, наказания, обращения в поддержку, ваши личные сообщения, логи, присланные лаунчером, наигранное время, банковские счета и сделки, личный контент, настройки уведомлений и скины.
+export-readme-left-out = Нарочно не включены: имена персонала, работавшего с вашим аккаунтом, слова других игроков (их ответы в переписке, жалобы и отзывы), внутренние заметки персонала и журнал аудита.
+export-readme-format = Все файлы с данными — JSON. Время указано в UTC.
 
 ## Cabinet: sign-in history
 

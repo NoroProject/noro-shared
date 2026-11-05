@@ -5805,6 +5805,7 @@ audit-action-game-server-maintenance = Maintenance on all servers of a client
 audit-action-user-ban = Banned
 audit-action-user-unban = Unbanned
 audit-action-user-export = Data exported
+audit-action-user-self-export = Own data exported
 audit-action-user-role-add = Role granted
 audit-action-user-role-remove = Role revoked
 audit-action-user-permission-add = Permission granted
@@ -6296,6 +6297,20 @@ cabinet-sessions-ended-others = { $count ->
     [one] { $count } session ended
    *[other] { $count } sessions ended
 }
+
+## Cabinet: export of own data
+
+cabinet-export-title = Your data
+cabinet-export-lead = Everything we keep about your account, in one archive you can download once a day.
+cabinet-export-row = Download my data
+cabinet-export-hint = A ZIP with your profile, sign-ins, sessions, punishments, support conversations, the messages you wrote, launcher logs, playtime, accounts and trades, personal content and settings. Staff names and other players' words are left out.
+cabinet-export-button = Download
+cabinet-export-next = Available again { $at }
+cabinet-export-done = Archive downloaded
+export-readme-title = Your data from { $instance } — { $user }, { $at }
+export-readme-intro = This archive holds what we keep about your account: the profile, sign-ins and sessions, punishments, support conversations, the direct messages you wrote, logs your launcher sent, time played, bank accounts and trades, personal content, notification settings and skins.
+export-readme-left-out = Left out on purpose: names of the staff who handled your account, other players' words (their replies in your conversations, their reports and reviews), internal staff notes and the staff audit log.
+export-readme-format = Every data file is JSON. Times are in UTC.
 
 ## Cabinet: sign-in history
 
