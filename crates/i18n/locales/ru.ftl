@@ -131,7 +131,6 @@ auth-session-expired = Сессия не найдена или истекла
 auth-sign-in-first = Сначала войдите
 
 ## Вход
-login-title = NORO LAUNCHER
 login-subtitle = ВХОД
 login-sign-in = ВОЙТИ
 login-waiting = ОЖИДАНИЕ...
@@ -395,8 +394,9 @@ web-nav-menu-close = Закрыть меню
 web-nav-terms = Условия использования
 web-nav-privacy = Конфиденциальность
 web-nav-legal = Правовая информация
-web-legal-meta-terms-title = Пользовательское соглашение — Noro
-web-legal-meta-privacy-title = Политика конфиденциальности — Noro
+web-legal-meta-terms-title = Пользовательское соглашение
+web-legal-meta-privacy-title = Политика конфиденциальности
+web-meta-description = Личный кабинет, серверы и лаунчер { $instance }
 web-legal-toc-title = Разделы документа
 web-legal-updated = Редакция: { $date }
 web-legal-lang = Язык документа:
@@ -449,7 +449,7 @@ web-home-rules-text = Правила просты и понятны, а их с�
 web-home-rules-cta = Открыть правила
 
 ## Серверы
-web-servers-meta-title = Серверы — Noro
+web-servers-meta-title = Серверы
 web-servers-meta-description = Модовые серверы Minecraft проекта: версии, адреса и онлайн в реальном времени.
 web-servers-title = Серверы
 web-servers-lead = Все миры проекта с версией, адресом и текущим онлайном.
@@ -518,7 +518,7 @@ web-download-other = Другие системы
 web-download-signed = Каждая сборка подписана — лаунчер проверяет подпись перед запуском.
 
 ## Правила
-web-rules-meta-title = Правила — Noro
+web-rules-meta-title = Правила
 web-rules-meta-description = Правила проекта: что можно на серверах, а что — нет, и что за это бывает.
 web-rules-title = Правила
 web-rules-lead = Что можно и чего нельзя на наших серверах и что бывает за нарушения.
@@ -713,7 +713,6 @@ cabinet-apps-title = Приложения
 cabinet-apps-subtitle = Управление приложениями с доступом к аккаунту
 cabinet-apps-lead = Сторонние сервисы и лаунчеры, у которых есть доступ к вашему профилю
 cabinet-apps-refresh = Обновить
-cabinet-apps-default-desc = Доступ к вашему профилю Noro Network
 cabinet-apps-revoke = Отозвать доступ
 cabinet-apps-none-title = У вас нет подключённых сторонних приложений
 cabinet-apps-none-text = Здесь будут отображаться приложения и лаунчеры, которым вы разрешили доступ
@@ -727,7 +726,6 @@ oauth-by-developer = разработчик — { $owner }
 oauth-app-pending = Приложение ещё не проверено, поэтому войти в него может только автор.
 oauth-will-return-to = Вернёт на { $host }
 oauth-revoke-hint = Доступ можно отозвать в любой момент в личном кабинете.
-oauth-sign-in-with-noro = Вход через Noro
 oauth-full-access-hint = Это всё, что может ваш аккаунт, а не один вид данных. Такой доступ просят только наши лаунчер и сайт.
 oauth-cannot-continue = Не получится продолжить
 oauth-back-home = Вернуться на сайт
@@ -915,7 +913,7 @@ admin-settings-hero-upload = Загрузить картинку
 admin-set-hint-allowed_origins = Через запятую. Пустое значение означает доступ для любого origin.
 admin-set-label-login_image_url = Адрес картинки страницы входа
 admin-set-hint-login_image_url = Подставляется сам, когда загружаешь файл.
-admin-set-hint-instance_name = Показывается в шапке сайта и заголовком главной страницы.
+admin-set-hint-instance_name = Так сеть подписана везде: заголовки вкладок и шапка сайта, окно лаунчера, окно passkey, таб в игре. Уже собранный установщик лаунчера показывает на заставке старое имя, пока его не пересобрать.
 admin-set-label-files_cdn_url = CDN URL для файлов
 admin-set-label-github_repo = Репозиторий GitHub
 admin-set-label-github_ref = Ветка GitHub
@@ -1895,7 +1893,7 @@ admin-legal-mode-preview = Рендер секций
 admin-legal-save-btn = Сохранить документ
 admin-legal-view-btn = Открыть на сайте
 admin-settings-logo-title = Логотип
-admin-settings-logo-desc = Значок в шапке сайта. Пусто — берётся значок из сборки.
+admin-settings-logo-desc = Шапка и боковая панель сайта, страница входа, значок вкладки и боковая панель лаунчера. Пусто — берётся значок из сборки.
 admin-settings-image-transparent = С прозрачностью — на сайте без рамки
 admin-settings-image-opaque = Без прозрачности — на сайте в рамке
 admin-set-label-logo_url = Адрес логотипа
@@ -5592,7 +5590,7 @@ setup-root-codes-secure = Каждый код работает один раз. 
 setup-root-codes-insecure = Каждый код работает один раз, и на обычном адресе http:// это ваш единственный способ войти — passkey здесь привязаться откажутся. Их показывают один раз и больше никогда.
 setup-root-download = Скачать файлом
 setup-root-downloaded = Скачано
-setup-root-file-header = Коды восстановления для этого инстанса Noro.
+setup-root-file-header = Коды восстановления для { $instance }.
 setup-root-file-note = Каждый работает один раз. Держите их там, куда дотянетесь без этого сайта.
 
 setup-finish-done = Настройка завершена
@@ -5776,7 +5774,7 @@ notif-mod-suggestion-sent = Запрос мода отправлен админ�
 notif-mod-suggestion-failed = Не удалось отправить запрос мода: { $reason }
 notif-remote-action-busy = Игра запущена — запрос администратора можно выполнить после её закрытия
 notif-manifest-timeout = Сервер не прислал сборку вовремя. Попробуйте через минуту
-offline-banner = Нет связи с серверами Noro. Переподключаемся…
+offline-banner = Нет связи с сервером. Переподключаемся…
 error-network = Проблема с соединением: { $reason }
 notif-cape-update-failed = Не удалось сменить плащ: { $reason }
 
@@ -6463,7 +6461,7 @@ web-download-signed-short = подписан
 
 ## Launcher: Discord Rich Presence
 
-rpc-in-launcher = В лаунчере NORO
+rpc-in-launcher = В лаунчере { $instance }
 rpc-server = Сервер: { $name }
 rpc-picking-server = Выбирает сервер
 rpc-starting = Запускает { $name }
