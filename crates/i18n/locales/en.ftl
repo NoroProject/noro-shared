@@ -3517,6 +3517,7 @@ admin-hub-set-town-exclaves-hint = Off, a new chunk must touch the town's own la
 
 nav-hub-map = Map
 map-empty = Nothing is drawn yet: the agent renders the map as players explore it
+map-cursor-chunk = chunk { $cx }, { $cz }
 map-towns = Towns on the map
 map-pick = Claim by clicking
 map-picking-on = Click a chunk
@@ -3840,6 +3841,10 @@ hub-market-point-name = Name
 hub-market-point-world = World
 hub-market-point-where = Where it stands
 hub-market-point-facing = Which way the wall faces
+hub-market-facing-north = North
+hub-market-facing-east = East
+hub-market-facing-south = South
+hub-market-facing-west = West
 hub-market-point-no-walls = No walls written down yet
 hub-market-wall-new = Add a wall
 hub-market-cells-free = Free barrels
@@ -5320,6 +5325,11 @@ admin-build-import-apply = Apply versions
 admin-build-import-redownload-confirm = Discard the Minecraft and loader base and download it again from scratch? Mods and configs are kept. The file cache is ignored, so this takes minutes — and until it finishes, players cannot fetch this build.
 admin-build-import-versions-applied = Versions applied
 admin-build-import-versions-applied-hint = You need to rebuild the pack for changes to take effect.
+admin-build-done = Done
+admin-build-import-failed = Import failed: { $error }
+admin-build-import-incomplete = The archive upload did not finish
+admin-build-import-chunk-failed = Part { $index } of the archive did not upload
+admin-build-import-nothing = Choose a file or paste a download link
 common-ok = OK
 common-error = Error
 common-failed = Failed
@@ -5581,6 +5591,11 @@ fm-sync-rules = Sync rules
 fm-new-folder = New folder
 fm-upload = Upload files
 fm-folder-prompt = Folder name:
+fm-root = Root
+fm-delete-confirm = Delete { $count } { $count ->
+    [one] item
+   *[other] items
+}?
 fm-sync-rules-saved = Sync rules saved
 fm-load-failed = Failed to load file content
 fm-save-failed = Failed to save file content

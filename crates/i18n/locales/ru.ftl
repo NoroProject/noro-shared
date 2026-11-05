@@ -3528,6 +3528,7 @@ admin-hub-set-town-exclaves-hint = Выключено — новый чанк о
 
 nav-hub-map = Карта
 map-empty = Пока ничего не нарисовано: агент рисует карту там, где ходят игроки
+map-cursor-chunk = чанк { $cx }, { $cz }
 map-towns = Города на карте
 map-pick = Занимать кликом
 map-picking-on = Кликните по чанку
@@ -3851,6 +3852,10 @@ hub-market-point-name = Название
 hub-market-point-world = Мир
 hub-market-point-where = Где стоит
 hub-market-point-facing = Куда смотрит стена
+hub-market-facing-north = Север
+hub-market-facing-east = Восток
+hub-market-facing-south = Юг
+hub-market-facing-west = Запад
 hub-market-point-no-walls = Стены ещё не внесены
 hub-market-wall-new = Добавить стену
 hub-market-cells-free = Свободно бочек
@@ -5325,6 +5330,11 @@ admin-build-import-apply = Применить версии
 admin-build-import-redownload-confirm = Отбросить базу Minecraft и лоадера и скачать её заново с нуля? Моды и конфиг останутся. Кеш файлов игнорируется, поэтому это займёт минуты — и пока не закончится, игроки не смогут получить эту сборку.
 admin-build-import-versions-applied = Версии применены
 admin-build-import-versions-applied-hint = Чтобы изменения подействовали, пересоберите пак.
+admin-build-done = Готово
+admin-build-import-failed = Импорт не удался: { $error }
+admin-build-import-incomplete = Архив загрузился не до конца
+admin-build-import-chunk-failed = Часть { $index } архива не загрузилась
+admin-build-import-nothing = Выберите файл или вставьте ссылку на скачивание
 common-ok = ОК
 common-error = Ошибка
 common-failed = Не удалось
@@ -5588,6 +5598,12 @@ fm-sync-rules = Правила синхронизации
 fm-new-folder = Новая папка
 fm-upload = Загрузить файлы
 fm-folder-prompt = Имя папки:
+fm-root = Корень
+fm-delete-confirm = Удалить { $count } { $count ->
+    [one] элемент
+    [few] элемента
+   *[many] элементов
+}?
 fm-sync-rules-saved = Правила синхронизации сохранены
 fm-load-failed = Не удалось загрузить содержимое файла
 fm-save-failed = Не удалось сохранить содержимое файла
