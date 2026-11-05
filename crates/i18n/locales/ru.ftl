@@ -159,6 +159,63 @@ toast-success = ГОТОВО
 toast-warning = ВНИМАНИЕ
 toast-error = ОШИБКА
 toast-info = СООБЩЕНИЕ
+toast-load-settings-failed = Не удалось загрузить настройки
+toast-load-support-logs-failed = Не удалось загрузить логи поддержки
+toast-download-bundle-failed = Не удалось скачать архив
+toast-cancel-request-failed = Не удалось отменить запрос
+toast-step-up-confirmed = Подтверждено на { $minutes } мин
+toast-delete-failed = Не удалось удалить
+toast-open-file-failed = Не удалось открыть файл
+toast-save-failed = Не удалось сохранить
+toast-create-folder-failed = Не удалось создать папку
+toast-backup-failed = Не удалось создать бэкап
+toast-load-auth-methods-failed = Не удалось загрузить способы входа
+toast-accept-request-failed = Не удалось принять заявку
+toast-reject-request-failed = Не удалось отклонить заявку
+toast-create-build-failed = Не удалось создать сборку
+toast-load-builds-failed = Не удалось загрузить сборки сервера
+toast-load-installed-mods-failed = Не удалось загрузить установленные моды
+toast-load-mc-versions-failed = Не удалось загрузить версии Minecraft
+toast-load-build-filters-failed = Не удалось прочитать настройки сборки — фильтры останутся пустыми
+toast-load-server-filters-failed = Не удалось прочитать сборки серверов — фильтры останутся пустыми
+toast-save-sync-rules-failed = Не удалось сохранить правила синхронизации
+toast-load-sync-rules-failed = Не удалось загрузить правила синхронизации
+toast-applied = Применено
+toast-applied-partly = Применено к { $done } из { $total }
+toast-servers-count = { $count ->
+        [one] { $count } сервер
+        [few] { $count } сервера
+       *[many] { $count } серверов
+    }
+toast-uploaded = Загружено
+toast-upload-failed = Не удалось загрузить
+toast-installed = Установлено
+toast-installed-partly = Установлено в { $done } из { $total }
+toast-targets-count = { $count ->
+        [one] { $count } цель
+        [few] { $count } цели
+       *[many] { $count } целей
+    }
+toast-install-failed = Не удалось установить
+toast-load-servers-search-failed = Не удалось загрузить серверы для поиска
+toast-load-loader-versions-failed = Не удалось загрузить версии { $loader } для { $mc }
+toast-load-mod-suggestions-failed = Не удалось загрузить предложения модов
+toast-load-rules-failed = Не удалось загрузить правила
+toast-reorder-failed = Не удалось сохранить порядок
+toast-load-case-failed = Не удалось загрузить дело
+toast-power-done = { $action ->
+        [start] Сервер запускается
+        [stop] Сервер останавливается
+        [restart] Сервер перезапускается
+       *[kill] Сервер принудительно остановлен
+    }
+toast-power-failed = { $action ->
+        [start] Не удалось запустить сервер
+        [stop] Не удалось остановить сервер
+        [restart] Не удалось перезапустить сервер
+       *[kill] Не удалось принудительно остановить сервер
+    }
+toast-command-rejected = Команда отклонена
 game-node-offline = нет связи
 game-online-unknown = онлайн неизвестен
 sync-failed = ОШИБКА СИНХРОНИЗАЦИИ

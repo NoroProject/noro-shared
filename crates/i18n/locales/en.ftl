@@ -157,6 +157,61 @@ toast-success = DONE
 toast-warning = HEADS UP
 toast-error = ERROR
 toast-info = NOTICE
+toast-load-settings-failed = Could not load settings
+toast-load-support-logs-failed = Could not load support logs
+toast-download-bundle-failed = Could not download the archive
+toast-cancel-request-failed = Could not cancel the request
+toast-step-up-confirmed = Confirmed for the next { $minutes } min
+toast-delete-failed = Could not delete
+toast-open-file-failed = Could not open the file
+toast-save-failed = Could not save
+toast-create-folder-failed = Could not create the folder
+toast-backup-failed = Could not create the backup
+toast-load-auth-methods-failed = Could not load sign-in methods
+toast-accept-request-failed = Could not accept the request
+toast-reject-request-failed = Could not reject the request
+toast-create-build-failed = Could not create the build
+toast-load-builds-failed = Could not load builds for this server
+toast-load-installed-mods-failed = Could not load installed mods
+toast-load-mc-versions-failed = Could not load Minecraft versions
+toast-load-build-filters-failed = Could not read build settings — filters stay empty
+toast-load-server-filters-failed = Could not read server builds — filters stay empty
+toast-save-sync-rules-failed = Could not save sync rules
+toast-load-sync-rules-failed = Could not load sync rules
+toast-applied = Applied
+toast-applied-partly = Applied to { $done } of { $total }
+toast-servers-count = { $count ->
+        [one] { $count } server
+       *[other] { $count } servers
+    }
+toast-uploaded = Uploaded
+toast-upload-failed = Upload failed
+toast-installed = Installed
+toast-installed-partly = Installed to { $done } of { $total }
+toast-targets-count = { $count ->
+        [one] { $count } target
+       *[other] { $count } targets
+    }
+toast-install-failed = Install failed
+toast-load-servers-search-failed = Could not load servers for search
+toast-load-loader-versions-failed = Could not load { $loader } versions for { $mc }
+toast-load-mod-suggestions-failed = Could not load mod suggestions
+toast-load-rules-failed = Could not load rules
+toast-reorder-failed = Could not save the new order
+toast-load-case-failed = Could not load the case
+toast-power-done = { $action ->
+        [start] Server starting
+        [stop] Server stopping
+        [restart] Server restarting
+       *[kill] Server killed
+    }
+toast-power-failed = { $action ->
+        [start] Could not start the server
+        [stop] Could not stop the server
+        [restart] Could not restart the server
+       *[kill] Could not kill the server
+    }
+toast-command-rejected = Command rejected
 game-node-offline = offline
 game-online-unknown = online unknown
 sync-failed = SYNC FAILED
