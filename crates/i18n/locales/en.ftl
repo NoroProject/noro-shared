@@ -129,7 +129,6 @@ auth-session-expired = Session not found or expired
 auth-sign-in-first = Sign in first
 
 ## Login
-login-title = NORO LAUNCHER
 login-subtitle = SIGN IN
 login-sign-in = SIGN IN
 login-waiting = WAITING...
@@ -391,8 +390,9 @@ web-nav-menu-close = Close menu
 web-nav-terms = Terms of Service
 web-nav-privacy = Privacy Policy
 web-nav-legal = Legal
-web-legal-meta-terms-title = Terms of Service — Noro
-web-legal-meta-privacy-title = Privacy Policy — Noro
+web-legal-meta-terms-title = Terms of Service
+web-legal-meta-privacy-title = Privacy Policy
+web-meta-description = Player cabinet, servers and launcher of { $instance }
 web-legal-toc-title = Document Sections
 web-legal-updated = Last revised: { $date }
 web-legal-lang = Document language:
@@ -444,7 +444,7 @@ web-home-rules-text = Our rules are clear and simple to ensure a welcoming, frie
 web-home-rules-cta = Open rules
 
 ## Servers
-web-servers-meta-title = Servers — Noro
+web-servers-meta-title = Servers
 web-servers-meta-description = Modded Minecraft servers of the project: versions, addresses and live player counts.
 web-servers-title = Servers
 web-servers-lead = Every world of the project with its version, address and how many players are on it right now.
@@ -513,7 +513,7 @@ web-download-other = Other platforms
 web-download-signed = Every build is signed — the launcher checks the signature before it runs.
 
 ## Rules
-web-rules-meta-title = Rules — Noro
+web-rules-meta-title = Rules
 web-rules-meta-description = Project rules: what is allowed on the servers and what follows if it is not.
 web-rules-title = Rules
 web-rules-lead = What is allowed on our servers and what happens if you break the rules.
@@ -704,7 +704,6 @@ cabinet-apps-title = Applications
 cabinet-apps-subtitle = Manage applications with account access
 cabinet-apps-lead = Third-party services and launchers with access to your profile
 cabinet-apps-refresh = Refresh
-cabinet-apps-default-desc = Access to your Noro Network profile
 cabinet-apps-revoke = Revoke Access
 cabinet-apps-none-title = No third-party applications connected
 cabinet-apps-none-text = Applications and launchers you have granted access to will appear here
@@ -718,7 +717,6 @@ oauth-by-developer = by { $owner }
 oauth-app-pending = This application has not been reviewed yet, so only its author can sign in with it.
 oauth-will-return-to = You will be sent back to { $host }
 oauth-revoke-hint = You can revoke this access at any time in your cabinet.
-oauth-sign-in-with-noro = Sign in with Noro
 oauth-full-access-hint = This is everything your account can do, not one kind of data. Only our own launcher and site ask for it.
 oauth-cannot-continue = Cannot continue
 oauth-back-home = Back to the site
@@ -5575,7 +5573,7 @@ setup-root-codes-secure = Each code works once. They are shown here and never ag
 setup-root-codes-insecure = Each code works once, and on a plain http:// address they are your only way in — passkeys refuse to bind here. They are shown once and never again.
 setup-root-download = Download as a file
 setup-root-downloaded = Downloaded
-setup-root-file-header = Recovery codes for this Noro instance.
+setup-root-file-header = Recovery codes for { $instance }.
 setup-root-file-note = Each one works once. Keep them somewhere you can reach without this site.
 
 setup-finish-done = Setup complete
@@ -5758,7 +5756,7 @@ notif-mod-suggestion-sent = Mod request sent to the staff
 notif-mod-suggestion-failed = Could not send the mod request: { $reason }
 notif-remote-action-busy = The game is running; the admin's request will be possible after you close it
 notif-manifest-timeout = The server did not send the build in time. Try again in a minute
-offline-banner = No connection to the Noro servers. Reconnecting…
+offline-banner = No connection to the server. Reconnecting…
 error-network = Connection problem: { $reason }
 notif-cape-update-failed = Could not change the cape: { $reason }
 
@@ -6441,7 +6439,7 @@ web-download-signed-short = signed
 
 ## Launcher: Discord Rich Presence
 
-rpc-in-launcher = In the NORO launcher
+rpc-in-launcher = In the { $instance } launcher
 rpc-server = Server: { $name }
 rpc-picking-server = Picking a server
 rpc-starting = Starting { $name }
