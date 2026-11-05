@@ -6063,3 +6063,11 @@ crash-hint-out-of-memory = The game ran out of memory. Give it more in the serve
 crash-hint-disk-full = The disk is full. Free some space and start the game again.
 crash-hint-graphics-driver = The graphics driver crashed. Update the driver for your video card and try again.
 crash-hint-mod-conflict = Two mods don't work together. Turn off the mods you added recently and try again.
+
+## Launcher: repair game files
+
+settings-repair = REPAIR
+settings-repair-hint = Removes the build's mods; the next launch downloads them again. Settings, worlds and screenshots stay.
+settings-repair-button = Repair files
+notif-repair-done = Files will be downloaded again on the next launch.
+notif-repair-busy = Close the game first, then repair its files.
