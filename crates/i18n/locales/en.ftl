@@ -6071,3 +6071,21 @@ settings-repair-hint = Removes the build's mods; the next launch downloads them 
 settings-repair-button = Repair files
 notif-repair-done = Files will be downloaded again on the next launch.
 notif-repair-busy = Close the game first, then repair its files.
+
+## Cabinet: active sessions
+
+cabinet-sessions-title = Active sessions
+cabinet-sessions-lead = Everywhere your account is signed in. End a session you don't recognise.
+cabinet-sessions-kind-site = Website
+cabinet-sessions-kind-launcher = Launcher
+cabinet-sessions-kind-master = Website (passkey or recovery code)
+cabinet-sessions-kind-app = App: { $name }
+cabinet-sessions-current = This browser
+cabinet-sessions-staff = Opened by staff
+cabinet-sessions-dates = Signed in { $created } · expires { $expires }
+cabinet-sessions-end = End session
+cabinet-sessions-end-others = Sign out everywhere else
+cabinet-sessions-ended-others = { $count ->
+    [one] { $count } session ended
+   *[other] { $count } sessions ended
+}

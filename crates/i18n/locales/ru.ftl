@@ -6078,3 +6078,22 @@ settings-repair-hint = Удаляет моды сборки, следующий 
 settings-repair-button = Починить файлы
 notif-repair-done = Файлы будут скачаны заново при следующем запуске.
 notif-repair-busy = Сначала закройте игру, потом чините её файлы.
+
+## Cabinet: active sessions
+
+cabinet-sessions-title = Активные сессии
+cabinet-sessions-lead = Все места, где выполнен вход в ваш аккаунт. Завершите сессию, которую не узнаёте.
+cabinet-sessions-kind-site = Сайт
+cabinet-sessions-kind-launcher = Лаунчер
+cabinet-sessions-kind-master = Сайт (ключ доступа или код восстановления)
+cabinet-sessions-kind-app = Приложение: { $name }
+cabinet-sessions-current = Этот браузер
+cabinet-sessions-staff = Открыта персоналом
+cabinet-sessions-dates = Вход { $created } · истекает { $expires }
+cabinet-sessions-end = Завершить сессию
+cabinet-sessions-end-others = Выйти на всех остальных
+cabinet-sessions-ended-others = { $count ->
+    [one] Завершена { $count } сессия
+    [few] Завершено { $count } сессии
+   *[other] Завершено { $count } сессий
+}
