@@ -2174,6 +2174,7 @@ admin-reports-empty-text = There are currently no open reports from players.
 admin-freezes-section-title = Freeze / Unfreeze Player
 admin-freezes-reason-label = Freeze Reason
 admin-freezes-reason-placeholder = Cheat inspection / Software check
+admin-freezes-default-reason = Frozen by a moderator
 admin-freezes-action-freeze = Freeze
 admin-freezes-action-unfreeze = Unfreeze
 admin-freezes-frozen = Frozen

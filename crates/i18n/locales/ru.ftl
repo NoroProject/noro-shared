@@ -2184,6 +2184,7 @@ admin-reports-empty-text = В данный момент открытых жал�
 admin-freezes-section-title = Заморозка / Разморозка игрока
 admin-freezes-reason-label = Причина заморозки
 admin-freezes-reason-placeholder = Проверка на софт / подозрение в читах
+admin-freezes-default-reason = Заморозка модератором
 admin-freezes-action-freeze = Заморозить
 admin-freezes-action-unfreeze = Разморозить
 admin-freezes-frozen = Заморожен
