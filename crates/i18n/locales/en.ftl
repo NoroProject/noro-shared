@@ -1349,6 +1349,21 @@ admin-content-block-confirm = Block this project
 admin-content-reason = Why it is not allowed
 admin-content-reason-required = A reason is required.
 admin-content-blocked = Blocked, and removed from everyone who had it.
+admin-project-bans-title = Banned projects
+admin-project-bans-lead = Modrinth and CurseForge projects players may not add on top of a build. A ban removes the project from everyone who had it.
+admin-project-bans-none = No projects are banned.
+admin-project-bans-everywhere = Whole instance
+admin-project-bans-one-build = One build
+admin-project-bans-meta = { $scope } · since { $date }
+admin-project-bans-lift = Lift ban
+admin-project-bans-lifted = Ban lifted — players can add the project again
+admin-popular-title = What players add
+admin-popular-lead = Projects players most often install on top of builds. Open one to see who has it.
+admin-popular-none = Players have not added anything of their own yet.
+admin-popular-players = { $count ->
+        [one] { $count } player
+       *[other] { $count } players
+    }
 admin-diag-collect = Collect
 admin-diag-subtitle = Versions, hardware and link speed — nothing personal.
 admin-diag-empty = Nothing collected yet.

@@ -1357,6 +1357,22 @@ admin-content-block-confirm = Запретить проект
 admin-content-reason = Почему нельзя
 admin-content-reason-required = Нужна причина.
 admin-content-blocked = Запрещено и снято у всех, кто поставил.
+admin-project-bans-title = Запрещённые проекты
+admin-project-bans-lead = Проекты Modrinth и CurseForge, которые игрокам нельзя ставить поверх сборки. Запрет снимает проект у всех, у кого он уже стоял.
+admin-project-bans-none = Запрещённых проектов нет.
+admin-project-bans-everywhere = Весь инстанс
+admin-project-bans-one-build = Одна сборка
+admin-project-bans-meta = { $scope } · с { $date }
+admin-project-bans-lift = Снять запрет
+admin-project-bans-lifted = Запрет снят — игроки снова могут ставить проект
+admin-popular-title = Что ставят игроки
+admin-popular-lead = Проекты, которые игроки чаще всего ставят поверх сборок. Откройте строку, чтобы увидеть, у кого он стоит.
+admin-popular-none = Игроки пока ничего своего не ставили.
+admin-popular-players = { $count ->
+        [one] { $count } игрок
+        [few] { $count } игрока
+       *[many] { $count } игроков
+    }
 admin-diag-collect = Запросить
 admin-diag-subtitle = Версии, железо и скорость соединения. Никаких личных данных.
 admin-diag-empty = Данные ещё не собирались.
