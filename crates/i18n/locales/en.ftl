@@ -227,6 +227,13 @@ mods-optional = OPTIONAL MODS
 mods-active-count = { $on } of { $total } on
 mods-limited = BY PERMISSION
 mods-empty = No optional mods configured for this server.
+mods-my-suggestions = My suggestions
+suggestion-status-pending = Waiting
+suggestion-status-approved = Approved
+suggestion-status-installed = Installed
+suggestion-status-rejected = Declined
+suggestion-status-unknown = Unknown
+suggestion-reason = Reason: { $reason }
 
 ## Notifications
 launcher-notifications = NOTIFICATIONS
@@ -554,6 +561,11 @@ cabinet-punishments-lead = Full history of warnings, bans, mutes, and server res
 cabinet-punishments-refresh = Refresh
 cabinet-punishments-none-title = No punishments
 cabinet-punishments-none-text = You have no active or past warnings or bans on record.
+cabinet-suggestions-title = Mod suggestions
+cabinet-suggestions-subtitle = Mods you suggested from the launcher and what became of them
+cabinet-suggestions-empty-title = No suggestions yet
+cabinet-suggestions-empty-text = Suggest a mod from the server's page in the launcher, and its status will show up here.
+cabinet-suggestions-decided = decided { $date }
 
 ## Punishment kinds & status badges
 punishment-kind-ban = BAN
@@ -2250,6 +2262,8 @@ admin-mod-suggestions-accept-optional = Add as Optional Mod
 admin-mod-suggestions-accept-regular = Add as Regular Mod
 admin-mod-suggestions-accept-servers = Regular + Install on Servers
 admin-mod-suggestions-reject = Reject
+admin-mod-suggestions-reject-title = Decline the suggestion
+admin-mod-suggestions-reject-reason = Reason for the author (optional)
 admin-mod-suggestions-empty = No requested mods matching query
 
 ## Installed Build Mods
@@ -3293,6 +3307,7 @@ cabinet-support-subtitle = Ask the staff, appeal a punishment, report a problem
 nav-cabinet-messages = Messages
 nav-toggle-sidebar = Toggle sidebar
 nav-cabinet-support = Support
+nav-cabinet-suggestions = Mod suggestions
 nav-group-players = Players
 nav-group-servers = Servers
 perm-node-tickets-close = Close and reopen tickets
@@ -5176,6 +5191,11 @@ notify-cat-messages = Direct messages
 notify-cat-moderation = Moderation
 notify-cat-hosting = Hosting
 notify-cat-project = Project news
+notify-cat-suggestions = Mod suggestions
+notify-suggestion-approved = Your suggestion «{ $title }» was approved
+notify-suggestion-installed = «{ $title }» is now in the build
+notify-suggestion-rejected = Your suggestion «{ $title }» was declined
+notify-suggestion-reason = Reason: { $reason }
 notify-cat-module = Module { $module }
 
 notify-channel-site = Site

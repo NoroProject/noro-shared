@@ -231,6 +231,13 @@ mods-optional = ОПЦИОНАЛЬНЫЕ МОДЫ
 mods-active-count = включено { $on } из { $total }
 mods-limited = ПО ПРАВУ
 mods-empty = Для этого сервера опциональных модов нет.
+mods-my-suggestions = Мои предложения
+suggestion-status-pending = Ждёт решения
+suggestion-status-approved = Одобрено
+suggestion-status-installed = Установлено
+suggestion-status-rejected = Отклонено
+suggestion-status-unknown = Неизвестно
+suggestion-reason = Причина: { $reason }
 
 ## Notifications
 launcher-notifications = УВЕДОМЛЕНИЯ
@@ -561,6 +568,11 @@ cabinet-punishments-lead = Полный список всех выдававши
 cabinet-punishments-refresh = Обновить
 cabinet-punishments-none-title = Наказаний нет
 cabinet-punishments-none-text = У вас нет активных или прошлых предупреждений и блокировок.
+cabinet-suggestions-title = Предложения модов
+cabinet-suggestions-subtitle = Моды, которые вы предложили из лаунчера, и решения по ним
+cabinet-suggestions-empty-title = Предложений пока нет
+cabinet-suggestions-empty-text = Предложите мод со страницы сервера в лаунчере — его статус появится здесь.
+cabinet-suggestions-decided = решено { $date }
 
 ## Статусы и плашки наказаний
 punishment-kind-ban = БАН
@@ -2260,6 +2272,8 @@ admin-mod-suggestions-accept-optional = Добавить как опционал
 admin-mod-suggestions-accept-regular = Добавить как обычный мод
 admin-mod-suggestions-accept-servers = Обычный + установить на серверы
 admin-mod-suggestions-reject = Отклонить
+admin-mod-suggestions-reject-title = Отклонить предложение
+admin-mod-suggestions-reject-reason = Причина для автора (необязательно)
 admin-mod-suggestions-empty = Нет предложенных модов по запросу
 
 ## Установленные моды сборки
@@ -3304,6 +3318,7 @@ cabinet-support-subtitle = Спросить персонал, обжаловат
 nav-cabinet-messages = Сообщения
 nav-toggle-sidebar = Свернуть меню
 nav-cabinet-support = Поддержка
+nav-cabinet-suggestions = Предложения модов
 nav-group-players = Игроки
 nav-group-servers = Серверы
 perm-node-tickets-close = Закрывать и переоткрывать обращения
@@ -5181,6 +5196,11 @@ notify-cat-messages = Личные сообщения
 notify-cat-moderation = Модерация
 notify-cat-hosting = Хостинг
 notify-cat-project = Новости проекта
+notify-cat-suggestions = Предложения модов
+notify-suggestion-approved = Ваше предложение «{ $title }» одобрено
+notify-suggestion-installed = «{ $title }» теперь в сборке
+notify-suggestion-rejected = Ваше предложение «{ $title }» отклонено
+notify-suggestion-reason = Причина: { $reason }
 notify-cat-module = Модуль { $module }
 
 notify-channel-site = Сайт

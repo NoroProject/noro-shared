@@ -37,7 +37,46 @@ pub mod categories {
     /// Your account itself: a new sign-in.
     pub const SECURITY: &str = "security";
 
-    pub const BUILT_IN: &[&str] = &[MESSAGES, MODERATION, HOSTING, PROJECT, SECURITY];
+    /// What happened to a mod you suggested.
+    pub const SUGGESTIONS: &str = "suggestions";
+
+    /// Staff feeds. Each goes to whoever holds the permission to act on it, and
+    /// is a category of its own so a staff member can switch off one kind
+    /// without missing the others.
+    ///
+    /// A new support ticket, or the player's reply in one.
+    pub const STAFF_SUPPORT: &str = "staff-support";
+    /// A new report or case.
+    pub const STAFF_REPORTS: &str = "staff-reports";
+    /// A new appeal against a punishment.
+    pub const STAFF_APPEALS: &str = "staff-appeals";
+    /// Something broke on its own: a module switched itself off, a hosted
+    /// server crashed.
+    pub const STAFF_ALERTS: &str = "staff-alerts";
+    /// Something waits for a decision: an OAuth application, a mod suggestion.
+    pub const STAFF_REVIEW: &str = "staff-review";
+
+    pub const STAFF: &[&str] = &[
+        STAFF_SUPPORT,
+        STAFF_REPORTS,
+        STAFF_APPEALS,
+        STAFF_ALERTS,
+        STAFF_REVIEW,
+    ];
+
+    pub const BUILT_IN: &[&str] = &[
+        MESSAGES,
+        MODERATION,
+        HOSTING,
+        PROJECT,
+        SECURITY,
+        SUGGESTIONS,
+        STAFF_SUPPORT,
+        STAFF_REPORTS,
+        STAFF_APPEALS,
+        STAFF_ALERTS,
+        STAFF_REVIEW,
+    ];
 
     /// Category of a module's own notifications.
     pub fn of_module(id: &str) -> String {
