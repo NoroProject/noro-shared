@@ -5080,6 +5080,7 @@ admin-build-import-versions-applied-hint = Чтобы изменения под�
 common-ok = ОК
 common-error = Ошибка
 common-failed = Не удалось
+common-request-failed = Запрос не выполнен
 admin-backup-keep = Хранить:
 admin-backup-next = Следующий:
 admin-user-launcher-last-activity = Последняя активность

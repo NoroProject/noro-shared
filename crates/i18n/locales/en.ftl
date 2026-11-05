@@ -5079,6 +5079,7 @@ admin-build-import-versions-applied-hint = You need to rebuild the pack for chan
 common-ok = OK
 common-error = Error
 common-failed = Failed
+common-request-failed = The request did not go through
 admin-backup-keep = Keep:
 admin-backup-next = Next:
 admin-user-launcher-last-activity = Last activity
