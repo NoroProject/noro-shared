@@ -4700,7 +4700,15 @@ panel-backup-restored = Restored from the backup
 panel-backup-restore-title = Restore this backup?
 panel-backup-restore-text = The server will be stopped and files from the archive written over the current ones. Files added after the backup are kept.
 panel-backup-empty = No backups yet
-panel-backup-note = The server is asked to save and pause before packing, so the world stays consistent. Logs and the service directory are never included.
+panel-backup-note = The server is asked to save and pause before packing, so the world stays consistent. Backups are incremental: each one stores only what changed since the previous, and deleting one frees only what no other backup uses. Logs and the service directory are never included.
+panel-backup-added = +{ $size } new
+panel-backup-restore-part = Restore a file or folder
+panel-backup-browse-title = Restore from “{ $name }”
+panel-backup-browse-root = Server root
+panel-backup-browse-empty = This folder is empty in the backup
+panel-backup-browse-pick = Restore { $path }
+panel-backup-browse-text = The server will be stopped and the selected file or folder written over the current one. Everything else stays as it is.
+panel-backup-restored-part = Restored { $path } from the backup
 
 nav-group-hosting = Hosting
 panel-back-to-servers = All servers
@@ -5117,6 +5125,8 @@ err-panel-memory-over-node = That is more memory than the node has left
 err-panel-in-proxy-network = The server is part of a proxy network: detach it from the proxy first
 err-panel-section-unavailable = A server of this kind has no such section
 err-panel-backup-quota = There is no room left for this server's backups: delete old ones or ask for a larger limit
+err-panel-backup-not-browsable = This backup is a full archive: it can be restored or downloaded whole, but not browsed
+err-panel-backup-partial-unsupported = The node is too old to restore part of a backup — update its daemon
 err-internal-error = Something broke on our side
 
 admin-dns-reserved-title = Reserved Addresses
