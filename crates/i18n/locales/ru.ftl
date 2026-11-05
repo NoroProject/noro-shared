@@ -6120,6 +6120,16 @@ notify-sign-in-passkey = Новый вход по ключу доступа
 notify-sign-in-recovery = Новый вход по коду восстановления
 notify-sign-in-app = { $app } получило доступ к аккаунту
 notify-sign-in-body = Если это были не вы, завершите эту сессию в Настройках → Безопасность.
+notify-punished-ban = Ваш аккаунт заблокирован
+notify-punished-server-ban = Вам закрыт доступ на сервер
+notify-punished-mute = Вам выдан мут
+notify-punished-warn = Вам вынесено предупреждение
+notify-punished-body = Причина: { $reason }
+notify-punished-body-until = Причина: { $reason }. Действует до { $until }.
+notify-lifted-ban = Бан снят
+notify-lifted-server-ban = Доступ на сервер возвращён
+notify-lifted-mute = Мут снят
+notify-lifted-warn = Предупреждение отозвано
 
 ## Launcher: hide while playing
 

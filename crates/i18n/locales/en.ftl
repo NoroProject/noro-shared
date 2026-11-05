@@ -6112,6 +6112,16 @@ notify-sign-in-passkey = New sign-in with a passkey
 notify-sign-in-recovery = New sign-in with a recovery code
 notify-sign-in-app = { $app } got access to your account
 notify-sign-in-body = If it wasn't you, end that session in Settings → Security.
+notify-punished-ban = Your account is banned
+notify-punished-server-ban = You lost access to a server
+notify-punished-mute = You are muted
+notify-punished-warn = You received a warning
+notify-punished-body = Reason: { $reason }
+notify-punished-body-until = Reason: { $reason }. Ends { $until }.
+notify-lifted-ban = Your ban was lifted
+notify-lifted-server-ban = Your server access was restored
+notify-lifted-mute = Your mute was lifted
+notify-lifted-warn = A warning was withdrawn
 
 ## Launcher: hide while playing
 
