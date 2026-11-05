@@ -2400,6 +2400,7 @@ admin-case-source-system = automatic
 admin-case-opened = opened
 admin-case-rule = rule
 admin-case-report-no-place = place not recorded
+admin-case-report-rule = Rule the player cited
 admin-case-metric-reports = Reports
 admin-case-metric-people = People
 admin-case-metric-punishments = Punishments

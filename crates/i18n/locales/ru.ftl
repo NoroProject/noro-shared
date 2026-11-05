@@ -2410,6 +2410,7 @@ admin-case-source-system = автоматически
 admin-case-opened = открыто
 admin-case-rule = правило
 admin-case-report-no-place = место не записано
+admin-case-report-rule = Правило, на которое сослался игрок
 admin-case-metric-reports = Жалоб
 admin-case-metric-people = Человек
 admin-case-metric-punishments = Наказаний
