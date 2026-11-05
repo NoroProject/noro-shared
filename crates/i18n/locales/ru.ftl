@@ -6106,6 +6106,24 @@ notif-repair-busy = Сначала закройте игру, потом чин�
 ## Cabinet: active sessions
 
 cabinet-sessions-title = Активные сессии
+cabinet-recovery-title = Коды восстановления
+cabinet-recovery-lead = Одноразовые коды для входа по нику, когда под рукой нет ни платформы, ни ключа доступа.
+cabinet-recovery-left = { $count ->
+        [one] Остался { $count } код
+        [few] Осталось { $count } кода
+       *[many] Осталось { $count } кодов
+    }
+cabinet-recovery-none = Кодов восстановления пока нет
+cabinet-recovery-hint = Каждый код срабатывает один раз. Новый набор полностью заменяет старый.
+cabinet-recovery-low-hint = Коды заканчиваются. Выпустите новый набор, пока ещё можете войти.
+cabinet-recovery-low = Заканчиваются
+cabinet-recovery-issue = Создать коды
+cabinet-recovery-reissue = Новый набор
+cabinet-recovery-confirm-title = Выпустить новый набор кодов?
+cabinet-recovery-confirm-text = Все нынешние коды перестанут работать в момент выпуска. Новые покажутся один раз — сохраните их там, куда сможете попасть без этого сайта.
+cabinet-recovery-confirm-action = Выпустить новые коды
+cabinet-recovery-saved = Коды сохранены
+cabinet-recovery-file-header = Коды восстановления для { $user }.
 cabinet-sessions-lead = Все места, где выполнен вход в ваш аккаунт. Завершите сессию, которую не узнаёте.
 cabinet-sessions-kind-site = Сайт
 cabinet-sessions-kind-launcher = Лаунчер

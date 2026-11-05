@@ -6098,6 +6098,23 @@ notif-repair-busy = Close the game first, then repair its files.
 ## Cabinet: active sessions
 
 cabinet-sessions-title = Active sessions
+cabinet-recovery-title = Recovery codes
+cabinet-recovery-lead = One-time codes that sign you in with your username when no platform or passkey is at hand.
+cabinet-recovery-left = { $count ->
+        [one] { $count } code left
+       *[other] { $count } codes left
+    }
+cabinet-recovery-none = No recovery codes yet
+cabinet-recovery-hint = Each code works once. A new set replaces the old one completely.
+cabinet-recovery-low-hint = You are running out. Make a new set while you can still sign in.
+cabinet-recovery-low = Running low
+cabinet-recovery-issue = Create codes
+cabinet-recovery-reissue = New set
+cabinet-recovery-confirm-title = Create a new set of codes?
+cabinet-recovery-confirm-text = Every code you have now stops working the moment the new set is created. The new codes are shown once — keep them somewhere you can reach without this site.
+cabinet-recovery-confirm-action = Create new codes
+cabinet-recovery-saved = I saved them
+cabinet-recovery-file-header = Recovery codes for { $user }.
 cabinet-sessions-lead = Everywhere your account is signed in. End a session you don't recognise.
 cabinet-sessions-kind-site = Website
 cabinet-sessions-kind-launcher = Launcher
