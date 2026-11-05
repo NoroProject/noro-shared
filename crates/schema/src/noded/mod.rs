@@ -16,6 +16,7 @@
 //! `schema::noded::NodeOp`.
 
 pub mod events;
+pub mod network;
 pub mod ops;
 pub mod replies;
 
@@ -23,14 +24,15 @@ pub use events::{
     NodeEvent, NodeStats, PowerState, PressureKind, ServerStats, SftpActionKind,
     PRESSURE_CLEAR_PERCENT, PRESSURE_WARN_PERCENT,
 };
+pub use network::NetworkGroup;
 pub use ops::{
     AgentSpec, BackupUpload, CoreSource, InstallSpec, Listing, NodeOp, PackSource, PortMapping,
     PortProtocol, PowerAction, ServerSpec, SyncPolicy, TicketMode,
 };
 pub use replies::{
     BackupInfo, CrashFile, CrashReport, CrashReports, CrashSummary, DirEntry, DirListing,
-    FileContent, InstallResult, MasterLink, NodeDiag, ServerDiag, SftpDiag, SyncReport,
-    TicketGrant,
+    DiskQuotaDiag, FileContent, InstallResult, MasterLink, NetworkDiag, NodeDiag, ServerDiag,
+    SftpDiag, SyncReport, TicketGrant,
 };
 
 use serde::{Deserialize, Serialize};
@@ -59,8 +61,15 @@ pub mod caps {
     pub const BACKUP_S3: &str = "backup-s3";
     pub const BACKUP_WEBDAV: &str = "backup-webdav";
     pub const IMAGE_PULL: &str = "image-pull";
-    /// Real per-server disk quotas, which need overlay2 on xfs with pquota.
+    /// Per-server disk limits enforced by the filesystem (project quota on xfs
+    /// or ext4): the server's own process cannot write past them either.
     pub const DISK_QUOTA: &str = "disk-quota";
+    /// Understands `NodeOp::ServerLimits`; an older node only takes a new disk
+    /// limit with a rebuild.
+    pub const SERVER_LIMITS: &str = "server-limits";
+    /// Understands `NodeOp::NetworkGroups` and gives every server a network of
+    /// its own.
+    pub const NET_ISOLATION: &str = "net-isolation";
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

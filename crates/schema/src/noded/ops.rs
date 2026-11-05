@@ -368,6 +368,21 @@ pub enum NodeOp {
         ttl_secs: u64,
     },
 
+    // --- isolation and limits ----------------------------------------------
+    /// Which servers on this node may open connections to one another: a
+    /// proxy with the backends and limbos behind it. The whole picture for the
+    /// node, not a change — a server in no group reaches no other server here.
+    NetworkGroups {
+        groups: Vec<super::NetworkGroup>,
+    },
+    /// The disk limit of a server, applied in place. Unlike memory or CPU it
+    /// needs no new container, and waiting for the next rebuild left the old
+    /// limit in force while the panel showed the new one.
+    ServerLimits {
+        server: uuid::Uuid,
+        disk_mb: i64,
+    },
+
     // --- crashes -----------------------------------------------------------
     /// What the node kept from the last crashes: the console tail and the
     /// `crash-reports/` file of each. Answers with [`super::CrashReports`] —
@@ -461,8 +476,12 @@ impl NodeOp {
             | NodeOp::BackupRestore { server, .. }
             | NodeOp::BackupDelete { server, .. }
             | NodeOp::BackupTicket { server, .. }
-            | NodeOp::CrashReport { server, .. } => Some(*server),
-            NodeOp::NodeInfo | NodeOp::ImagePull { .. } | NodeOp::SftpReload => None,
+            | NodeOp::CrashReport { server, .. }
+            | NodeOp::ServerLimits { server, .. } => Some(*server),
+            NodeOp::NodeInfo
+            | NodeOp::ImagePull { .. }
+            | NodeOp::SftpReload
+            | NodeOp::NetworkGroups { .. } => None,
         }
     }
 }

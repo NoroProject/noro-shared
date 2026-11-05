@@ -304,4 +304,36 @@ fn node_diagnostics_read_without_servers() {
     .unwrap();
     assert!(diag.master.connected);
     assert!(diag.servers.is_empty());
+    assert!(
+        diag.network.is_none(),
+        "a daemon older than isolation says nothing"
+    );
+    assert!(diag.disk_quota.is_none());
+}
+
+/// Both ops are new: an older daemon does not parse them, and the master only
+/// sends them to a node that announced the capability.
+#[test]
+fn isolation_and_limit_ops_keep_their_shape() {
+    let group = uuid::Uuid::from_u128(1);
+    let member = uuid::Uuid::from_u128(2);
+    let op = NodeOp::NetworkGroups {
+        groups: vec![NetworkGroup {
+            id: group,
+            servers: vec![group, member],
+        }],
+    };
+    let value = serde_json::to_value(&op).unwrap();
+    assert_eq!(value["op"], "network_groups");
+    assert_eq!(value["args"]["groups"][0]["servers"][1], member.to_string());
+    assert_eq!(op.server(), None, "groups concern the whole node");
+
+    let op = NodeOp::ServerLimits {
+        server: member,
+        disk_mb: 4096,
+    };
+    let value = serde_json::to_value(&op).unwrap();
+    assert_eq!(value["op"], "server_limits");
+    assert_eq!(value["args"]["disk_mb"], 4096);
+    assert_eq!(op.server(), Some(member));
 }

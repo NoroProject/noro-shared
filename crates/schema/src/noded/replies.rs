@@ -155,6 +155,39 @@ pub struct NodeDiag {
     pub sftp: SftpDiag,
     #[serde(default)]
     pub servers: Vec<ServerDiag>,
+    /// Absent from a daemon older than network isolation.
+    #[serde(default)]
+    pub network: Option<NetworkDiag>,
+    #[serde(default)]
+    pub disk_quota: Option<DiskQuotaDiag>,
+}
+
+/// Whether servers are fenced off from the host, the cloud metadata service
+/// and each other.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NetworkDiag {
+    /// Turned on in the daemon's config.
+    pub enabled: bool,
+    /// The firewall rules are in place right now. `false` with `enabled` means
+    /// servers run on their own networks, but nothing stops them reaching the
+    /// host — `error` says why.
+    pub enforced: bool,
+    #[serde(default)]
+    pub error: Option<String>,
+    /// Groups of servers allowed to reach each other.
+    #[serde(default)]
+    pub groups: u32,
+}
+
+/// How a server's disk limit is held.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DiskQuotaDiag {
+    /// `project` — the filesystem refuses writes past the limit; `walk` — the
+    /// daemon measures the directory and refuses only its own writes.
+    pub mode: String,
+    /// Why project quota is not in use, when it is not.
+    #[serde(default)]
+    pub reason: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
