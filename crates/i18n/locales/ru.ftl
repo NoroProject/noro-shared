@@ -5590,6 +5590,12 @@ fm-sync-rules = Правила синхронизации
 fm-new-folder = Новая папка
 fm-upload = Загрузить файлы
 fm-folder-prompt = Имя папки:
+fm-root = Корень
+fm-delete-confirm = Удалить { $count } { $count ->
+    [one] элемент
+    [few] элемента
+   *[many] элементов
+}?
 fm-sync-rules-saved = Правила синхронизации сохранены
 fm-load-failed = Не удалось загрузить содержимое файла
 fm-save-failed = Не удалось сохранить содержимое файла

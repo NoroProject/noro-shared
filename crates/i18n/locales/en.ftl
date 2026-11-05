@@ -5583,6 +5583,11 @@ fm-sync-rules = Sync rules
 fm-new-folder = New folder
 fm-upload = Upload files
 fm-folder-prompt = Folder name:
+fm-root = Root
+fm-delete-confirm = Delete { $count } { $count ->
+    [one] item
+   *[other] items
+}?
 fm-sync-rules-saved = Sync rules saved
 fm-load-failed = Failed to load file content
 fm-save-failed = Failed to save file content
