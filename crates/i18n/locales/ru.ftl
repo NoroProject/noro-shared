@@ -380,6 +380,7 @@ settings-support-send = Отправить логи
 web-nav-home = Главная
 web-nav-servers = Серверы
 web-nav-rules = Правила
+web-nav-status = Состояние
 web-nav-cabinet = Кабинет
 web-nav-sign-in = Войти
 web-nav-menu-open = Открыть меню
@@ -451,6 +452,47 @@ web-servers-loading = Загружаем серверы…
 web-servers-empty-title = Серверов пока нет
 web-servers-empty-text = Проект ещё не открыл ни одного мира. Загляните позже.
 web-servers-empty-short = Проект ещё не открыл ни одного мира.
+
+## Public: status page
+
+web-status-meta-title = Состояние
+web-status-meta-description = Работают ли сейчас сайт, загрузки лаунчера и игровые серверы и что чинится.
+web-status-title = Состояние
+web-status-overall-up = Всё работает
+web-status-overall-degraded = Что-то работает не полностью
+web-status-overall-down = Сервис недоступен
+web-status-checked = Проверено { $at }
+web-status-services = Сервисы
+web-status-master = Аккаунты и сайт
+web-status-master-hint = Вход, кабинет и связь лаунчера с сервером.
+web-status-cdn = Загрузки лаунчера
+web-status-cdn-hint = Файлы игры и обновления лаунчера.
+web-status-cdn-hint-master = Файлы игры и обновления лаунчера — с того же сервера, что и сайт.
+web-status-servers = Игровые серверы
+web-status-server-players = { $online } из { $max } игроков
+web-status-state-up = Работает
+web-status-state-degraded = С перебоями
+web-status-state-down = Не работает
+web-status-incidents-active = Текущие инциденты
+web-status-incidents-recent = Решено за неделю
+web-status-incident-ongoing = С { $started }
+web-status-incident-resolved = { $started } — решено { $resolved }
+web-status-incident-badge-resolved = Решено
+web-status-severity-minor = Незначительный
+web-status-severity-major = Серьёзный
+web-status-severity-maintenance = Техработы
+admin-incidents-title = Инциденты на странице состояния
+admin-incidents-lead = То, что игроки видят на публичной странице состояния. Решённые остаются там неделю.
+admin-incidents-none = Инцидентов не объявлено.
+admin-incidents-new = Объявить инцидент
+admin-incidents-edit = Изменить инцидент
+admin-incidents-modal-lead = Пишите для игроков: что не работает и что можно сделать пока.
+admin-incidents-field-title = Что происходит
+admin-incidents-field-body = Подробности
+admin-incidents-field-severity = Серьёзность
+admin-incidents-save = Опубликовать
+admin-incidents-resolve = Решено
+admin-incidents-delete-title = Удалить этот инцидент?
 
 ## Карточка сервера
 web-server-online = В сети
@@ -1405,6 +1447,14 @@ admin-dash-quick-actions = Быстрые действия
 admin-dash-create-client = Создать клиент
 admin-dash-publish-news = Опубликовать новость
 admin-dash-deploy-launcher = Развернуть лаунчер
+admin-queues-title = Ждёт персонал
+admin-queues-lead = Открытые очереди, к которым у вас есть доступ. Обновляется раз в минуту.
+admin-queues-tickets = Обращения без ответа
+admin-queues-cases = Открытые дела
+admin-queues-reports = Нерешённые жалобы
+admin-queues-apps = Приложения на проверке
+admin-queues-mod-suggestions = Предложения модов
+admin-queues-integrity = Отметки целостности на проверку
 
 ## Админка: Вкладки раздела сборки
 admin-tab-profile = Профиль
@@ -5866,6 +5916,7 @@ audit-action-game-server-maintenance = Техработы на всех серв
 audit-action-user-ban = Бан
 audit-action-user-unban = Разбан
 audit-action-user-export = Выгрузка данных
+audit-action-user-self-export = Выгрузка своих данных
 audit-action-user-role-add = Роль выдана
 audit-action-user-role-remove = Роль снята
 audit-action-user-permission-add = Право выдано
@@ -5890,6 +5941,9 @@ audit-action-ticket-link-case = Обращение привязано к дел�
 audit-action-news-create = Новость опубликована
 audit-action-news-update = Новость изменена
 audit-action-news-delete = Новость удалена
+audit-action-status-incident-create = Инцидент объявлен
+audit-action-status-incident-update = Инцидент изменён
+audit-action-status-incident-delete = Инцидент удалён
 audit-action-instance-setting = Настройка инстанса изменена
 audit-action-role-create = Роль создана
 audit-action-role-update = Роль изменена
@@ -6361,6 +6415,35 @@ cabinet-sessions-ended-others = { $count ->
     [few] Завершено { $count } сессии
    *[other] Завершено { $count } сессий
 }
+
+## Cabinet: export of own data
+
+cabinet-export-title = Ваши данные
+cabinet-export-lead = Всё, что мы храним о вашем аккаунте, одним архивом — скачать можно раз в сутки.
+cabinet-export-row = Скачать мои данные
+cabinet-export-hint = ZIP с профилем, входами, сессиями, наказаниями, обращениями в поддержку, вашими сообщениями, логами лаунчера, наигранным временем, счетами и сделками, личным контентом и настройками. Имён персонала и слов других игроков в нём нет.
+cabinet-export-button = Скачать
+cabinet-export-next = Снова доступно { $at }
+cabinet-export-done = Архив скачан
+export-readme-title = Ваши данные с { $instance } — { $user }, { $at }
+export-readme-intro = В архиве то, что мы храним о вашем аккаунте: профиль, входы и сессии, наказания, обращения в поддержку, ваши личные сообщения, логи, присланные лаунчером, наигранное время, банковские счета и сделки, личный контент, настройки уведомлений и скины.
+export-readme-left-out = Нарочно не включены: имена персонала, работавшего с вашим аккаунтом, слова других игроков (их ответы в переписке, жалобы и отзывы), внутренние заметки персонала и журнал аудита.
+export-readme-format = Все файлы с данными — JSON. Время указано в UTC.
+
+## Cabinet: sign-in history
+
+cabinet-logins-title = История входов
+cabinet-logins-lead = Последние 30 входов в аккаунт. Адрес нарочно обрезан: по нему можно узнать свою сеть, но не найти дом.
+cabinet-logins-none = Входов пока не записано.
+cabinet-logins-method-platform = Вход через { $platform }
+cabinet-logins-method-passkey = Вход по ключу доступа
+cabinet-logins-method-recovery-code = Вход по коду восстановления
+cabinet-logins-method-launcher = Вход в лаунчер
+cabinet-logins-method-site = Вход на сайте
+cabinet-logins-method-app = { $name } получило доступ
+cabinet-logins-failed = Неудачная попытка
+cabinet-logins-unknown-client = Неизвестное устройство
+cabinet-logins-unknown-ip = адрес неизвестен
 
 ## Notifications: new sign-in
 

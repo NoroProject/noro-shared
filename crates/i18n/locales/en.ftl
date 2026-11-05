@@ -376,6 +376,7 @@ settings-support-send = Send logs
 web-nav-home = Home
 web-nav-servers = Servers
 web-nav-rules = Rules
+web-nav-status = Status
 web-nav-cabinet = Cabinet
 web-nav-sign-in = Sign in
 web-nav-menu-open = Open menu
@@ -446,6 +447,47 @@ web-servers-loading = Loading servers…
 web-servers-empty-title = No servers published yet
 web-servers-empty-text = The project has not opened a world to the public yet. Check back later.
 web-servers-empty-short = The project has not opened a world to the public yet.
+
+## Public: status page
+
+web-status-meta-title = Status
+web-status-meta-description = Whether the site, launcher downloads and game servers are working right now, and what is being fixed.
+web-status-title = Status
+web-status-overall-up = Everything is working
+web-status-overall-degraded = Some things are not working fully
+web-status-overall-down = The service is unreachable
+web-status-checked = Checked { $at }
+web-status-services = Services
+web-status-master = Accounts and website
+web-status-master-hint = Sign-in, the cabinet and the launcher's connection.
+web-status-cdn = Launcher downloads
+web-status-cdn-hint = Game files and launcher updates.
+web-status-cdn-hint-master = Game files and launcher updates, served by the same server as the website.
+web-status-servers = Game servers
+web-status-server-players = { $online } of { $max } players
+web-status-state-up = Working
+web-status-state-degraded = Degraded
+web-status-state-down = Down
+web-status-incidents-active = Ongoing incidents
+web-status-incidents-recent = Resolved this week
+web-status-incident-ongoing = Since { $started }
+web-status-incident-resolved = { $started } — resolved { $resolved }
+web-status-incident-badge-resolved = Resolved
+web-status-severity-minor = Minor
+web-status-severity-major = Major
+web-status-severity-maintenance = Maintenance
+admin-incidents-title = Status incidents
+admin-incidents-lead = What players see on the public status page. Resolved ones stay there for a week.
+admin-incidents-none = No incidents announced.
+admin-incidents-new = Announce incident
+admin-incidents-edit = Edit incident
+admin-incidents-modal-lead = Write it for players: what does not work and what they can do meanwhile.
+admin-incidents-field-title = What is happening
+admin-incidents-field-body = Details
+admin-incidents-field-severity = Severity
+admin-incidents-save = Publish
+admin-incidents-resolve = Resolved
+admin-incidents-delete-title = Delete this incident?
 
 ## Server card
 web-server-online = Online
@@ -1396,6 +1438,14 @@ admin-dash-quick-actions = Quick actions
 admin-dash-create-client = Create client
 admin-dash-publish-news = Publish news
 admin-dash-deploy-launcher = Deploy launcher
+admin-queues-title = Waiting for staff
+admin-queues-lead = Open queues you have access to. Refreshes every minute.
+admin-queues-tickets = Tickets awaiting a reply
+admin-queues-cases = Open cases
+admin-queues-reports = Unresolved reports
+admin-queues-apps = Apps awaiting review
+admin-queues-mod-suggestions = Mod suggestions
+admin-queues-integrity = Integrity flags to review
 
 ## Admin: Build section tabs
 admin-tab-profile = Profile
@@ -5855,6 +5905,7 @@ audit-action-game-server-maintenance = Maintenance on all servers of a client
 audit-action-user-ban = Banned
 audit-action-user-unban = Unbanned
 audit-action-user-export = Data exported
+audit-action-user-self-export = Own data exported
 audit-action-user-role-add = Role granted
 audit-action-user-role-remove = Role revoked
 audit-action-user-permission-add = Permission granted
@@ -5879,6 +5930,9 @@ audit-action-ticket-link-case = Ticket linked to a case
 audit-action-news-create = News published
 audit-action-news-update = News edited
 audit-action-news-delete = News deleted
+audit-action-status-incident-create = Incident announced
+audit-action-status-incident-update = Incident updated
+audit-action-status-incident-delete = Incident deleted
 audit-action-instance-setting = Instance setting changed
 audit-action-role-create = Role created
 audit-action-role-update = Role edited
@@ -6347,6 +6401,35 @@ cabinet-sessions-ended-others = { $count ->
     [one] { $count } session ended
    *[other] { $count } sessions ended
 }
+
+## Cabinet: export of own data
+
+cabinet-export-title = Your data
+cabinet-export-lead = Everything we keep about your account, in one archive you can download once a day.
+cabinet-export-row = Download my data
+cabinet-export-hint = A ZIP with your profile, sign-ins, sessions, punishments, support conversations, the messages you wrote, launcher logs, playtime, accounts and trades, personal content and settings. Staff names and other players' words are left out.
+cabinet-export-button = Download
+cabinet-export-next = Available again { $at }
+cabinet-export-done = Archive downloaded
+export-readme-title = Your data from { $instance } — { $user }, { $at }
+export-readme-intro = This archive holds what we keep about your account: the profile, sign-ins and sessions, punishments, support conversations, the direct messages you wrote, logs your launcher sent, time played, bank accounts and trades, personal content, notification settings and skins.
+export-readme-left-out = Left out on purpose: names of the staff who handled your account, other players' words (their replies in your conversations, their reports and reviews), internal staff notes and the staff audit log.
+export-readme-format = Every data file is JSON. Times are in UTC.
+
+## Cabinet: sign-in history
+
+cabinet-logins-title = Sign-in history
+cabinet-logins-lead = The last 30 sign-ins to your account. The address is cut short on purpose: enough to recognise your network, not to find your home.
+cabinet-logins-none = No sign-ins recorded yet.
+cabinet-logins-method-platform = Signed in with { $platform }
+cabinet-logins-method-passkey = Signed in with a passkey
+cabinet-logins-method-recovery-code = Signed in with a recovery code
+cabinet-logins-method-launcher = Signed in to the launcher
+cabinet-logins-method-site = Signed in on the website
+cabinet-logins-method-app = { $name } got access
+cabinet-logins-failed = Failed attempt
+cabinet-logins-unknown-client = Unknown device
+cabinet-logins-unknown-ip = address unknown
 
 ## Notifications: new sign-in
 
