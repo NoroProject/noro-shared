@@ -14,9 +14,11 @@ mod build;
 mod check;
 mod dev;
 mod gen_types;
+mod login;
 mod new;
 mod package;
 mod project;
+mod publish;
 mod sign;
 mod ui;
 
@@ -102,6 +104,31 @@ enum Cmd {
     Ui,
     /// Сгенерировать TypeScript-типы из структур модуля для мини-аппа.
     GenTypes,
+    /// Войти в аккаунт noro.rest: подтверждение в браузере, токен в ~/.noro.
+    Login {
+        /// Адрес реестра (по умолчанию https://noro.rest).
+        #[arg(long)]
+        registry: Option<String>,
+    },
+    /// Выйти: отозвать токен и удалить его из ~/.noro.
+    Logout,
+    /// Под каким аккаунтом вы вошли.
+    Whoami,
+    /// Собрать и опубликовать модуль в реестре noro.rest.
+    Publish {
+        /// Подписать пакет личным ключом автора.
+        #[arg(long)]
+        sign: bool,
+        /// Категория: gameplay, economy, moderation, social, integrations, tools, other.
+        #[arg(long)]
+        category: Option<String>,
+        /// Ссылка на репозиторий с исходным кодом.
+        #[arg(long)]
+        repo: Option<String>,
+        /// Адрес реестра (по умолчанию https://noro.rest).
+        #[arg(long)]
+        registry: Option<String>,
+    },
 }
 
 fn main() {
@@ -169,6 +196,18 @@ fn run() -> Result<()> {
         Cmd::GenTypes => {
             let p = project::find()?;
             gen_types::run(&p)
+        }
+        Cmd::Login { registry } => login::run(registry),
+        Cmd::Logout => login::logout(),
+        Cmd::Whoami => login::whoami(),
+        Cmd::Publish {
+            sign,
+            category,
+            repo,
+            registry,
+        } => {
+            let p = project::find()?;
+            publish::run(&p, sign, category, repo, registry)
         }
     }
 }

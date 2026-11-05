@@ -33,6 +33,9 @@ pub fn run(p: &Project, debug: bool, signed: bool) -> Result<()> {
     if p.has("icon.png") {
         entries.push(("icon.png".to_string(), std::fs::read(p.path("icon.png"))?));
     }
+    if p.has("README.md") {
+        entries.push(("README.md".to_string(), std::fs::read(p.path("README.md"))?));
+    }
     for dir in DIRS {
         collect(&p.path(dir), dir, &mut entries)?;
     }

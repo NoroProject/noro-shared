@@ -16,8 +16,10 @@ path = "src/main.rs"
 
 [dependencies]
 noro-module-abi = { workspace = true, features = ["signing"] }
+serde = { workspace = true }
 serde_json = { workspace = true }
 zip = { workspace = true }
+ureq = { version = "2.10", features = ["json"] }
 
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
