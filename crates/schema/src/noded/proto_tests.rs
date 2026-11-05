@@ -205,6 +205,59 @@ fn a_backup_without_a_quota_has_no_limit() {
     }
 }
 
+/// An old node answers a backup with bare `bytes`/`sha256`: that is a full
+/// archive, and nothing about the space the server's backups take.
+#[test]
+fn an_old_backup_reply_reads_as_a_full_archive() {
+    let info: BackupInfo = serde_json::from_value(json!({
+        "backup": "00000000-0000-0000-0000-000000000000",
+        "bytes": 10,
+        "sha256": "ab",
+    }))
+    .unwrap();
+    assert_eq!(info.format, BackupFormat::Tar);
+    assert_eq!(info.backups_bytes, None);
+    assert_eq!(info.source_bytes, None);
+
+    let chunks: BackupInfo = serde_json::from_value(json!({
+        "backup": "00000000-0000-0000-0000-000000000000",
+        "bytes": 10,
+        "sha256": "ab",
+        "format": "chunks",
+        "backups_bytes": 30,
+    }))
+    .unwrap();
+    assert_eq!(chunks.format, BackupFormat::Chunks);
+    assert_eq!(chunks.backups_bytes, Some(30));
+}
+
+/// A whole restore leaves `paths` off the wire: an old node never sees a
+/// field it would silently ignore, and a new one reads its absence as "all".
+#[test]
+fn a_whole_restore_carries_no_paths() {
+    let op = NodeOp::BackupRestore {
+        server: uuid::Uuid::nil(),
+        backup: uuid::Uuid::nil(),
+        download: None,
+        paths: vec![],
+    };
+    let value = serde_json::to_value(&op).unwrap();
+    assert!(value["args"].get("paths").is_none(), "{value}");
+
+    let old: NodeOp = serde_json::from_value(json!({
+        "op": "backup_restore",
+        "args": {
+            "server": "00000000-0000-0000-0000-000000000000",
+            "backup": "00000000-0000-0000-0000-000000000000"
+        }
+    }))
+    .unwrap();
+    match old {
+        NodeOp::BackupRestore { paths, .. } => assert!(paths.is_empty()),
+        other => panic!("expected a restore, got {other:?}"),
+    }
+}
+
 /// The rebuild waits for a stop that may take a minute; the master giving up
 /// first leaves the panel saying "failed" about a rebuild that went through.
 #[test]

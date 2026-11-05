@@ -30,9 +30,9 @@ pub use ops::{
     PortProtocol, PowerAction, ServerSpec, SyncPolicy, TicketMode,
 };
 pub use replies::{
-    BackupInfo, CrashFile, CrashReport, CrashReports, CrashSummary, DirEntry, DirListing,
-    DiskQuotaDiag, FileContent, InstallResult, MasterLink, NetworkDiag, NodeDiag, ServerDiag,
-    SftpDiag, SyncReport, TicketGrant,
+    BackupDeleted, BackupFormat, BackupInfo, CrashFile, CrashReport, CrashReports, CrashSummary,
+    DirEntry, DirListing, DiskQuotaDiag, FileContent, InstallResult, MasterLink, NetworkDiag,
+    NodeDiag, ServerDiag, SftpDiag, SyncReport, TicketGrant,
 };
 
 use serde::{Deserialize, Serialize};
@@ -60,6 +60,9 @@ pub mod caps {
     pub const DIRECT_TRANSFER: &str = "direct-transfer";
     pub const BACKUP_S3: &str = "backup-s3";
     pub const BACKUP_WEBDAV: &str = "backup-webdav";
+    /// Restores a single file or directory out of a backup and browses
+    /// backups (`BackupBrowse`, `BackupRestore.paths`).
+    pub const BACKUP_PARTIAL: &str = "backup-partial";
     pub const IMAGE_PULL: &str = "image-pull";
     /// Per-server disk limits enforced by the filesystem (project quota on xfs
     /// or ext4): the server's own process cannot write past them either.

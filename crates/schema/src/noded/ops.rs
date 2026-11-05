@@ -357,6 +357,12 @@ pub enum NodeOp {
         backup: uuid::Uuid,
         #[serde(default)]
         download: Option<Box<BackupUpload>>,
+        /// Restore only these files or directories (relative to the server
+        /// root); empty means the whole backup. A node without
+        /// [`super::caps::BACKUP_PARTIAL`] ignores the field and restores
+        /// everything, so the master must not send it there.
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        paths: Vec<String>,
     },
     BackupDelete {
         server: uuid::Uuid,
@@ -366,6 +372,15 @@ pub enum NodeOp {
         server: uuid::Uuid,
         backup: uuid::Uuid,
         ttl_secs: u64,
+    },
+    /// One directory of a backup, to pick what to restore. Answers with
+    /// [`super::DirListing`]. Only nodes with [`super::caps::BACKUP_PARTIAL`]
+    /// know it.
+    BackupBrowse {
+        server: uuid::Uuid,
+        backup: uuid::Uuid,
+        #[serde(default)]
+        path: String,
     },
 
     // --- isolation and limits ----------------------------------------------
@@ -476,6 +491,7 @@ impl NodeOp {
             | NodeOp::BackupRestore { server, .. }
             | NodeOp::BackupDelete { server, .. }
             | NodeOp::BackupTicket { server, .. }
+            | NodeOp::BackupBrowse { server, .. }
             | NodeOp::CrashReport { server, .. }
             | NodeOp::ServerLimits { server, .. } => Some(*server),
             NodeOp::NodeInfo

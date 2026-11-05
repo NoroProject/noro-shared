@@ -62,14 +62,50 @@ pub struct SyncReport {
     pub bytes: u64,
 }
 
+/// How a backup is kept on the node.
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum BackupFormat {
+    /// One self-contained `.tar.gz`. Every node before incremental backups
+    /// made only these, so it is what a reply without the field means.
+    #[default]
+    Tar,
+    /// A snapshot in the server's chunk store: deduplicated against every
+    /// other snapshot of the same server.
+    Chunks,
+}
+
+/// Reply to `BackupCreate`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BackupInfo {
     pub backup: uuid::Uuid,
+    /// Bytes this backup added to the node's disk: the archive itself, or the
+    /// chunks no earlier snapshot had.
     pub bytes: u64,
+    /// sha256 of the archive, or of the snapshot manifest.
     pub sha256: String,
     /// Set when the node pushed it to a storage as well.
     #[serde(default)]
     pub storage_path: Option<String>,
+    #[serde(default)]
+    pub format: BackupFormat,
+    /// Size of the files the backup holds, before compression and dedup.
+    /// Absent for archives, where only the packed size is known.
+    #[serde(default)]
+    pub source_bytes: Option<u64>,
+    /// Everything this server's backups take on the node after the operation.
+    /// With deduplication the sum of `bytes` says nothing about it.
+    #[serde(default)]
+    pub backups_bytes: Option<u64>,
+}
+
+/// Reply to `BackupDelete`. Older nodes answer `null`.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct BackupDeleted {
+    /// What the server's backups take on the node once this one and the
+    /// chunks only it used are gone.
+    #[serde(default)]
+    pub backups_bytes: Option<u64>,
 }
 
 /// One-shot URL for a direct upload or download against the node.
