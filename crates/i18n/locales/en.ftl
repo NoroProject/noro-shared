@@ -157,6 +157,61 @@ toast-success = DONE
 toast-warning = HEADS UP
 toast-error = ERROR
 toast-info = NOTICE
+toast-load-settings-failed = Could not load settings
+toast-load-support-logs-failed = Could not load support logs
+toast-download-bundle-failed = Could not download the archive
+toast-cancel-request-failed = Could not cancel the request
+toast-step-up-confirmed = Confirmed for the next { $minutes } min
+toast-delete-failed = Could not delete
+toast-open-file-failed = Could not open the file
+toast-save-failed = Could not save
+toast-create-folder-failed = Could not create the folder
+toast-backup-failed = Could not create the backup
+toast-load-auth-methods-failed = Could not load sign-in methods
+toast-accept-request-failed = Could not accept the request
+toast-reject-request-failed = Could not reject the request
+toast-create-build-failed = Could not create the build
+toast-load-builds-failed = Could not load builds for this server
+toast-load-installed-mods-failed = Could not load installed mods
+toast-load-mc-versions-failed = Could not load Minecraft versions
+toast-load-build-filters-failed = Could not read build settings — filters stay empty
+toast-load-server-filters-failed = Could not read server builds — filters stay empty
+toast-save-sync-rules-failed = Could not save sync rules
+toast-load-sync-rules-failed = Could not load sync rules
+toast-applied = Applied
+toast-applied-partly = Applied to { $done } of { $total }
+toast-servers-count = { $count ->
+        [one] { $count } server
+       *[other] { $count } servers
+    }
+toast-uploaded = Uploaded
+toast-upload-failed = Upload failed
+toast-installed = Installed
+toast-installed-partly = Installed to { $done } of { $total }
+toast-targets-count = { $count ->
+        [one] { $count } target
+       *[other] { $count } targets
+    }
+toast-install-failed = Install failed
+toast-load-servers-search-failed = Could not load servers for search
+toast-load-loader-versions-failed = Could not load { $loader } versions for { $mc }
+toast-load-mod-suggestions-failed = Could not load mod suggestions
+toast-load-rules-failed = Could not load rules
+toast-reorder-failed = Could not save the new order
+toast-load-case-failed = Could not load the case
+toast-power-done = { $action ->
+        [start] Server starting
+        [stop] Server stopping
+        [restart] Server restarting
+       *[kill] Server killed
+    }
+toast-power-failed = { $action ->
+        [start] Could not start the server
+        [stop] Could not stop the server
+        [restart] Could not restart the server
+       *[kill] Could not kill the server
+    }
+toast-command-rejected = Command rejected
 game-node-offline = offline
 game-online-unknown = online unknown
 sync-failed = SYNC FAILED
@@ -467,6 +522,14 @@ punishment-status-active = ACTIVE
 punishment-status-expired = EXPIRED
 punishment-status-revoked = REVOKED
 punishment-actor = Issued by: { $actor }
+punish-problem-term = The term is not understood: try 7d, 12h, 1d 6h, 30m.
+punish-problem-kind = You cannot issue this kind of punishment.
+punish-problem-permanent = Punishing forever needs noro.mod.punish.permanent.
+punish-problem-rule = Pick a rule: without it only a bypass permission can punish.
+punish-problem-no-options = This rule sets no punishment you are allowed to issue.
+punish-problem-pick = Pick one of the punishments the rule allows.
+punish-problem-other-kind = The chosen option is for another kind of punishment.
+punish-problem-rule-allows = The rule allows { $sanction }.
 punishment-until = until { $date }
 punishment-forever = forever
 
@@ -621,7 +684,7 @@ oauth-allow = Authorize
 
 ## Skin and Capes Manager
 skin-title = Skins & Capes
-skin-subtitle = Modrinth & Pandora style skin manager
+skin-subtitle = Choose how your character looks in game
 skin-3d-character = 3D Character
 skin-custom-badge = Custom Skin
 skin-default-badge = Default
@@ -640,10 +703,30 @@ skin-official-skins = Official Minecraft skins
 skin-mojang-desc = Standard Mojang characters
 skin-available-capes = Your available capes
 skin-pick-cape-desc = Pick a cape for your character
-skin-capes-count = { $count } capes
+skin-capes-count = { $count ->
+        [one] { $count } cape
+       *[other] { $count } capes
+    }
 skin-no-cape = No cape
 skin-no-capes-title = No capes available
 skin-no-capes-desc = You have no capes yet. Ask an administrator to grant you cape access.
+skin-import-label = Copy a skin from a player
+skin-import-placeholder = Minecraft username
+skin-import-action = Import
+skin-imported = Skin copied from { $name }
+skin-only-png = Only PNG files are supported.
+skin-too-large = The file is { $size } KB — skins must be { $max } KB or smaller.
+skin-updated = Skin updated
+skin-equipped-name = Now wearing { $name }
+skin-apply-failed = Could not change the skin
+skin-reset-done = Skin reset to default
+skin-reset-failed = Could not reset the skin
+skin-cape-on = Cape equipped
+skin-cape-off = Cape removed
+skin-cape-failed = Could not change the cape
+skin-rename = Rename
+skin-delete-title = Delete this skin?
+skin-delete-text = “{ $name }” is removed from your saved skins. What you are wearing does not change.
 
 ## Login page
 login-secure-login = Secure login
@@ -652,6 +735,8 @@ login-no-methods = No sign-in method is configured on this instance yet. An oper
 login-passkey = SIGN IN WITH PASSKEY
 login-recovery-toggle = Use a recovery code
 login-username-placeholder = Username
+login-recovery-code = Recovery code
+login-profile-failed = Signed in, but your profile did not load. Try again in a moment.
 login-submit = SIGN IN
 login-recovery-hint = Each code works once.
 
@@ -1005,6 +1090,32 @@ admin-gs-role-fallback = Fallback Server
 admin-gs-is-default = Default entry point
 admin-gs-auto-register = Register dynamically in Velocity
 admin-gs-forwarding-secret = Velocity Forwarding Secret
+admin-gs-forwarding-secret-for = For { $name }
+admin-alloc-used-percent = { $percent }% used
+admin-alloc-free-percent = { $percent }% free
+admin-perm-global-hint = Already granted on every build
+admin-roles-admin-bypass = Admin bypass
+admin-roles-admin-bypass-hint = Admin roles bypass limits
+admin-build-draft-hint = This build is not visible to players yet.
+admin-build-active-hint = This build is currently active in the launcher.
+admin-build-log-empty = (empty)
+admin-logs-request-collecting = Collecting — the bundle will appear shortly.
+admin-logs-request-waiting = Waiting for the player to accept.
+admin-logs-request-queued = The launcher is offline — queued for 24 hours.
+admin-impersonate-confirm-launcher = Confirm the prompt in your launcher.
+admin-impersonate-launcher-offline = Your launcher is offline — open it and confirm there.
+admin-impersonate-status-pending = Waiting for your launcher to confirm…
+admin-impersonate-status-accepted = Confirmed — the launcher is signing in as the player.
+admin-impersonate-status-consumed = Done — the launcher is signed in as the player.
+admin-impersonate-status-declined = Declined in the launcher.
+admin-impersonate-status-expired = The request expired. Start it again.
+admin-media-only-images = Only image files can be uploaded.
+preview-expand = Expand
+preview-collapse = Normal size
+moderation-channel-actionbar = Actionbar
+moderation-channel-chat = Chat
+moderation-channel-disconnect = Disconnect screen
+skin-preview-failed = The preview texture did not load
 admin-gs-evacuate-title = Evacuate players
 admin-gs-evacuate-btn = Evacuate to Limbo
 admin-gs-tab-plugins = Plugins
@@ -1238,6 +1349,21 @@ admin-content-block-confirm = Block this project
 admin-content-reason = Why it is not allowed
 admin-content-reason-required = A reason is required.
 admin-content-blocked = Blocked, and removed from everyone who had it.
+admin-project-bans-title = Banned projects
+admin-project-bans-lead = Modrinth and CurseForge projects players may not add on top of a build. A ban removes the project from everyone who had it.
+admin-project-bans-none = No projects are banned.
+admin-project-bans-everywhere = Whole instance
+admin-project-bans-one-build = One build
+admin-project-bans-meta = { $scope } · since { $date }
+admin-project-bans-lift = Lift ban
+admin-project-bans-lifted = Ban lifted — players can add the project again
+admin-popular-title = What players add
+admin-popular-lead = Projects players most often install on top of builds. Open one to see who has it.
+admin-popular-none = Players have not added anything of their own yet.
+admin-popular-players = { $count ->
+        [one] { $count } player
+       *[other] { $count } players
+    }
 admin-diag-collect = Collect
 admin-diag-subtitle = Versions, hardware and link speed — nothing personal.
 admin-diag-empty = Nothing collected yet.
@@ -1375,6 +1501,15 @@ admin-mods-license = License
 admin-mods-followers = followers
 admin-mods-install = Install
 admin-mods-reinstall = Update / Reinstall
+admin-mods-update = Update
+admin-mods-version-install = Install this version
+admin-mods-version-reinstall = Update or reinstall to this version
+admin-mods-side-both = Client or server
+admin-mods-side-client = Client only
+admin-mods-side-server = Server only
+admin-mods-show-less = Show less
+admin-mods-show-more = +{ $count } more
+admin-mods-no-answer-from = No answer from: { $sources }
 admin-mods-installed = Installed
 admin-mods-project-id = Project ID
 admin-mods-env-client = Client
@@ -1434,6 +1569,10 @@ admin-build-modpack-checking = Checking…
 
 ## Capes
 admin-capes-title = CAPES
+admin-capes-only-png = Only PNG cape images are supported.
+admin-capes-too-large = The file is { $size } KB — capes must be { $max } KB or smaller.
+admin-capes-uploaded = Cape uploaded
+admin-capes-deleted = Cape deleted
 admin-capes-subtitle = Cape Catalog & Cosmetics Management
 admin-capes-add-title = Add New Cape
 admin-capes-add-subtitle = Upload 64x32 or 22x17 Minecraft cape PNG textures.
@@ -1993,6 +2132,17 @@ cabinet-privacy-title = Privacy
 cabinet-privacy-hide-online = Hide me from the online list
 cabinet-privacy-silent-join-title = Silent Join (Vanish on connect)
 cabinet-privacy-silent-join-hint = Automatically connect to servers in vanish mode
+cabinet-blocked-title = Blocked players
+cabinet-blocked-lead = They cannot send you direct messages. Unblock someone here even after the conversation is gone.
+cabinet-blocked-none = You have not blocked anyone.
+cabinet-blocked-removed = { $name } can message you again
+cabinet-bundles-title = Logs sent from the launcher
+cabinet-bundles-lead = Game and launcher logs from your computer that staff can read. Each one is deleted automatically when it expires.
+cabinet-bundles-none = Your launcher has not sent any logs.
+cabinet-bundles-untitled = Logs without a note
+cabinet-bundles-meta = Sent { $sent } · { $size } · kept until { $expires }
+cabinet-bundles-requested = Requested by staff
+cabinet-bundles-requested-hint = Collected at a staff request — it stays until it expires.
 cabinet-profile-title = Profile
 cabinet-roles-card = Roles
 cabinet-direct-card = Direct permissions
@@ -2084,6 +2234,12 @@ spotlight-action-logout = Sign out
 ## Search & Filters for User List
 admin-users-search-label = Search User / UUID / platform
 admin-users-search-placeholder = Filter by username, platform handle, or UUID...
+admin-users-identity-find = Find by platform ID
+admin-users-identity-lead = Look a player up by the ID of the account they sign in with — the number you see in Discord or Telegram, not their username.
+admin-users-identity-provider = Platform
+admin-users-identity-id = Account ID on the platform
+admin-users-identity-search = Find
+admin-users-identity-not-found = Nobody here signs in with that account.
 admin-users-status-label = Status
 admin-users-status-all = All Statuses
 admin-users-status-active-only = Active Only
@@ -2225,6 +2381,22 @@ admin-backup-db = Database
 admin-backup-db-text = Streams a pg_dump of the whole database: accounts, servers, rules, cases and punishments.
 admin-backup-download = Download the dump
 admin-backup-files-note = The plain dump holds the database only. Builds, skins, capes and agents live in the data volume — take the full archive to get them too.
+admin-storage-gc-title = Storage cleanup
+admin-storage-gc-lead = Files in the master's storage that nothing refers to any more: replaced mods, removed skins, deleted builds.
+admin-storage-gc-hint = The search walks the whole database and storage, so it runs only when you ask.
+admin-storage-gc-scan = Find unused files
+admin-storage-gc-rescan = Search again
+admin-storage-gc-clean = Nothing to clean up — every stored file is in use.
+admin-storage-gc-found = { $count ->
+        [one] { $count } unused file, { $size }
+       *[other] { $count } unused files, { $size }
+    }
+admin-storage-gc-age = Files younger than seven days are never counted: they may belong to an import still in progress.
+admin-storage-gc-sample = First { $count } checksums
+admin-storage-gc-delete = Delete unused files
+admin-storage-gc-confirm-title = Delete unused files?
+admin-storage-gc-confirm-text = { $count } files ({ $size }) are removed from the storage for good. Take a full archive first if you might still need them.
+admin-storage-gc-deleted = Deleted { $count } files, { $size } freed
 admin-backup-full = Full archive
 admin-backup-full-text = Database dump, every file in the data volume, a manifest and an Ed25519 signature, in one noro-backup-{ "{" }date{ "}" }.tar.gz. Built on the fly — about half a minute per 4 GB of data.
 admin-backup-full-btn = Build the full archive
@@ -3048,6 +3220,7 @@ admin-tickets-link-case = Link to a case
 admin-tickets-none-text = Nothing waits for an answer under this filter.
 admin-tickets-pick-text = The conversation opens here.
 admin-tickets-search = Player or subject
+admin-tickets-load-more = Show more ({ $shown } of { $total })
 admin-tickets-title = SUPPORT
 admin-tickets-unlink = Unlink from the case
 admin-tokens-owner-none = Nobody
@@ -5046,6 +5219,7 @@ admin-build-import-versions-applied-hint = You need to rebuild the pack for chan
 common-ok = OK
 common-error = Error
 common-failed = Failed
+common-request-failed = The request did not go through
 admin-backup-keep = Keep:
 admin-backup-next = Next:
 admin-user-launcher-last-activity = Last activity
@@ -5253,6 +5427,9 @@ gameserver-files-empty = Empty directory.
 gameserver-files-no-wrapper = No wrapper connected — there is nothing to browse.
 gameserver-files-copied = Path copied to clipboard
 gameserver-files-folder-prompt = New folder name:
+gameserver-files-delete-confirm = Delete { $path }? Folders go with everything inside.
+gameserver-mods-delete-confirm = Delete { $name }? The server keeps running it until a restart.
+files-edit-title = Edit: { $name }
 
 gameserver-mods-count = { $count } jar(s)
 gameserver-mods-empty = No jars in { $path } yet.
@@ -6088,6 +6265,23 @@ notif-repair-busy = Close the game first, then repair its files.
 ## Cabinet: active sessions
 
 cabinet-sessions-title = Active sessions
+cabinet-recovery-title = Recovery codes
+cabinet-recovery-lead = One-time codes that sign you in with your username when no platform or passkey is at hand.
+cabinet-recovery-left = { $count ->
+        [one] { $count } code left
+       *[other] { $count } codes left
+    }
+cabinet-recovery-none = No recovery codes yet
+cabinet-recovery-hint = Each code works once. A new set replaces the old one completely.
+cabinet-recovery-low-hint = You are running out. Make a new set while you can still sign in.
+cabinet-recovery-low = Running low
+cabinet-recovery-issue = Create codes
+cabinet-recovery-reissue = New set
+cabinet-recovery-confirm-title = Create a new set of codes?
+cabinet-recovery-confirm-text = Every code you have now stops working the moment the new set is created. The new codes are shown once — keep them somewhere you can reach without this site.
+cabinet-recovery-confirm-action = Create new codes
+cabinet-recovery-saved = I saved them
+cabinet-recovery-file-header = Recovery codes for { $user }.
 cabinet-sessions-lead = Everywhere your account is signed in. End a session you don't recognise.
 cabinet-sessions-kind-site = Website
 cabinet-sessions-kind-launcher = Launcher

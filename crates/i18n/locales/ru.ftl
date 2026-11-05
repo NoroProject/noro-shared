@@ -159,6 +159,63 @@ toast-success = ГОТОВО
 toast-warning = ВНИМАНИЕ
 toast-error = ОШИБКА
 toast-info = СООБЩЕНИЕ
+toast-load-settings-failed = Не удалось загрузить настройки
+toast-load-support-logs-failed = Не удалось загрузить логи поддержки
+toast-download-bundle-failed = Не удалось скачать архив
+toast-cancel-request-failed = Не удалось отменить запрос
+toast-step-up-confirmed = Подтверждено на { $minutes } мин
+toast-delete-failed = Не удалось удалить
+toast-open-file-failed = Не удалось открыть файл
+toast-save-failed = Не удалось сохранить
+toast-create-folder-failed = Не удалось создать папку
+toast-backup-failed = Не удалось создать бэкап
+toast-load-auth-methods-failed = Не удалось загрузить способы входа
+toast-accept-request-failed = Не удалось принять заявку
+toast-reject-request-failed = Не удалось отклонить заявку
+toast-create-build-failed = Не удалось создать сборку
+toast-load-builds-failed = Не удалось загрузить сборки сервера
+toast-load-installed-mods-failed = Не удалось загрузить установленные моды
+toast-load-mc-versions-failed = Не удалось загрузить версии Minecraft
+toast-load-build-filters-failed = Не удалось прочитать настройки сборки — фильтры останутся пустыми
+toast-load-server-filters-failed = Не удалось прочитать сборки серверов — фильтры останутся пустыми
+toast-save-sync-rules-failed = Не удалось сохранить правила синхронизации
+toast-load-sync-rules-failed = Не удалось загрузить правила синхронизации
+toast-applied = Применено
+toast-applied-partly = Применено к { $done } из { $total }
+toast-servers-count = { $count ->
+        [one] { $count } сервер
+        [few] { $count } сервера
+       *[many] { $count } серверов
+    }
+toast-uploaded = Загружено
+toast-upload-failed = Не удалось загрузить
+toast-installed = Установлено
+toast-installed-partly = Установлено в { $done } из { $total }
+toast-targets-count = { $count ->
+        [one] { $count } цель
+        [few] { $count } цели
+       *[many] { $count } целей
+    }
+toast-install-failed = Не удалось установить
+toast-load-servers-search-failed = Не удалось загрузить серверы для поиска
+toast-load-loader-versions-failed = Не удалось загрузить версии { $loader } для { $mc }
+toast-load-mod-suggestions-failed = Не удалось загрузить предложения модов
+toast-load-rules-failed = Не удалось загрузить правила
+toast-reorder-failed = Не удалось сохранить порядок
+toast-load-case-failed = Не удалось загрузить дело
+toast-power-done = { $action ->
+        [start] Сервер запускается
+        [stop] Сервер останавливается
+        [restart] Сервер перезапускается
+       *[kill] Сервер принудительно остановлен
+    }
+toast-power-failed = { $action ->
+        [start] Не удалось запустить сервер
+        [stop] Не удалось остановить сервер
+        [restart] Не удалось перезапустить сервер
+       *[kill] Не удалось принудительно остановить сервер
+    }
+toast-command-rejected = Команда отклонена
 game-node-offline = нет связи
 game-online-unknown = онлайн неизвестен
 sync-failed = ОШИБКА СИНХРОНИЗАЦИИ
@@ -472,6 +529,14 @@ punishment-status-active = ДЕЙСТВУЕТ
 punishment-status-expired = ИСТЕКЛО
 punishment-status-revoked = ОТМЕНЕНО
 punishment-actor = Выдал: { $actor }
+punish-problem-term = Срок не распознан: попробуйте 7d, 12h, 1d 6h, 30m.
+punish-problem-kind = Вам нельзя выдавать такое наказание.
+punish-problem-permanent = Для бессрочного наказания нужно право noro.mod.punish.permanent.
+punish-problem-rule = Выберите правило: без него наказать может только право обхода.
+punish-problem-no-options = Это правило не предусматривает наказаний, которые вам можно выдавать.
+punish-problem-pick = Выберите одно из наказаний, которые допускает правило.
+punish-problem-other-kind = Выбранный вариант — для другого вида наказания.
+punish-problem-rule-allows = Правило допускает { $sanction }.
 punishment-until = до { $date }
 punishment-forever = навсегда
 
@@ -626,7 +691,7 @@ oauth-allow = Разрешить
 
 ## Менеджер скинов и плащей
 skin-title = Скины и плащи
-skin-subtitle = Менеджер скинов в стиле Modrinth & Pandora
+skin-subtitle = Выберите, как ваш персонаж выглядит в игре
 skin-3d-character = 3D Персонаж
 skin-custom-badge = Свой скин
 skin-default-badge = По умолчанию
@@ -645,10 +710,31 @@ skin-official-skins = Официальные скины Minecraft
 skin-mojang-desc = Стандартные персонажи Mojang
 skin-available-capes = Доступные плащи
 skin-pick-cape-desc = Выберите плащ для вашего персонажа
-skin-capes-count = { $count } плащей
+skin-capes-count = { $count ->
+        [one] { $count } плащ
+        [few] { $count } плаща
+       *[many] { $count } плащей
+    }
 skin-no-cape = Без плаща
 skin-no-capes-title = Нет доступных плащей
 skin-no-capes-desc = У вас пока нет доступных плащей. Запросите доступ у администрации.
+skin-import-label = Скопировать скин игрока
+skin-import-placeholder = Ник в Minecraft
+skin-import-action = Скопировать
+skin-imported = Скин скопирован у { $name }
+skin-only-png = Поддерживаются только файлы PNG.
+skin-too-large = Файл весит { $size } КБ — скин должен быть не больше { $max } КБ.
+skin-updated = Скин обновлён
+skin-equipped-name = Надет скин { $name }
+skin-apply-failed = Не удалось сменить скин
+skin-reset-done = Скин сброшен на стандартный
+skin-reset-failed = Не удалось сбросить скин
+skin-cape-on = Плащ надет
+skin-cape-off = Плащ снят
+skin-cape-failed = Не удалось сменить плащ
+skin-rename = Переименовать
+skin-delete-title = Удалить скин?
+skin-delete-text = «{ $name }» пропадёт из сохранённых скинов. Надетый скин не изменится.
 
 ## Страница входа
 login-secure-login = Безопасная авторизация
@@ -657,6 +743,8 @@ login-no-methods = На этом инстансе ещё не настроен �
 login-passkey = ВОЙТИ ЧЕРЕЗ PASSKEY
 login-recovery-toggle = Использовать код восстановления
 login-username-placeholder = Имя пользователя
+login-recovery-code = Код восстановления
+login-profile-failed = Вход выполнен, но профиль не загрузился. Попробуйте ещё раз чуть позже.
 login-submit = ВОЙТИ
 login-recovery-hint = Каждый код работает один раз.
 
@@ -1010,6 +1098,32 @@ admin-gs-role-fallback = Сервер эвакуации (Fallback)
 admin-gs-is-default = Точка первичного входа
 admin-gs-auto-register = Регистрировать на лету в Velocity
 admin-gs-forwarding-secret = Секрет форвардинга Velocity
+admin-gs-forwarding-secret-for = Для { $name }
+admin-alloc-used-percent = { $percent }% занято
+admin-alloc-free-percent = { $percent }% свободно
+admin-perm-global-hint = Уже выдано на всех сборках
+admin-roles-admin-bypass = Обход для админа
+admin-roles-admin-bypass-hint = На админские роли ограничения не действуют
+admin-build-draft-hint = Игроки эту сборку пока не видят.
+admin-build-active-hint = Эта сборка сейчас активна в лаунчере.
+admin-build-log-empty = (пусто)
+admin-logs-request-collecting = Собираем — архив скоро появится.
+admin-logs-request-waiting = Ждём, пока игрок согласится.
+admin-logs-request-queued = Лаунчер не в сети — запрос ждёт 24 часа.
+admin-impersonate-confirm-launcher = Подтвердите запрос в своём лаунчере.
+admin-impersonate-launcher-offline = Ваш лаунчер не в сети — откройте его и подтвердите там.
+admin-impersonate-status-pending = Ждём подтверждения в вашем лаунчере…
+admin-impersonate-status-accepted = Подтверждено — лаунчер входит под игроком.
+admin-impersonate-status-consumed = Готово — лаунчер вошёл под игроком.
+admin-impersonate-status-declined = Отклонено в лаунчере.
+admin-impersonate-status-expired = Запрос истёк. Запустите заново.
+admin-media-only-images = Загружать можно только картинки.
+preview-expand = Развернуть
+preview-collapse = Обычный размер
+moderation-channel-actionbar = Над хотбаром
+moderation-channel-chat = Чат
+moderation-channel-disconnect = Экран отключения
+skin-preview-failed = Текстура для предпросмотра не загрузилась
 admin-gs-evacuate-title = Эвакуировать игроков
 admin-gs-evacuate-btn = Эвакуировать в Лимбо
 admin-gs-tab-plugins = Плагины
@@ -1243,6 +1357,22 @@ admin-content-block-confirm = Запретить проект
 admin-content-reason = Почему нельзя
 admin-content-reason-required = Нужна причина.
 admin-content-blocked = Запрещено и снято у всех, кто поставил.
+admin-project-bans-title = Запрещённые проекты
+admin-project-bans-lead = Проекты Modrinth и CurseForge, которые игрокам нельзя ставить поверх сборки. Запрет снимает проект у всех, у кого он уже стоял.
+admin-project-bans-none = Запрещённых проектов нет.
+admin-project-bans-everywhere = Весь инстанс
+admin-project-bans-one-build = Одна сборка
+admin-project-bans-meta = { $scope } · с { $date }
+admin-project-bans-lift = Снять запрет
+admin-project-bans-lifted = Запрет снят — игроки снова могут ставить проект
+admin-popular-title = Что ставят игроки
+admin-popular-lead = Проекты, которые игроки чаще всего ставят поверх сборок. Откройте строку, чтобы увидеть, у кого он стоит.
+admin-popular-none = Игроки пока ничего своего не ставили.
+admin-popular-players = { $count ->
+        [one] { $count } игрок
+        [few] { $count } игрока
+       *[many] { $count } игроков
+    }
 admin-diag-collect = Запросить
 admin-diag-subtitle = Версии, железо и скорость соединения. Никаких личных данных.
 admin-diag-empty = Данные ещё не собирались.
@@ -1380,6 +1510,15 @@ admin-mods-license = Лицензия
 admin-mods-followers = подписчиков
 admin-mods-install = Установить
 admin-mods-reinstall = Переустановить
+admin-mods-update = Обновить
+admin-mods-version-install = Установить эту версию
+admin-mods-version-reinstall = Обновить или переустановить на эту версию
+admin-mods-side-both = Клиент или сервер
+admin-mods-side-client = Только клиент
+admin-mods-side-server = Только сервер
+admin-mods-show-less = Свернуть
+admin-mods-show-more = Ещё { $count }
+admin-mods-no-answer-from = Не ответили: { $sources }
 admin-mods-installed = Установлен
 admin-mods-project-id = ID проекта
 admin-mods-env-client = Клиент
@@ -1439,6 +1578,10 @@ admin-build-modpack-checking = Проверка…
 
 ## Плащи
 admin-capes-title = ПЛАЩИ
+admin-capes-only-png = Плащ загружается только картинкой PNG.
+admin-capes-too-large = Файл весит { $size } КБ — плащ должен быть не больше { $max } КБ.
+admin-capes-uploaded = Плащ загружен
+admin-capes-deleted = Плащ удалён
 admin-capes-subtitle = Каталог плащей и управление косметикой
 admin-capes-add-title = Добавить новый плащ
 admin-capes-add-subtitle = Загружайте текстуры плащей Minecraft 64x32 или 22x17 PNG.
@@ -1999,6 +2142,17 @@ cabinet-privacy-title = Приватность
 cabinet-privacy-hide-online = Скрывать меня из списка онлайна
 cabinet-privacy-silent-join-title = Войти тихо (Vanish на входе)
 cabinet-privacy-silent-join-hint = Автоматически входить на сервер в режиме невидимости
+cabinet-blocked-title = Заблокированные игроки
+cabinet-blocked-lead = Они не могут писать вам в личные сообщения. Разблокировать можно здесь, даже если переписки уже нет.
+cabinet-blocked-none = Вы никого не блокировали.
+cabinet-blocked-removed = { $name } снова может вам писать
+cabinet-bundles-title = Логи из лаунчера
+cabinet-bundles-lead = Журналы игры и лаунчера с вашего компьютера, которые может прочитать персонал. Каждый удаляется сам, когда истечёт срок.
+cabinet-bundles-none = Лаунчер не отправлял логов.
+cabinet-bundles-untitled = Логи без пояснения
+cabinet-bundles-meta = Отправлено { $sent } · { $size } · хранится до { $expires }
+cabinet-bundles-requested = По запросу персонала
+cabinet-bundles-requested-hint = Собрано по запросу персонала — хранится до конца срока.
 cabinet-profile-title = Профиль
 cabinet-roles-card = Роли
 cabinet-direct-card = Прямые права
@@ -2090,6 +2244,12 @@ spotlight-action-logout = Выйти
 ## Поиск и фильтры списка пользователей
 admin-users-search-label = Поиск игрока / UUID / платформа
 admin-users-search-placeholder = Поиск по нику, платформе или UUID...
+admin-users-identity-find = Найти по ID платформы
+admin-users-identity-lead = Поиск игрока по ID аккаунта, через который он входит, — по числу из Discord или Telegram, а не по нику.
+admin-users-identity-provider = Платформа
+admin-users-identity-id = ID аккаунта на платформе
+admin-users-identity-search = Найти
+admin-users-identity-not-found = Никто здесь не входит через этот аккаунт.
 admin-users-status-label = Статус
 admin-users-status-all = Все статусы
 admin-users-status-active-only = Только активные
@@ -2231,6 +2391,23 @@ admin-backup-db = База данных
 admin-backup-db-text = Отдаёт pg_dump всей базы: аккаунты, серверы, свод правил, дела и наказания.
 admin-backup-download = Скачать дамп
 admin-backup-files-note = В голом дампе только база. Сборки, скины, плащи и агенты лежат в томе данных — чтобы забрать и их, берите полный архив.
+admin-storage-gc-title = Уборка хранилища
+admin-storage-gc-lead = Файлы в хранилище мастера, на которые больше ничего не ссылается: заменённые моды, снятые скины, удалённые сборки.
+admin-storage-gc-hint = Поиск обходит всю базу и всё хранилище, поэтому запускается только по кнопке.
+admin-storage-gc-scan = Найти неиспользуемые файлы
+admin-storage-gc-rescan = Искать заново
+admin-storage-gc-clean = Убирать нечего — каждый файл в хранилище используется.
+admin-storage-gc-found = { $count ->
+        [one] { $count } неиспользуемый файл, { $size }
+        [few] { $count } неиспользуемых файла, { $size }
+       *[many] { $count } неиспользуемых файлов, { $size }
+    }
+admin-storage-gc-age = Файлы моложе семи дней не считаются никогда: они могут принадлежать ещё идущему импорту.
+admin-storage-gc-sample = Первые { $count } контрольных сумм
+admin-storage-gc-delete = Удалить неиспользуемые
+admin-storage-gc-confirm-title = Удалить неиспользуемые файлы?
+admin-storage-gc-confirm-text = Файлов: { $count } ({ $size }) — они будут удалены из хранилища насовсем. Если они ещё могут понадобиться, сначала сделайте полный архив.
+admin-storage-gc-deleted = Удалено файлов: { $count }, освобождено { $size }
 admin-backup-full = Полный архив
 admin-backup-full-text = Дамп базы, все файлы тома данных, паспорт и подпись Ed25519 в одном noro-backup-{ "{" }дата{ "}" }.tar.gz. Собирается на лету — на 4 ГБ данных это примерно полминуты.
 admin-backup-full-btn = Собрать полный архив
@@ -3054,6 +3231,7 @@ admin-tickets-link-case = Привязать к делу
 admin-tickets-none-text = Под этот фильтр ничего не ждёт ответа.
 admin-tickets-pick-text = Переписка откроется здесь.
 admin-tickets-search = Игрок или тема
+admin-tickets-load-more = Показать ещё ({ $shown } из { $total })
 admin-tickets-title = ПОДДЕРЖКА
 admin-tickets-unlink = Отвязать от дела
 admin-tokens-owner-none = Ничей
@@ -5046,6 +5224,7 @@ admin-build-import-versions-applied-hint = Чтобы изменения под�
 common-ok = ОК
 common-error = Ошибка
 common-failed = Не удалось
+common-request-failed = Запрос не выполнен
 admin-backup-keep = Хранить:
 admin-backup-next = Следующий:
 admin-user-launcher-last-activity = Последняя активность
@@ -5255,6 +5434,9 @@ gameserver-files-empty = Каталог пуст.
 gameserver-files-no-wrapper = Враппер не подключён — смотреть нечего.
 gameserver-files-copied = Путь скопирован в буфер
 gameserver-files-folder-prompt = Имя новой папки:
+gameserver-files-delete-confirm = Удалить { $path }? Папка удаляется вместе со всем содержимым.
+gameserver-mods-delete-confirm = Удалить { $name }? Сервер будет работать с ним до перезапуска.
+files-edit-title = Правка: { $name }
 
 gameserver-mods-count = { $count } jar-файлов
 gameserver-mods-empty = В { $path } пока нет jar-файлов.
@@ -6095,6 +6277,24 @@ notif-repair-busy = Сначала закройте игру, потом чин�
 ## Cabinet: active sessions
 
 cabinet-sessions-title = Активные сессии
+cabinet-recovery-title = Коды восстановления
+cabinet-recovery-lead = Одноразовые коды для входа по нику, когда под рукой нет ни платформы, ни ключа доступа.
+cabinet-recovery-left = { $count ->
+        [one] Остался { $count } код
+        [few] Осталось { $count } кода
+       *[many] Осталось { $count } кодов
+    }
+cabinet-recovery-none = Кодов восстановления пока нет
+cabinet-recovery-hint = Каждый код срабатывает один раз. Новый набор полностью заменяет старый.
+cabinet-recovery-low-hint = Коды заканчиваются. Выпустите новый набор, пока ещё можете войти.
+cabinet-recovery-low = Заканчиваются
+cabinet-recovery-issue = Создать коды
+cabinet-recovery-reissue = Новый набор
+cabinet-recovery-confirm-title = Выпустить новый набор кодов?
+cabinet-recovery-confirm-text = Все нынешние коды перестанут работать в момент выпуска. Новые покажутся один раз — сохраните их там, куда сможете попасть без этого сайта.
+cabinet-recovery-confirm-action = Выпустить новые коды
+cabinet-recovery-saved = Коды сохранены
+cabinet-recovery-file-header = Коды восстановления для { $user }.
 cabinet-sessions-lead = Все места, где выполнен вход в ваш аккаунт. Завершите сессию, которую не узнаёте.
 cabinet-sessions-kind-site = Сайт
 cabinet-sessions-kind-launcher = Лаунчер
