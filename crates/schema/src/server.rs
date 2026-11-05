@@ -113,4 +113,9 @@ pub struct ServerEntry {
     pub online: Option<u32>,
     #[serde(default)]
     pub max_online: Option<u32>,
+    /// Сколько игрок, запросивший список, наиграл на сборке, в минутах. Считает
+    /// мастер по сессиям, о которых сообщили агенты, а не по словам лаунчера.
+    /// `None` — список запрошен без входа.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub my_playtime_minutes: Option<i64>,
 }

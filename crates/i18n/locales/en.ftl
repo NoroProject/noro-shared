@@ -6105,3 +6105,8 @@ notify-sign-in-body = If it wasn't you, end that session in Settings → Securit
 
 settings-hide-while-playing = HIDE WHILE PLAYING
 settings-hide-while-playing-hint = Minimise the launcher when the game starts and bring it back when the game closes.
+
+## Launcher: time played on a server
+
+game-playtime-minutes = PLAYED { $minutes } MIN
+game-playtime-hours = PLAYED { $hours } H

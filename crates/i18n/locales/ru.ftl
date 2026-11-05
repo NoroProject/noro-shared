@@ -6113,3 +6113,8 @@ notify-sign-in-body = Если это были не вы, завершите э�
 
 settings-hide-while-playing = СВОРАЧИВАТЬ ВО ВРЕМЯ ИГРЫ
 settings-hide-while-playing-hint = Сворачивать лаунчер при запуске игры и возвращать, когда игра закроется.
+
+## Launcher: time played on a server
+
+game-playtime-minutes = НАИГРАНО { $minutes } МИН
+game-playtime-hours = НАИГРАНО { $hours } Ч
