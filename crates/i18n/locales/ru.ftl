@@ -3187,6 +3187,7 @@ admin-tickets-link-case = Привязать к делу
 admin-tickets-none-text = Под этот фильтр ничего не ждёт ответа.
 admin-tickets-pick-text = Переписка откроется здесь.
 admin-tickets-search = Игрок или тема
+admin-tickets-load-more = Показать ещё ({ $shown } из { $total })
 admin-tickets-title = ПОДДЕРЖКА
 admin-tickets-unlink = Отвязать от дела
 admin-tokens-owner-none = Ничей

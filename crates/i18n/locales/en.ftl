@@ -3178,6 +3178,7 @@ admin-tickets-link-case = Link to a case
 admin-tickets-none-text = Nothing waits for an answer under this filter.
 admin-tickets-pick-text = The conversation opens here.
 admin-tickets-search = Player or subject
+admin-tickets-load-more = Show more ({ $shown } of { $total })
 admin-tickets-title = SUPPORT
 admin-tickets-unlink = Unlink from the case
 admin-tokens-owner-none = Nobody
