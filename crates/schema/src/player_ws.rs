@@ -117,6 +117,11 @@ pub enum PlayerWsMsg {
     /// Your punishments changed: one was issued or lifted. The page lists them
     /// itself; the frame only says it's time to re-read.
     PunishmentsChanged,
+    /// An admin flipped an instance-wide switch. The tab drops the section
+    /// right away instead of waiting for the next page load.
+    FeaturesChanged {
+        features: crate::InstanceFeatures,
+    },
     /// Frame from an installed module to the player's web tab.
     ModuleMessage {
         module: String,
