@@ -6053,3 +6053,13 @@ screenshots-refresh = Refresh
 screenshots-open = Open
 screenshots-delete = Delete
 screenshots-show-more = Show more
+
+## Launcher: why the game crashed
+
+crash-hint-heap-too-large = The game could not take the memory it was given. Lower the memory for this server in its settings, or close other programs.
+crash-hint-wrong-java = The game needs a different Java. Pick the build's default Java in the server settings.
+crash-hint-jvm-flags = Java refused one of the JVM flags. Check the flags in the server settings or reset them.
+crash-hint-out-of-memory = The game ran out of memory. Give it more in the server settings.
+crash-hint-disk-full = The disk is full. Free some space and start the game again.
+crash-hint-graphics-driver = The graphics driver crashed. Update the driver for your video card and try again.
+crash-hint-mod-conflict = Two mods don't work together. Turn off the mods you added recently and try again.
