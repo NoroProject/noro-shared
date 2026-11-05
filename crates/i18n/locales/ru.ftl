@@ -6044,3 +6044,19 @@ rpc-on-server = На сервере
 ## Launcher: update notice
 
 update-pill = Доступно обновление { $version }
+
+## Launcher: screenshots tab
+
+nav-screenshots = СКРИНШОТЫ
+screenshots-title = Скриншоты
+screenshots-count = { $count ->
+    [one] { $count } скриншот
+    [few] { $count } скриншота
+   *[other] { $count } скриншотов
+}
+screenshots-empty = Скриншотов пока нет. Нажмите F2 в игре, чтобы сделать снимок.
+screenshots-open-folder = Открыть папку
+screenshots-refresh = Обновить
+screenshots-open = Открыть
+screenshots-delete = Удалить
+screenshots-show-more = Показать ещё

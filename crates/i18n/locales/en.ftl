@@ -6038,3 +6038,18 @@ rpc-on-server = On the server
 ## Launcher: update notice
 
 update-pill = Update { $version } available
+
+## Launcher: screenshots tab
+
+nav-screenshots = SCREENSHOTS
+screenshots-title = Screenshots
+screenshots-count = { $count ->
+    [one] { $count } screenshot
+   *[other] { $count } screenshots
+}
+screenshots-empty = No screenshots yet. Press F2 in game to take one.
+screenshots-open-folder = Open folder
+screenshots-refresh = Refresh
+screenshots-open = Open
+screenshots-delete = Delete
+screenshots-show-more = Show more
