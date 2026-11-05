@@ -2369,6 +2369,23 @@ admin-backup-db = База данных
 admin-backup-db-text = Отдаёт pg_dump всей базы: аккаунты, серверы, свод правил, дела и наказания.
 admin-backup-download = Скачать дамп
 admin-backup-files-note = В голом дампе только база. Сборки, скины, плащи и агенты лежат в томе данных — чтобы забрать и их, берите полный архив.
+admin-storage-gc-title = Уборка хранилища
+admin-storage-gc-lead = Файлы в хранилище мастера, на которые больше ничего не ссылается: заменённые моды, снятые скины, удалённые сборки.
+admin-storage-gc-hint = Поиск обходит всю базу и всё хранилище, поэтому запускается только по кнопке.
+admin-storage-gc-scan = Найти неиспользуемые файлы
+admin-storage-gc-rescan = Искать заново
+admin-storage-gc-clean = Убирать нечего — каждый файл в хранилище используется.
+admin-storage-gc-found = { $count ->
+        [one] { $count } неиспользуемый файл, { $size }
+        [few] { $count } неиспользуемых файла, { $size }
+       *[many] { $count } неиспользуемых файлов, { $size }
+    }
+admin-storage-gc-age = Файлы моложе семи дней не считаются никогда: они могут принадлежать ещё идущему импорту.
+admin-storage-gc-sample = Первые { $count } контрольных сумм
+admin-storage-gc-delete = Удалить неиспользуемые
+admin-storage-gc-confirm-title = Удалить неиспользуемые файлы?
+admin-storage-gc-confirm-text = Файлов: { $count } ({ $size }) — они будут удалены из хранилища насовсем. Если они ещё могут понадобиться, сначала сделайте полный архив.
+admin-storage-gc-deleted = Удалено файлов: { $count }, освобождено { $size }
 admin-backup-full = Полный архив
 admin-backup-full-text = Дамп базы, все файлы тома данных, паспорт и подпись Ed25519 в одном noro-backup-{ "{" }дата{ "}" }.tar.gz. Собирается на лету — на 4 ГБ данных это примерно полминуты.
 admin-backup-full-btn = Собрать полный архив

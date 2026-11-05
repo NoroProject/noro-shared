@@ -2360,6 +2360,22 @@ admin-backup-db = Database
 admin-backup-db-text = Streams a pg_dump of the whole database: accounts, servers, rules, cases and punishments.
 admin-backup-download = Download the dump
 admin-backup-files-note = The plain dump holds the database only. Builds, skins, capes and agents live in the data volume — take the full archive to get them too.
+admin-storage-gc-title = Storage cleanup
+admin-storage-gc-lead = Files in the master's storage that nothing refers to any more: replaced mods, removed skins, deleted builds.
+admin-storage-gc-hint = The search walks the whole database and storage, so it runs only when you ask.
+admin-storage-gc-scan = Find unused files
+admin-storage-gc-rescan = Search again
+admin-storage-gc-clean = Nothing to clean up — every stored file is in use.
+admin-storage-gc-found = { $count ->
+        [one] { $count } unused file, { $size }
+       *[other] { $count } unused files, { $size }
+    }
+admin-storage-gc-age = Files younger than seven days are never counted: they may belong to an import still in progress.
+admin-storage-gc-sample = First { $count } checksums
+admin-storage-gc-delete = Delete unused files
+admin-storage-gc-confirm-title = Delete unused files?
+admin-storage-gc-confirm-text = { $count } files ({ $size }) are removed from the storage for good. Take a full archive first if you might still need them.
+admin-storage-gc-deleted = Deleted { $count } files, { $size } freed
 admin-backup-full = Full archive
 admin-backup-full-text = Database dump, every file in the data volume, a manifest and an Ed25519 signature, in one noro-backup-{ "{" }date{ "}" }.tar.gz. Built on the fly — about half a minute per 4 GB of data.
 admin-backup-full-btn = Build the full archive
