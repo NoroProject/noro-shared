@@ -6107,3 +6107,8 @@ notify-sign-in-passkey = Новый вход по ключу доступа
 notify-sign-in-recovery = Новый вход по коду восстановления
 notify-sign-in-app = { $app } получило доступ к аккаунту
 notify-sign-in-body = Если это были не вы, завершите эту сессию в Настройках → Безопасность.
+
+## Launcher: hide while playing
+
+settings-hide-while-playing = СВОРАЧИВАТЬ ВО ВРЕМЯ ИГРЫ
+settings-hide-while-playing-hint = Сворачивать лаунчер при запуске игры и возвращать, когда игра закроется.

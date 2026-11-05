@@ -6099,3 +6099,8 @@ notify-sign-in-passkey = New sign-in with a passkey
 notify-sign-in-recovery = New sign-in with a recovery code
 notify-sign-in-app = { $app } got access to your account
 notify-sign-in-body = If it wasn't you, end that session in Settings → Security.
+
+## Launcher: hide while playing
+
+settings-hide-while-playing = HIDE WHILE PLAYING
+settings-hide-while-playing-hint = Minimise the launcher when the game starts and bring it back when the game closes.
