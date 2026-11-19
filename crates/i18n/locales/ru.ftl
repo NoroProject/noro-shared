@@ -3575,7 +3575,7 @@ map-picking-on = Кликните по чанку
 
 admin-hub-settings-map = Карта
 admin-hub-set-map-worlds = Миры на карте
-admin-hub-set-map-worlds-hint = Через запятую. Пусто — только основной мир
+admin-hub-set-map-worlds-hint = Через запятую, как их зовёт сервер: minecraft:the_nether (или просто the_nether) на модах, world_nether на Paper. Пусто — только основной мир
 admin-hub-set-map-rate = Чанков в секунду
 admin-hub-set-map-interval = Секунд между отправками
 admin-hub-set-map-zooms = Уровней отдаления

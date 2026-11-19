@@ -3564,7 +3564,7 @@ map-picking-on = Click a chunk
 
 admin-hub-settings-map = Map
 admin-hub-set-map-worlds = Worlds on the map
-admin-hub-set-map-worlds-hint = Comma separated. Empty — only the main world
+admin-hub-set-map-worlds-hint = Comma separated, as the server names them: minecraft:the_nether (or just the_nether) on mods, world_nether on Paper. Empty — only the main world
 admin-hub-set-map-rate = Chunks per second
 admin-hub-set-map-interval = Seconds between uploads
 admin-hub-set-map-zooms = Zoom-out levels
