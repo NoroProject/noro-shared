@@ -6708,3 +6708,8 @@ data-interrupted-resume = Продолжить перенос
 data-interrupted-rollback = Отменить перенос
 data-interrupted-rollback-hint = Отмена удалит неполную копию в { $to }. Ваши файлы в { $from } останутся как есть.
 close-prompt-data-move = Идёт перенос файлов игры. Если закрыть лаунчер, он прервётся; продолжить можно при следующем запуске.
+
+# Лаунчер: скин по нику
+profile-skin-import = Скопировать
+profile-skin-import-placeholder = Скопировать скин игрока по нику
+notif-skin-import-failed = Не удалось скопировать скин { $name }: { $reason }

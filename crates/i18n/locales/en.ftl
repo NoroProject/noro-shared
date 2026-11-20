@@ -6692,3 +6692,8 @@ data-interrupted-resume = Continue the move
 data-interrupted-rollback = Cancel the move
 data-interrupted-rollback-hint = Cancelling removes the partial copy in { $to }. Your files in { $from } stay as they are.
 close-prompt-data-move = Game files are being moved. Closing the launcher interrupts the move; you can continue it on the next start.
+
+# Launcher: copying a skin by nickname
+profile-skin-import = Copy
+profile-skin-import-placeholder = Copy a player's skin by nickname
+notif-skin-import-failed = Could not copy the skin of { $name }: { $reason }
