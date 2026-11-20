@@ -5857,6 +5857,7 @@ remote-action-requested-by = Запрос от { $name }
 
 settings-memory-min = МИН
 settings-memory-max = МАКС
+settings-memory-gb = { $gb } ГБ
 settings-jvm-not-set = не заданы
 settings-memory-too-much = Это больше трёх четвертей из { $total } ГБ этого компьютера. Система может начать тормозить
 settings-discord-rpc = СТАТУС В DISCORD
