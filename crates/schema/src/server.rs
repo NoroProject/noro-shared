@@ -128,4 +128,10 @@ pub struct ServerEntry {
     /// `None` — список запрошен без входа.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub my_playtime_minutes: Option<i64>,
+    /// Кому открыта закрытая сборка: отображаемые имена ролей с правом входа.
+    /// Роли со `*` сюда не попадают — это админы, им открыто всё. Пустой
+    /// список — сборка только для админов. `None` — сборка открыта всем либо
+    /// мастер старше этого поля.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub access_roles: Option<Vec<String>>,
 }
